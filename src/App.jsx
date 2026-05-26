@@ -4,7 +4,7 @@ import { useNodesState, useEdgesState } from 'reactflow';
 import FlowCanvas from './components/FlowCanvas';
 import CodeEditor from './components/CodeEditor';
 import { initialNodes, initialEdges } from './graph/initialGraph';
-import { compileToExtendScript } from './compiler/astCompiler';
+import { compileToExtendScript } from './astCompiler';
 import './App.css';
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
   const activeComp = 'Main_Comp_01';
 
   useEffect(() => {
-    setGeneratedCode(compileToExtendScript(nodes, edges, { activeComp }));
+    setGeneratedCode(compileToExtendScript(nodes, edges));
   }, [nodes, edges]);
 
   return (
