@@ -1,0 +1,19 @@
+.ebn-edge__dot {
+  pointer-events: none;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.ebn-edge__dot--exec {
+  fill: #d6dbe1;
+  color: rgba(214, 219, 225, 0.55);
+}
+
+.ebn-edge__dot--data {
+  fill: #6ab0ff;
+  color: rgba(106, 176, 255, 0.55);
+}
+
+.ebn-edge__dot--selected {
+  fill: #ffffff;
+  color: rgba(255, 255, 255, 0.7);
+}

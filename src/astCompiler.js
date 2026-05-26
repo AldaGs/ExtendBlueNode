@@ -1,13 +1,15 @@
 // EBN translation engine: flat DAG -> ExtendScript string.
 //
-// Supported source-side node types:
-//   - integer / string : primitive literal -> declares `var <name> = <lit>;`
-//   - getGlobal        : references a hoisted global, no extra decl
-//
-// Supported step node types (executed in exec-edge order):
-//   - ebnNode (with snippet) : templated ExtendScript via NODE_SNIPPETS
-//   - setGlobal              : emits `global_<name> = <resolved>;`
-//   - reroute                : transparent pass-through
+// Every node in the graph contributes something to the output:
+//   - integer / string   : always hoisted as `var <name> = <literal>;`
+//                          regardless of whether it's wired anywhere.
+//   - getGlobal          : referenced via the hoisted global name.
+//   - ebnNode (snippet)  : emitted inline when reached from the exec
+//                          chain that starts at "Get Active Comp";
+//                          otherwise listed as an orphan comment.
+//   - setGlobal          : emits an assignment when reached, comment
+//                          when orphan.
+//   - reroute            : transparent pass-through (no emit).
 
 const EXEC_OUT = 'exec_out';
 const EXEC_IN  = 'exec_in';
@@ -67,6 +69,19 @@ function literalForGlobal(g) {
   return g.type === 'Integer' ? String(Math.trunc(n)) : String(n);
 }
 
+function primDeclFor(node) {
+  if (node.type === 'integer') {
+    const n = Number(node.data?.value);
+    const lit = Number.isFinite(n) ? String(Math.trunc(n)) : '0';
+    return `  var ${varNameFor(node)} = ${lit};`;
+  }
+  if (node.type === 'string') {
+    const lit = JSON.stringify(String(node.data?.value ?? ''));
+    return `  var ${varNameFor(node)} = ${lit};`;
+  }
+  return null;
+}
+
 // Walk back through reroute relays to reach the real upstream node.
 function resolveSource(byId, edges, targetId, handleId) {
   const edge = edges.find(
@@ -84,9 +99,9 @@ function resolveSource(byId, edges, targetId, handleId) {
   return src;
 }
 
-// Convert an upstream source node into a usable reference.
-//  { kind: 'prim',   name, decl }  -> Integer/String literal, needs decl
-//  { kind: 'global', name }        -> hoisted global, no decl needed
+// Reference shape produced by resolveUpstreamRef.
+//   { kind: 'prim',   name }  -> Integer/String literal (already hoisted)
+//   { kind: 'global', name }  -> hoisted global, no decl needed
 function resolveUpstreamRef(upstream, globals) {
   if (!upstream) return null;
   if (upstream.type === 'getGlobal') {
@@ -94,16 +109,8 @@ function resolveUpstreamRef(upstream, globals) {
     if (!g) return null;
     return { kind: 'global', name: globalVarName(g) };
   }
-  if (upstream.type === 'integer') {
-    const n = Number(upstream.data?.value);
-    const name = varNameFor(upstream);
-    const lit = Number.isFinite(n) ? String(Math.trunc(n)) : '0';
-    return { kind: 'prim', name, decl: `  var ${name} = ${lit};` };
-  }
-  if (upstream.type === 'string') {
-    const name = varNameFor(upstream);
-    const lit = JSON.stringify(String(upstream.data?.value ?? ''));
-    return { kind: 'prim', name, decl: `  var ${name} = ${lit};` };
+  if (upstream.type === 'integer' || upstream.type === 'string') {
+    return { kind: 'prim', name: varNameFor(upstream) };
   }
   return null;
 }
@@ -118,81 +125,99 @@ export function compileToExtendScript(nodes, edges, globalVariables = []) {
     (e) => e.sourceHandle === EXEC_OUT && e.targetHandle === EXEC_IN,
   );
 
-  let current = nodes.find((n) => n.data?.label === 'Get Active Comp');
-  if (!current) {
-    return "// Add a 'Get Active Comp' node to start the execution flow.";
+  // Hoist every primitive node up-front. Always-emit means a newly
+  // added Integer/String is immediately visible in Monaco even
+  // before the user wires it anywhere.
+  const primDecls = [];
+  for (const n of nodes) {
+    const decl = primDeclFor(n);
+    if (decl) primDecls.push(decl);
   }
 
+  // Track which nodes were touched by the exec walk so we can list
+  // the rest as orphans at the end.
+  const reachedIds = new Set();
   const stepLines = [];
-  const primDecls = new Map(); // srcNodeId -> decl line
-  let safety = 0;
 
-  // resolveInput: returns the JS expression to inject for this input port.
-  // Wires take precedence; otherwise the inline SmartInput value is used.
   function resolveInput(stepNode, port) {
     const upstream = resolveSource(byId, edges, stepNode.id, port.id);
     if (upstream) {
       const ref = resolveUpstreamRef(upstream, globalVariables);
-      if (ref) {
-        if (ref.kind === 'prim') primDecls.set(upstream.id, ref.decl);
-        return ref.name;
-      }
+      if (ref) return ref.name;
     }
     const inline = stepNode.data?.values?.[port.id] ?? DEFAULTS[port.id];
     return literalFor(port.type, inline);
   }
 
-  while (current && safety < 100) {
-    safety++;
+  // Find the chain start. Multiple Get-Active-Comp nodes are allowed,
+  // but the walker uses the first found and reports the rest as
+  // orphans through the reached-set check below.
+  const start = nodes.find((n) => n.data?.label === 'Get Active Comp');
 
-    if (current.type === 'reroute') {
-      const nextEdge = execEdges.find((e) => e.source === current.id);
-      current = nextEdge ? byId.get(nextEdge.target) : null;
-      continue;
-    }
+  if (start) {
+    let current = start;
+    let safety = 0;
+    while (current && safety < 100) {
+      safety += 1;
+      reachedIds.add(current.id);
 
-    if (current.type === 'setGlobal') {
-      const g = globalVariables.find((x) => x.id === current.data?.globalId);
-      if (g) {
-        const expr = resolveInput(current, {
-          id: 'value',
-          type: g.type === 'String' ? 'text' : 'number',
-        });
-        stepLines.push(`  ${globalVarName(g)} = ${expr};\n`);
-      } else {
-        stepLines.push('  // WARNING: Set Global with no target selected\n');
-      }
-      const nextEdge = execEdges.find((e) => e.source === current.id);
-      current = nextEdge ? byId.get(nextEdge.target) : null;
-      continue;
-    }
-
-    const tpl = NODE_SNIPPETS[current.data?.label];
-    if (tpl) {
-      const inputs = (current.data?.inputs || []).filter((p) => p.type !== 'exec');
-      const params = {};
-      for (const port of inputs) {
-        params[port.id] = resolveInput(current, port);
+      if (current.type === 'reroute') {
+        const nextEdge = execEdges.find((e) => e.source === current.id);
+        current = nextEdge ? byId.get(nextEdge.target) : null;
+        continue;
       }
 
-      const snippet = tpl.replace(/\{(\w+)\}/g, (_, k) => {
-        if (params[k] !== undefined) return params[k];
-        if (DEFAULTS[k] !== undefined) {
-          return literalFor(
-            typeof DEFAULTS[k] === 'number' ? 'number' : 'text',
-            DEFAULTS[k],
-          );
+      if (current.type === 'setGlobal') {
+        const g = globalVariables.find((x) => x.id === current.data?.globalId);
+        if (g) {
+          const expr = resolveInput(current, {
+            id: 'value',
+            type: g.type === 'String' ? 'text' : 'number',
+          });
+          stepLines.push(`  ${globalVarName(g)} = ${expr};\n`);
+        } else {
+          stepLines.push('  // WARNING: Set Global with no target selected\n');
         }
-        return `/* missing:${k} */`;
-      });
-      stepLines.push(snippet);
-    } else {
-      stepLines.push(`  // WARNING: Unknown node type '${current.data?.label}'\n`);
-    }
+        const nextEdge = execEdges.find((e) => e.source === current.id);
+        current = nextEdge ? byId.get(nextEdge.target) : null;
+        continue;
+      }
 
-    const nextEdge = execEdges.find((e) => e.source === current.id);
-    current = nextEdge ? byId.get(nextEdge.target) : null;
+      const tpl = NODE_SNIPPETS[current.data?.label];
+      if (tpl) {
+        const inputs = (current.data?.inputs || []).filter((p) => p.type !== 'exec');
+        const params = {};
+        for (const port of inputs) {
+          params[port.id] = resolveInput(current, port);
+        }
+        const snippet = tpl.replace(/\{(\w+)\}/g, (_, k) => {
+          if (params[k] !== undefined) return params[k];
+          if (DEFAULTS[k] !== undefined) {
+            return literalFor(
+              typeof DEFAULTS[k] === 'number' ? 'number' : 'text',
+              DEFAULTS[k],
+            );
+          }
+          return `/* missing:${k} */`;
+        });
+        stepLines.push(snippet);
+      } else {
+        stepLines.push(
+          `  // WARNING: Unknown node type '${current.data?.label}'\n`,
+        );
+      }
+
+      const nextEdge = execEdges.find((e) => e.source === current.id);
+      current = nextEdge ? byId.get(nextEdge.target) : null;
+    }
   }
+
+  // Anything that contributes to the script logic but wasn't reached.
+  // Primitives are always hoisted so they don't count as orphans here.
+  const ORPHAN_TYPES = new Set(['ebnNode', 'setGlobal', 'getGlobal']);
+  const orphans = nodes.filter(
+    (n) => ORPHAN_TYPES.has(n.type) && !reachedIds.has(n.id),
+  );
 
   /* ----------------------------- emit ----------------------------- */
 
@@ -207,11 +232,30 @@ export function compileToExtendScript(nodes, edges, globalVariables = []) {
     out += '\n';
   }
 
-  if (primDecls.size) {
-    out += [...primDecls.values()].join('\n') + '\n\n';
+  if (primDecls.length) {
+    out += '  // --- Primitive Nodes ---\n';
+    out += primDecls.join('\n') + '\n\n';
   }
 
-  out += stepLines.join('');
+  if (!start) {
+    out += "  // (No exec chain — add a 'Get Active Comp' node to begin.)\n";
+  } else {
+    out += '  // --- Execution Chain ---\n';
+    out += stepLines.join('');
+  }
+
+  if (orphans.length) {
+    out += '\n  // --- Orphan Nodes (not in exec chain) ---\n';
+    for (const n of orphans) {
+      const tag =
+        n.type === 'ebnNode'   ? (n.data?.label || 'EBN Node')
+      : n.type === 'setGlobal' ? 'Set Global'
+      : n.type === 'getGlobal' ? 'Get Global'
+      : n.type;
+      out += `  //   • ${tag} [id=${n.id}]\n`;
+    }
+  }
+
   out += '\n  app.endUndoGroup();\n';
   out += '} catch (error) {\n';
   out += "  alert('EBN Execution Error: ' + error.message);\n";

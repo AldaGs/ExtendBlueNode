@@ -18,6 +18,7 @@ import StringNode from './StringNode';
 import GetGlobalNode from './GetGlobalNode';
 import SetGlobalNode from './SetGlobalNode';
 import AddNodeMenu from './AddNodeMenu';
+import FlowEdge from './FlowEdge';
 import { findCompatibleHandle } from '../nodeLibrary';
 
 /* ----------------------------- geometry helpers ----------------------------- */
@@ -112,6 +113,9 @@ function FlowCanvasInner({
     }),
     [],
   );
+
+  // Override the default edge so every wire shows a moving dot.
+  const edgeTypes = useMemo(() => ({ default: FlowEdge, flow: FlowEdge }), []);
 
   /* ------------ connection + reconnect (one wire per input) ------------ */
 
@@ -417,6 +421,7 @@ function FlowCanvasInner({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
