@@ -1,0 +1,26 @@
+.ebn-reroute {
+  width: 12px;
+  height: 12px;
+  background: #c0c0c0;
+  border: 1px solid #0d0d0d;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.ebn-reroute--selected {
+  background: #fff;
+  box-shadow: 0 0 0 2px #2b7fff, 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Stack both handles dead center on the dot so it looks like one point. */
+.ebn-reroute .ebn-reroute__handle.react-flow__handle {
+  width: 12px;
+  height: 12px;
+  background: transparent;
+  border: none;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ebn-reroute .ebn-reroute__handle.react-flow__handle-left  { left: 50%; }
+.ebn-reroute .ebn-reroute__handle.react-flow__handle-right { left: 50%; right: auto; }

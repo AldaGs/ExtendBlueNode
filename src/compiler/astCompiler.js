@@ -82,6 +82,7 @@ export function compileToExtendScript(nodes, edges, context = {}) {
   for (const id of order) {
     const node = byId.get(id);
     if (!node) continue;
+    if (node.type === 'reroute') continue; // pass-through wire relay
     const label = node.data?.label;
     const tpl = NODE_SNIPPETS[label];
     if (!tpl) {
