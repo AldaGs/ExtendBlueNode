@@ -1,17 +1,17 @@
 // EBN translation engine: flat DAG -> ExtendScript string.
 //
-// Phase 8: inputs can be either literal (typed into the SmartInput on
-// the consuming node) or wired (driven by a primitive data node such as
-// Integer/String). Wired inputs get a `var node_<id>_val = ...;` line
-// at the top of the try-block and the snippet receives the variable
-// name in place of the literal.
+// Supported source-side node types:
+//   - integer / string : primitive literal -> declares `var <name> = <lit>;`
+//   - getGlobal        : references a hoisted global, no extra decl
+//
+// Supported step node types (executed in exec-edge order):
+//   - ebnNode (with snippet) : templated ExtendScript via NODE_SNIPPETS
+//   - setGlobal              : emits `global_<name> = <resolved>;`
+//   - reroute                : transparent pass-through
 
 const EXEC_OUT = 'exec_out';
 const EXEC_IN  = 'exec_in';
 
-// Templates use bare {token} slots — the substitution layer adds the
-// JS quoting for string literals so the same template handles wired
-// and literal inputs uniformly.
 const NODE_SNIPPETS = {
   'Get Active Comp':
     "  var activeComp = app.project.activeItem;\n" +
@@ -21,19 +21,19 @@ const NODE_SNIPPETS = {
     "  if (!targetLayer) throw new Error('Layer not found.');\n",
   'Set Property':
     '  targetLayer.property({property}).setValue({value});\n',
-  // Legacy fixture from the original Phase 5 spec.
   'Set Opacity to 50%':
     '  targetLayer.property("ADBE Opacity").setValue(50);\n',
 };
 
 const DEFAULTS = { layer_id: 1, property: 'ADBE Opacity', value: 100 };
 
+/* ----------------------------- helpers ----------------------------- */
+
 function literalFor(portType, raw) {
   if (portType === 'number') {
     const n = Number(raw);
     return Number.isFinite(n) ? String(n) : '0';
   }
-  // text / default -> quoted JS string
   return JSON.stringify(raw == null ? '' : String(raw));
 }
 
@@ -41,10 +41,6 @@ function defaultVarName(nodeId) {
   return `var_${String(nodeId).replace(/[^A-Za-z0-9_$]/g, '_')}`;
 }
 
-// Sanitize a user-supplied variable name into a valid JS identifier.
-// - replace non-[A-Za-z0-9_$] with _
-// - prepend _ if it starts with a digit
-// - returns null if nothing usable remains
 function sanitizeVarName(raw) {
   if (raw == null) return null;
   const trimmed = String(raw).trim();
@@ -58,7 +54,20 @@ function varNameFor(node) {
   return sanitizeVarName(node.data?.variableName) ?? defaultVarName(node.id);
 }
 
-// Walk back through any reroute nodes to find the real upstream source.
+function globalVarName(g) {
+  return `global_${sanitizeVarName(g.name) ?? '_unnamed'}`;
+}
+
+function literalForGlobal(g) {
+  if (g.type === 'String') {
+    return JSON.stringify(String(g.initialValue ?? ''));
+  }
+  const n = Number(g.initialValue);
+  if (!Number.isFinite(n)) return '0';
+  return g.type === 'Integer' ? String(Math.trunc(n)) : String(n);
+}
+
+// Walk back through reroute relays to reach the real upstream node.
 function resolveSource(byId, edges, targetId, handleId) {
   const edge = edges.find(
     (e) => e.target === targetId && e.targetHandle === handleId,
@@ -75,18 +84,33 @@ function resolveSource(byId, edges, targetId, handleId) {
   return src;
 }
 
-function primitiveLiteral(srcNode) {
-  if (srcNode.type === 'integer') {
-    const n = Number(srcNode.data?.value);
-    return Number.isFinite(n) ? String(Math.trunc(n)) : '0';
+// Convert an upstream source node into a usable reference.
+//  { kind: 'prim',   name, decl }  -> Integer/String literal, needs decl
+//  { kind: 'global', name }        -> hoisted global, no decl needed
+function resolveUpstreamRef(upstream, globals) {
+  if (!upstream) return null;
+  if (upstream.type === 'getGlobal') {
+    const g = globals.find((x) => x.id === upstream.data?.globalId);
+    if (!g) return null;
+    return { kind: 'global', name: globalVarName(g) };
   }
-  if (srcNode.type === 'string') {
-    return JSON.stringify(String(srcNode.data?.value ?? ''));
+  if (upstream.type === 'integer') {
+    const n = Number(upstream.data?.value);
+    const name = varNameFor(upstream);
+    const lit = Number.isFinite(n) ? String(Math.trunc(n)) : '0';
+    return { kind: 'prim', name, decl: `  var ${name} = ${lit};` };
+  }
+  if (upstream.type === 'string') {
+    const name = varNameFor(upstream);
+    const lit = JSON.stringify(String(upstream.data?.value ?? ''));
+    return { kind: 'prim', name, decl: `  var ${name} = ${lit};` };
   }
   return null;
 }
 
-export function compileToExtendScript(nodes, edges) {
+/* ----------------------------- main ----------------------------- */
+
+export function compileToExtendScript(nodes, edges, globalVariables = []) {
   if (!nodes || nodes.length === 0) return '// No nodes to compile.';
 
   const byId = new Map(nodes.map((n) => [n.id, n]));
@@ -94,21 +118,50 @@ export function compileToExtendScript(nodes, edges) {
     (e) => e.sourceHandle === EXEC_OUT && e.targetHandle === EXEC_IN,
   );
 
-  // 1. Find the start node.
   let current = nodes.find((n) => n.data?.label === 'Get Active Comp');
   if (!current) {
     return "// Add a 'Get Active Comp' node to start the execution flow.";
   }
 
-  // 2. Walk execution chain, collecting per-step substitution maps and
-  //    the set of upstream primitives that need variable declarations.
   const stepLines = [];
-  const variableDecls = new Map(); // srcNodeId -> "  var node_X_val = ...;"
+  const primDecls = new Map(); // srcNodeId -> decl line
   let safety = 0;
+
+  // resolveInput: returns the JS expression to inject for this input port.
+  // Wires take precedence; otherwise the inline SmartInput value is used.
+  function resolveInput(stepNode, port) {
+    const upstream = resolveSource(byId, edges, stepNode.id, port.id);
+    if (upstream) {
+      const ref = resolveUpstreamRef(upstream, globalVariables);
+      if (ref) {
+        if (ref.kind === 'prim') primDecls.set(upstream.id, ref.decl);
+        return ref.name;
+      }
+    }
+    const inline = stepNode.data?.values?.[port.id] ?? DEFAULTS[port.id];
+    return literalFor(port.type, inline);
+  }
 
   while (current && safety < 100) {
     safety++;
+
     if (current.type === 'reroute') {
+      const nextEdge = execEdges.find((e) => e.source === current.id);
+      current = nextEdge ? byId.get(nextEdge.target) : null;
+      continue;
+    }
+
+    if (current.type === 'setGlobal') {
+      const g = globalVariables.find((x) => x.id === current.data?.globalId);
+      if (g) {
+        const expr = resolveInput(current, {
+          id: 'value',
+          type: g.type === 'String' ? 'text' : 'number',
+        });
+        stepLines.push(`  ${globalVarName(g)} = ${expr};\n`);
+      } else {
+        stepLines.push('  // WARNING: Set Global with no target selected\n');
+      }
       const nextEdge = execEdges.find((e) => e.source === current.id);
       current = nextEdge ? byId.get(nextEdge.target) : null;
       continue;
@@ -116,39 +169,19 @@ export function compileToExtendScript(nodes, edges) {
 
     const tpl = NODE_SNIPPETS[current.data?.label];
     if (tpl) {
-      const inputs = (current.data?.inputs || []).filter(
-        (p) => p.type !== 'exec',
-      );
-      const values = current.data?.values || {};
-
+      const inputs = (current.data?.inputs || []).filter((p) => p.type !== 'exec');
       const params = {};
       for (const port of inputs) {
-        const upstream = resolveSource(byId, edges, current.id, port.id);
-        if (upstream) {
-          const lit = primitiveLiteral(upstream);
-          if (lit != null) {
-            const name = varNameFor(upstream);
-            variableDecls.set(
-              upstream.id,
-              `  var ${name} = ${lit};`,
-            );
-            params[port.id] = name;
-            continue;
-          }
-          // Non-primitive upstream: reference its var slot anyway (will
-          // be defined when its node compiles) — fall back to literal
-          // for now so the script stays runnable.
-        }
-        const inline = values[port.id] ?? DEFAULTS[port.id];
-        params[port.id] = literalFor(port.type, inline);
+        params[port.id] = resolveInput(current, port);
       }
 
-      // Fill any leftover {token}s from DEFAULTS so legacy templates
-      // (e.g. "Set Opacity to 50%") don't break.
       const snippet = tpl.replace(/\{(\w+)\}/g, (_, k) => {
         if (params[k] !== undefined) return params[k];
         if (DEFAULTS[k] !== undefined) {
-          return literalFor(typeof DEFAULTS[k] === 'number' ? 'number' : 'text', DEFAULTS[k]);
+          return literalFor(
+            typeof DEFAULTS[k] === 'number' ? 'number' : 'text',
+            DEFAULTS[k],
+          );
         }
         return `/* missing:${k} */`;
       });
@@ -161,12 +194,23 @@ export function compileToExtendScript(nodes, edges) {
     current = nextEdge ? byId.get(nextEdge.target) : null;
   }
 
-  // 3. Emit final script.
+  /* ----------------------------- emit ----------------------------- */
+
   let out = 'try {\n';
   out += "  app.beginUndoGroup('EBN Auto-Inject');\n\n";
-  if (variableDecls.size) {
-    out += [...variableDecls.values()].join('\n') + '\n\n';
+
+  if (globalVariables.length) {
+    out += '  // --- Global Variables ---\n';
+    for (const g of globalVariables) {
+      out += `  var ${globalVarName(g)} = ${literalForGlobal(g)};\n`;
+    }
+    out += '\n';
   }
+
+  if (primDecls.size) {
+    out += [...primDecls.values()].join('\n') + '\n\n';
+  }
+
   out += stepLines.join('');
   out += '\n  app.endUndoGroup();\n';
   out += '} catch (error) {\n';

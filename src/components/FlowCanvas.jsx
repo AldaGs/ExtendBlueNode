@@ -13,6 +13,8 @@ import EBNNode from './EBNNode';
 import RerouteNode from './RerouteNode';
 import IntegerNode from './IntegerNode';
 import StringNode from './StringNode';
+import GetGlobalNode from './GetGlobalNode';
+import SetGlobalNode from './SetGlobalNode';
 
 /* ----------------------------- geometry helpers ----------------------------- */
 
@@ -88,6 +90,8 @@ function FlowCanvasInner({
       reroute: RerouteNode,
       integer: IntegerNode,
       string: StringNode,
+      getGlobal: GetGlobalNode,
+      setGlobal: SetGlobalNode,
     }),
     [],
   );

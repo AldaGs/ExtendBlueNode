@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import {
   ReactFlowProvider,
   useNodesState,
@@ -9,6 +9,8 @@ import {
 import FlowCanvas from './components/FlowCanvas';
 import CodeEditor from './components/CodeEditor';
 import PropertiesPanel from './components/PropertiesPanel';
+import GlobalVariablesPanel from './components/GlobalVariablesPanel';
+import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
 import './App.css';
@@ -20,13 +22,19 @@ function AppShell() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [generatedCode, setGeneratedCode] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
-  const [activeTab, setActiveTab] = useState('code'); // 'code' | 'props'
+  const [activeTab, setActiveTab] = useState('code'); // 'code' | 'props' | 'globals'
   const [propsValid, setPropsValid] = useState(true);
+  const [globalVariables, setGlobalVariables] = useState([]);
   const activeComp = 'Main_Comp_01';
 
+  const globalsContextValue = useMemo(
+    () => ({ globalVariables, setGlobalVariables }),
+    [globalVariables],
+  );
+
   useEffect(() => {
-    setGeneratedCode(compileToExtendScript(nodes, edges));
-  }, [nodes, edges]);
+    setGeneratedCode(compileToExtendScript(nodes, edges, globalVariables));
+  }, [nodes, edges, globalVariables]);
 
   useOnSelectionChange({
     onChange: useCallback(({ nodes: selected }) => {
@@ -34,10 +42,13 @@ function AppShell() {
     }, []),
   });
 
-  const goToCodeTab = useCallback(() => {
-    if (!propsValid) return;
-    setActiveTab('code');
-  }, [propsValid]);
+  const switchTab = useCallback(
+    (next) => {
+      if (!propsValid && next !== 'props') return;
+      setActiveTab(next);
+    },
+    [propsValid],
+  );
 
   // Keep the selected node reference fresh as the user types in the panel.
   const liveSelected = selectedNode
@@ -45,6 +56,7 @@ function AppShell() {
     : null;
 
   return (
+    <GlobalsProvider value={globalsContextValue}>
     <div className="ebn-app">
       <header className="ebn-header">
         <div className="ebn-header__title">Extend Blue Node</div>
@@ -73,7 +85,7 @@ function AppShell() {
             <div className="ebn-tabs">
               <button
                 className={`ebn-tab${activeTab === 'code' ? ' ebn-tab--active' : ''}${!propsValid ? ' ebn-tab--disabled' : ''}`}
-                onClick={goToCodeTab}
+                onClick={() => switchTab('code')}
                 disabled={!propsValid}
                 title={propsValid ? '' : 'Fix invalid properties first'}
                 type="button"
@@ -82,11 +94,20 @@ function AppShell() {
               </button>
               <button
                 className={`ebn-tab${activeTab === 'props' ? ' ebn-tab--active' : ''}`}
-                onClick={() => setActiveTab('props')}
+                onClick={() => switchTab('props')}
                 type="button"
               >
                 Properties
                 {!propsValid && <span className="ebn-tab__dot" aria-hidden="true" />}
+              </button>
+              <button
+                className={`ebn-tab${activeTab === 'globals' ? ' ebn-tab--active' : ''}${!propsValid ? ' ebn-tab--disabled' : ''}`}
+                onClick={() => switchTab('globals')}
+                disabled={!propsValid}
+                title={propsValid ? '' : 'Fix invalid properties first'}
+                type="button"
+              >
+                Globals
               </button>
             </div>
             <div className="ebn-pane__body">
@@ -104,6 +125,15 @@ function AppShell() {
                   selectedNode={liveSelected}
                   setNodes={setNodes}
                   onValidityChange={setPropsValid}
+                />
+              </div>
+              <div
+                className="ebn-tab-panel"
+                style={{ display: activeTab === 'globals' ? 'block' : 'none' }}
+              >
+                <GlobalVariablesPanel
+                  globalVariables={globalVariables}
+                  setGlobalVariables={setGlobalVariables}
                 />
               </div>
             </div>
@@ -137,6 +167,7 @@ function AppShell() {
         </aside>
       </div>
     </div>
+    </GlobalsProvider>
   );
 }
 
