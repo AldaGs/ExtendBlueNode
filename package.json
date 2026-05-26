@@ -1,19 +1,28 @@
 {
   "name": "extendbluenode",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "cep": {
+    "bundleId": "com.extendbluenode.panel",
+    "extensionRoot": "%APPDATA%/Adobe/CEP/extensions/com.extendbluenode.panel"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cep:enable-debug": "reg add \"HKCU\\Software\\Adobe\\CSXS.11\" /v PlayerDebugMode /t REG_SZ /d 1 /f && reg add \"HKCU\\Software\\Adobe\\CSXS.10\" /v PlayerDebugMode /t REG_SZ /d 1 /f",
+    "cep:install": "node scripts/install-cep.mjs",
+    "cep:uninstall": "node scripts/uninstall-cep.mjs",
+    "ae:preview": "npm run build && npm run cep:install"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "monaco-editor": "^0.55.1",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "reactflow": "^11.11.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

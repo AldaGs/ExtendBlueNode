@@ -1,0 +1,95 @@
+.ebn-node {
+  min-width: 180px;
+  background: #2b2b2b;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 6px 16px rgba(0, 0, 0, 0.45);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #d4d4d4;
+  overflow: hidden;
+  /* Override default react-flow node padding */
+  padding: 0 !important;
+}
+
+.ebn-node--selected {
+  border-color: #2b7fff;
+  box-shadow:
+    0 0 0 1px #2b7fff,
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.ebn-node__header {
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.ebn-node__title {
+  text-transform: none;
+}
+
+.ebn-node__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  padding: 8px 0;
+  background: #2b2b2b;
+}
+
+.ebn-node__col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ebn-node__col--out {
+  align-items: flex-end;
+}
+
+.ebn-node__port {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2px 10px 2px 14px;
+  font-size: 11px;
+  color: #b8b8b8;
+  min-height: 16px;
+}
+
+.ebn-node__port--out {
+  padding: 2px 14px 2px 10px;
+  justify-content: flex-end;
+}
+
+.ebn-node__port-label {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* React Flow handle visual */
+.ebn-node__handle.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #c0c0c0;
+  border: 1px solid #0d0d0d;
+  border-radius: 50%;
+}
+
+.ebn-node__handle.react-flow__handle-left {
+  left: -5px;
+}
+
+.ebn-node__handle.react-flow__handle-right {
+  right: -5px;
+}
+
+.ebn-node__handle.react-flow__handle:hover {
+  background: #fff;
+}
