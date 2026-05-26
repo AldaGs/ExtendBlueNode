@@ -13,15 +13,17 @@ export function makeLeaf(viewId) {
   return { type: 'leaf', id: newId('leaf'), viewId };
 }
 
+// Bottom-up walk: recurse into the ORIGINAL children first, then apply
+// `fn` to the current node. This way, when `fn` swaps a leaf for a split
+// containing that leaf (splitLeaf), we don't recurse into the freshly
+// produced subtree and re-match the same leaf forever.
 function map(tree, fn) {
-  const next = fn(tree);
-  if (next.type === 'split') {
-    return {
-      ...next,
-      children: [map(next.children[0], fn), map(next.children[1], fn)],
-    };
+  if (tree.type === 'split') {
+    const a = map(tree.children[0], fn);
+    const b = map(tree.children[1], fn);
+    return fn({ ...tree, children: [a, b] });
   }
-  return next;
+  return fn(tree);
 }
 
 export function setSplitSizes(tree, splitId, sizes) {
