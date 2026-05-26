@@ -37,6 +37,33 @@
   margin-left: 4px;
 }
 
+.ebn-compile-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--ebn-text-dim);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 3px 10px;
+}
+
+.ebn-compile-tag__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4cd482;
+  box-shadow: 0 0 6px rgba(76, 212, 130, 0.55);
+}
+
+.ebn-compile-tag__time {
+  font-family: ui-monospace, Consolas, monospace;
+  color: #9aa3ad;
+}
+
 .ebn-btn-primary {
   background: var(--ebn-accent);
   color: #fff;
@@ -120,125 +147,6 @@
 /* Render edges above nodes so connections stay visible across the graph. */
 .ebn-flow-wrapper .react-flow__edges {
   z-index: 1001 !important;
-}
-
-/* ---------- Right Pane ---------- */
-.ebn-right {
-  display: grid;
-  grid-template-rows: 55% 45%;
-  min-width: 0;
-}
-
-.ebn-pane {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: var(--ebn-panel);
-}
-
-.ebn-pane + .ebn-pane {
-  border-top: 1px solid var(--ebn-border);
-}
-
-.ebn-pane__header {
-  height: 30px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  background: var(--ebn-panel-2);
-  border-bottom: 1px solid var(--ebn-border);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--ebn-text-dim);
-  font-weight: 600;
-}
-
-.ebn-pane__body {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  position: relative;
-}
-
-.ebn-tabs {
-  display: flex;
-  flex-shrink: 0;
-  height: 30px;
-  background: var(--ebn-panel-2);
-  border-bottom: 1px solid var(--ebn-border);
-}
-
-.ebn-tab {
-  appearance: none;
-  background: transparent;
-  border: none;
-  border-right: 1px solid var(--ebn-border);
-  color: var(--ebn-text-dim);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 0 14px;
-  cursor: pointer;
-  position: relative;
-}
-
-.ebn-tab:hover {
-  color: var(--ebn-text);
-}
-
-.ebn-tab--active {
-  color: var(--ebn-text);
-  background: #1e1e1e;
-}
-
-.ebn-tab--active::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: var(--ebn-accent);
-}
-
-.ebn-tab--disabled,
-.ebn-tab[disabled] {
-  color: #555;
-  cursor: not-allowed;
-}
-
-.ebn-tab__dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #ff5a5a;
-  box-shadow: 0 0 6px rgba(255, 90, 90, 0.7);
-  margin-left: 6px;
-  vertical-align: middle;
-}
-
-.ebn-tab-panel {
-  position: absolute;
-  inset: 0;
-  overflow: auto;
-}
-
-/* Placeholder centered text */
-.ebn-placeholder {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ebn-text-dim);
-  font-size: 13px;
-  font-family: ui-monospace, Consolas, monospace;
-  background:
-    linear-gradient(var(--ebn-bg), var(--ebn-bg));
 }
 
 /* ---------- Copilot ---------- */

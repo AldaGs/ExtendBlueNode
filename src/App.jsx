@@ -47,6 +47,7 @@ export default function App() {
   const [propsValid, setPropsValid] = useState(true);
   const [globalVariables, setGlobalVariables] = useState([]);
   const [layout, setLayout] = useState(INITIAL_LAYOUT);
+  const [lastCompile, setLastCompile] = useState(null); // {at, nodes, edges}
   const activeComp = 'Main_Comp_01';
 
   const globalsContextValue = useMemo(
@@ -56,6 +57,11 @@ export default function App() {
 
   useEffect(() => {
     setGeneratedCode(compileToExtendScript(nodes, edges, globalVariables));
+    setLastCompile({
+      at: Date.now(),
+      nodes: nodes.length,
+      edges: edges.length,
+    });
   }, [nodes, edges, globalVariables]);
 
   const liveSelected = selectedNode
@@ -183,6 +189,17 @@ export default function App() {
           <div className="ebn-header__status">
             Active Comp:<strong>{activeComp}</strong>
           </div>
+          {lastCompile && (
+            <div className="ebn-compile-tag" title="Live AST compile status">
+              <span className="ebn-compile-tag__dot" />
+              <span>
+                {lastCompile.nodes} nodes &middot; {lastCompile.edges} edges
+              </span>
+              <span className="ebn-compile-tag__time">
+                {new Date(lastCompile.at).toLocaleTimeString()}
+              </span>
+            </div>
+          )}
           <button className="ebn-btn-primary" type="button">
             Compile &amp; Inject
           </button>

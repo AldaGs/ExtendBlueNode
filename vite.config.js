@@ -8,6 +8,18 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // Bumping the warning so the (still-monitored) chunk-size warning
+    // doesn't drown the build log. Monaco + ReactFlow are split below.
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/monaco-editor')) return 'monaco';
+          if (id.includes('node_modules/@monaco-editor')) return 'monaco';
+          if (id.includes('node_modules/reactflow')) return 'reactflow';
+        },
+      },
+    },
   },
   server: {
     port: 5173,

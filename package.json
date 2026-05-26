@@ -15,6 +15,7 @@
     "cep:enable-debug": "reg add \"HKCU\\Software\\Adobe\\CSXS.11\" /v PlayerDebugMode /t REG_SZ /d 1 /f && reg add \"HKCU\\Software\\Adobe\\CSXS.10\" /v PlayerDebugMode /t REG_SZ /d 1 /f",
     "cep:install": "node scripts/install-cep.mjs",
     "cep:uninstall": "node scripts/uninstall-cep.mjs",
+    "cep:doctor": "node scripts/cep-doctor.mjs",
     "ae:preview": "npm run build && npm run cep:install"
   },
   "dependencies": {
@@ -22,7 +23,6 @@
     "monaco-editor": "^0.55.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-resizable-panels": "^4.11.2",
     "reactflow": "^11.11.4"
   },
   "devDependencies": {
