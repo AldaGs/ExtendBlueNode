@@ -1,9 +1,8 @@
-// Theme palette per node category (Blender/ComfyUI inspired).
 export const NODE_THEME = {
-  selector: '#4a8a3f', // green
-  action:   '#3b6fb8', // blue
-  mutator:  '#a8632a', // orange
-  logic:    '#7a3fa0', // purple
+  selector: '#4a8a3f',
+  action:   '#3b6fb8',
+  mutator:  '#a8632a',
+  logic:    '#7a3fa0',
 };
 
 export const initialNodes = [
@@ -16,7 +15,7 @@ export const initialNodes = [
       category: 'selector',
       themeColor: NODE_THEME.selector,
       inputs: [
-        { id: 'exec_in', label: 'Execution' },
+        { id: 'exec_in', label: 'Execution', type: 'exec' },
       ],
       outputs: [
         { id: 'comp', label: 'Comp' },
@@ -33,14 +32,17 @@ export const initialNodes = [
       category: 'action',
       themeColor: NODE_THEME.action,
       inputs: [
-        { id: 'exec_in', label: 'Execution' },
-        { id: 'comp', label: 'Comp' },
-        { id: 'layer_id', label: 'Layer ID' },
+        { id: 'exec_in',  label: 'Execution', type: 'exec' },
+        { id: 'comp',     label: 'Comp',      type: 'text' },
+        { id: 'layer_id', label: 'Layer ID',  type: 'number' },
       ],
       outputs: [
         { id: 'layer', label: 'Layer' },
         { id: 'exec_out', label: 'Execution' },
       ],
+      values: {
+        layer_id: 1,
+      },
     },
   },
   {
@@ -48,17 +50,22 @@ export const initialNodes = [
     type: 'ebnNode',
     position: { x: 680, y: 180 },
     data: {
-      label: 'Set Opacity to 50%',
+      label: 'Set Property',
       category: 'mutator',
       themeColor: NODE_THEME.mutator,
       inputs: [
-        { id: 'exec_in', label: 'Execution' },
-        { id: 'layer', label: 'Layer' },
-        { id: 'value', label: 'Value' },
+        { id: 'exec_in',  label: 'Execution', type: 'exec' },
+        { id: 'layer',    label: 'Layer',     type: 'text' },
+        { id: 'property', label: 'Property',  type: 'text',   placeholder: 'ADBE Opacity' },
+        { id: 'value',    label: 'Value',     type: 'number', placeholder: '0' },
       ],
       outputs: [
         { id: 'exec_out', label: 'Execution' },
       ],
+      values: {
+        property: 'ADBE Opacity',
+        value: 50,
+      },
     },
   },
 ];

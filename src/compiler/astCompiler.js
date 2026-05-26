@@ -9,12 +9,16 @@ const EXEC_IN = 'exec_in';
 // that get filled from the node's data.params (falling back to a literal).
 const NODE_SNIPPETS = {
   'Get Active Comp':    'var activeComp = app.project.activeItem;',
-  'Select Layer by ID': 'var targetLayer = activeComp.layerByID({layerId});',
+  'Select Layer by ID': 'var targetLayer = activeComp.layerByID({layer_id});',
+  'Set Property':       'targetLayer.property("{property}").setValue({value});',
+  // Legacy fallback for old fixtures.
   'Set Opacity to 50%': 'targetLayer.property("ADBE Opacity").setValue(50);',
 };
 
 const DEFAULT_PARAMS = {
-  layerId: 1,
+  layer_id: 1,
+  property: 'ADBE Opacity',
+  value: 100,
 };
 
 function fillTemplate(tpl, params) {
@@ -84,7 +88,12 @@ export function compileToExtendScript(nodes, edges, context = {}) {
       skipped.push(label || id);
       continue;
     }
-    const params = { ...DEFAULT_PARAMS, ...(node.data?.params || {}), ...context };
+    const params = {
+      ...DEFAULT_PARAMS,
+      ...(node.data?.values || {}),
+      ...(node.data?.params || {}),
+      ...context,
+    };
     lines.push('    ' + fillTemplate(tpl, params));
   }
 

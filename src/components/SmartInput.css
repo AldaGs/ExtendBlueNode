@@ -1,0 +1,52 @@
+.ebn-smart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 14px;
+  font-size: 11px;
+  color: #b8b8b8;
+  min-height: 18px;
+}
+
+.ebn-smart__label {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ebn-smart__input {
+  flex: 1;
+  min-width: 0;
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  color: #d4d4d4;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  outline: none;
+  /* Stop React Flow from grabbing the drag/zoom gesture from the field. */
+}
+
+.ebn-smart__input:focus {
+  border-color: #2b7fff;
+  background: #232323;
+}
+
+.ebn-smart__input::-webkit-inner-spin-button,
+.ebn-smart__input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ebn-smart__pill {
+  margin-left: auto;
+  font-size: 9px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #6ab0ff;
+  background: rgba(43, 127, 255, 0.15);
+  border: 1px solid rgba(43, 127, 255, 0.4);
+  padding: 1px 5px;
+  border-radius: 8px;
+}
