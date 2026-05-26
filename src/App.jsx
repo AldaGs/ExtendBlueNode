@@ -25,6 +25,7 @@ import {
   downloadProject,
   pickProjectFile,
 } from './persistence';
+import { runInHost, isCep } from './cep';
 import './App.css';
 
 const INITIAL_LAYOUT = {
@@ -68,6 +69,8 @@ export default function App() {
   const [layout, setLayout] = useState(restored?.layout ?? INITIAL_LAYOUT);
   const [lastCompile, setLastCompile] = useState(null); // {at, nodes, edges}
   const [lastSave, setLastSave] = useState(restored ? Date.now() : null);
+  const [running, setRunning] = useState(false);
+  const [lastRun, setLastRun] = useState(null); // {at, ok, message, offline}
   const activeComp = 'Main_Comp_01';
 
   const globalsContextValue = useMemo(
@@ -128,6 +131,32 @@ export default function App() {
       window.alert(`Couldn't open project: ${e.message}`);
     }
   }, [setNodes, setEdges]);
+
+  /* ----------------------------- Compile & Inject ----------------------------- */
+
+  const onCompileInject = useCallback(async () => {
+    if (running) return;
+    setRunning(true);
+    try {
+      const result = await runInHost(generatedCode);
+      setLastRun({
+        at: Date.now(),
+        ok: !!result.ok,
+        offline: !!result.offline,
+        message: result.ok
+          ? 'Injected successfully.'
+          : (result.message || 'Unknown host error.') +
+            (result.line ? ` (line ${result.line})` : ''),
+      });
+      if (!result.ok) {
+        // Mirror to console so DevTools always has the full payload.
+        // eslint-disable-next-line no-console
+        console.warn('[ebn] inject failed:', result);
+      }
+    } finally {
+      setRunning(false);
+    }
+  }, [generatedCode, running]);
 
   const onSaveProject = useCallback(() => {
     const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -310,8 +339,38 @@ export default function App() {
               </span>
             </div>
           )}
-          <button className="ebn-btn-primary" type="button">
-            Compile &amp; Inject
+          {lastRun && (
+            <div
+              className={`ebn-run-tag ebn-run-tag--${
+                lastRun.ok ? 'ok' : lastRun.offline ? 'offline' : 'err'
+              }`}
+              title={lastRun.message}
+            >
+              <span className="ebn-run-tag__dot" />
+              <span>
+                {lastRun.ok
+                  ? 'Injected'
+                  : lastRun.offline
+                  ? 'Browser mode'
+                  : 'Run error'}
+              </span>
+              <span className="ebn-run-tag__time">
+                {new Date(lastRun.at).toLocaleTimeString()}
+              </span>
+            </div>
+          )}
+          <button
+            className="ebn-btn-primary"
+            type="button"
+            onClick={onCompileInject}
+            disabled={running}
+            title={
+              isCep()
+                ? 'Send generated ExtendScript to After Effects'
+                : 'Open in After Effects to inject — browser shows status only'
+            }
+          >
+            {running ? 'Injecting…' : 'Compile & Inject'}
           </button>
         </header>
 
