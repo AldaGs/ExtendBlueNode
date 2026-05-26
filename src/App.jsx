@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useNodesState, useEdgesState } from 'reactflow';
 import Split from './components/Split';
 import FlowCanvas from './components/FlowCanvas';
@@ -7,6 +7,7 @@ import PropertiesPanel from './components/PropertiesPanel';
 import GlobalVariablesPanel from './components/GlobalVariablesPanel';
 import CopilotPanel from './components/CopilotPanel';
 import ViewLeaf from './components/ViewLeaf';
+import ProjectMenu from './components/ProjectMenu';
 import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
@@ -17,6 +18,13 @@ import {
   countLeaves,
   setSplitSizes,
 } from './layoutTree';
+import {
+  loadFromStorage,
+  saveToStorage,
+  clearStorage,
+  downloadProject,
+  pickProjectFile,
+} from './persistence';
 import './App.css';
 
 const INITIAL_LAYOUT = {
@@ -40,14 +48,26 @@ const INITIAL_LAYOUT = {
 };
 
 export default function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  // One-time read of the autosave so hydration happens before any
+  // setters run. If parsing fails, restored is null and we fall back
+  // to the seed graph + INITIAL_LAYOUT.
+  const restored = useMemo(() => loadFromStorage(), []);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(
+    restored?.nodes ?? initialNodes,
+  );
+  const [edges, setEdges, onEdgesChange] = useEdgesState(
+    restored?.edges ?? initialEdges,
+  );
   const [generatedCode, setGeneratedCode] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
   const [propsValid, setPropsValid] = useState(true);
-  const [globalVariables, setGlobalVariables] = useState([]);
-  const [layout, setLayout] = useState(INITIAL_LAYOUT);
+  const [globalVariables, setGlobalVariables] = useState(
+    restored?.globalVariables ?? [],
+  );
+  const [layout, setLayout] = useState(restored?.layout ?? INITIAL_LAYOUT);
   const [lastCompile, setLastCompile] = useState(null); // {at, nodes, edges}
+  const [lastSave, setLastSave] = useState(restored ? Date.now() : null);
   const activeComp = 'Main_Comp_01';
 
   const globalsContextValue = useMemo(
@@ -63,6 +83,79 @@ export default function App() {
       edges: edges.length,
     });
   }, [nodes, edges, globalVariables]);
+
+  // Debounced autosave. Cancels the pending write on every subsequent
+  // change so we only persist after the user pauses for ~500 ms.
+  const hasMountedRef = useRef(false);
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return; // skip the initial mount — nothing actually changed
+    }
+    const t = setTimeout(() => {
+      const ok = saveToStorage({ nodes, edges, globalVariables, layout });
+      if (ok) setLastSave(Date.now());
+    }, 500);
+    return () => clearTimeout(t);
+  }, [nodes, edges, globalVariables, layout]);
+
+  /* ----------------------------- project menu ----------------------------- */
+
+  const onNewProject = useCallback(() => {
+    const confirmed = window.confirm(
+      'New project: this will discard the current graph and layout. Continue?',
+    );
+    if (!confirmed) return;
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+    setGlobalVariables([]);
+    setLayout(INITIAL_LAYOUT);
+    setSelectedNode(null);
+    clearStorage();
+    setLastSave(null);
+  }, [setNodes, setEdges]);
+
+  const onOpenProject = useCallback(async () => {
+    try {
+      const loaded = await pickProjectFile();
+      if (!loaded) return;
+      setNodes(loaded.nodes);
+      setEdges(loaded.edges);
+      setGlobalVariables(loaded.globalVariables);
+      setLayout(loaded.layout);
+      setSelectedNode(null);
+    } catch (e) {
+      window.alert(`Couldn't open project: ${e.message}`);
+    }
+  }, [setNodes, setEdges]);
+
+  const onSaveProject = useCallback(() => {
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    downloadProject(
+      { nodes, edges, globalVariables, layout },
+      `ebn-${stamp}.ebn`,
+    );
+  }, [nodes, edges, globalVariables, layout]);
+
+  // Keyboard shortcuts: Ctrl/Cmd + N / O / S.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const k = e.key.toLowerCase();
+      if (k === 's') {
+        e.preventDefault();
+        onSaveProject();
+      } else if (k === 'o') {
+        e.preventDefault();
+        onOpenProject();
+      } else if (k === 'n') {
+        // Browsers reserve Ctrl/Cmd+N for new window; we can't reliably
+        // override it. Leave it to the menu.
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onSaveProject, onOpenProject]);
 
   const liveSelected = selectedNode
     ? nodes.find((n) => n.id === selectedNode.id) ?? null
@@ -186,6 +279,11 @@ export default function App() {
       <div className="ebn-app">
         <header className="ebn-header">
           <div className="ebn-header__title">Extend Blue Node</div>
+          <ProjectMenu
+            onNew={onNewProject}
+            onOpen={onOpenProject}
+            onSave={onSaveProject}
+          />
           <div className="ebn-header__status">
             Active Comp:<strong>{activeComp}</strong>
           </div>
@@ -197,6 +295,18 @@ export default function App() {
               </span>
               <span className="ebn-compile-tag__time">
                 {new Date(lastCompile.at).toLocaleTimeString()}
+              </span>
+            </div>
+          )}
+          {lastSave && (
+            <div
+              className="ebn-compile-tag ebn-compile-tag--muted"
+              title="Autosaved to browser storage"
+            >
+              <span className="ebn-compile-tag__dot ebn-compile-tag__dot--idle" />
+              <span>saved</span>
+              <span className="ebn-compile-tag__time">
+                {new Date(lastSave).toLocaleTimeString()}
               </span>
             </div>
           )}

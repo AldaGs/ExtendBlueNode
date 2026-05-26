@@ -64,6 +64,15 @@
   color: #9aa3ad;
 }
 
+.ebn-compile-tag--muted {
+  opacity: 0.85;
+}
+
+.ebn-compile-tag__dot--idle {
+  background: #6e6e6e;
+  box-shadow: none;
+}
+
 .ebn-btn-primary {
   background: var(--ebn-accent);
   color: #fff;

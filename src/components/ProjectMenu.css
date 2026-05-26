@@ -1,0 +1,97 @@
+.ebn-projmenu {
+  position: relative;
+}
+
+.ebn-projmenu__trigger {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 4px 8px 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ebn-text);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.ebn-projmenu__trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ebn-projmenu__trigger--open {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--ebn-accent);
+}
+
+.ebn-projmenu__caret {
+  color: var(--ebn-text-dim);
+  transition: transform 0.15s, color 0.15s;
+}
+
+.ebn-projmenu__caret--up {
+  transform: rotate(180deg);
+  color: var(--ebn-accent);
+}
+
+.ebn-projmenu__menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 200;
+  min-width: 200px;
+  background: #1f1f22;
+  border: 1px solid #3c3c3c;
+  border-radius: 5px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  animation: ebn-projmenu-in 0.12s ease-out;
+}
+
+@keyframes ebn-projmenu-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ebn-projmenu__item {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: transparent;
+  border: none;
+  color: var(--ebn-text);
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.ebn-projmenu__item:hover {
+  background: var(--ebn-accent);
+  color: #fff;
+}
+
+.ebn-projmenu__kbd {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 10px;
+  color: var(--ebn-text-dim);
+  letter-spacing: 0.4px;
+}
+
+.ebn-projmenu__item:hover .ebn-projmenu__kbd {
+  color: rgba(255, 255, 255, 0.75);
+}
