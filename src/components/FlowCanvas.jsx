@@ -12,6 +12,8 @@ import 'reactflow/dist/style.css';
 
 import EBNNode from './EBNNode';
 import RerouteNode from './RerouteNode';
+import IntegerNode from './IntegerNode';
+import StringNode from './StringNode';
 
 /* ----------------------------- geometry helpers ----------------------------- */
 
@@ -82,7 +84,12 @@ function FlowCanvasInner({
   const edgeReconnectSuccessful = useRef(true);
 
   const nodeTypes = useMemo(
-    () => ({ ebnNode: EBNNode, reroute: RerouteNode }),
+    () => ({
+      ebnNode: EBNNode,
+      reroute: RerouteNode,
+      integer: IntegerNode,
+      string: StringNode,
+    }),
     [],
   );
 

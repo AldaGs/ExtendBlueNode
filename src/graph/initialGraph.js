@@ -70,6 +70,23 @@ export const initialNodes = [
   },
 ];
 
+// Primitive data nodes — drive a Set Property value via a wire to
+// demonstrate the dynamic-variable compiler path.
+initialNodes.push(
+  {
+    id: 'int_1',
+    type: 'integer',
+    position: { x: 680, y: 420 },
+    data: { label: 'Integer', value: 25 },
+  },
+  {
+    id: 'str_1',
+    type: 'string',
+    position: { x: 680, y: 520 },
+    data: { label: 'String', value: 'ADBE Opacity' },
+  },
+);
+
 export const initialEdges = [
   {
     id: 'edge_1',
