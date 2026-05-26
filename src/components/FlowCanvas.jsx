@@ -15,6 +15,8 @@ import IntegerNode from './IntegerNode';
 import StringNode from './StringNode';
 import GetGlobalNode from './GetGlobalNode';
 import SetGlobalNode from './SetGlobalNode';
+import AddNodeMenu from './AddNodeMenu';
+import { findCompatibleHandle } from '../nodeLibrary';
 
 /* ----------------------------- geometry helpers ----------------------------- */
 
@@ -292,11 +294,109 @@ function FlowCanvasInner({
     };
   }, [knife, rf]);
 
+  /* ------------ Add-Node menu (right-click + drop-wire-on-pane) ------------ */
+
+  // null | { screen: {x,y}, flow: {x,y}, pending?: {nodeId, handleId, handleType} }
+  const [addMenu, setAddMenu] = useState(null);
+  const pendingConnRef = useRef(null);
+
+  const openMenuAtClient = useCallback(
+    (clientX, clientY, pending) => {
+      const rect = wrapperRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const flow = rf.screenToFlowPosition({ x: clientX, y: clientY });
+      setAddMenu({
+        screen: { x: clientX - rect.left, y: clientY - rect.top },
+        flow,
+        pending: pending || null,
+      });
+    },
+    [rf],
+  );
+
+  const onContextMenu = useCallback(
+    (e) => {
+      e.preventDefault();
+      // Only open over the pane / our wrapper — not over an existing node.
+      const onNode = e.target.closest?.('.react-flow__node');
+      if (onNode) return;
+      openMenuAtClient(e.clientX, e.clientY, null);
+    },
+    [openMenuAtClient],
+  );
+
+  const onConnectStart = useCallback((_e, params) => {
+    pendingConnRef.current = params; // { nodeId, handleId, handleType }
+  }, []);
+
+  const onConnectEnd = useCallback(
+    (event) => {
+      const pending = pendingConnRef.current;
+      pendingConnRef.current = null;
+      if (!pending) return;
+      const tgt = event.target;
+      const droppedOnPane =
+        tgt?.classList?.contains('react-flow__pane') ||
+        tgt?.classList?.contains('ebn-flow-wrapper');
+      if (!droppedOnPane) return;
+      openMenuAtClient(event.clientX, event.clientY, pending);
+    },
+    [openMenuAtClient],
+  );
+
+  const onPickFromMenu = useCallback(
+    (item) => {
+      if (!addMenu) return;
+      const node = item.factory(addMenu.flow);
+      const pending = addMenu.pending;
+      setNodes((nds) => [...nds, node]);
+      if (pending) {
+        const fromExec =
+          pending.handleId === 'exec_out' || pending.handleId === 'exec_in';
+        // pending.handleType is the dragged-from side. If the user grabbed a
+        // source ('exec_out' / output), we need to land on a target handle.
+        const role = pending.handleType === 'source' ? 'target' : 'source';
+        const compatible = findCompatibleHandle(node.data, role, fromExec);
+        if (compatible) {
+          const newEdge =
+            role === 'target'
+              ? {
+                  id: `e_${pending.nodeId}_${node.id}_${Date.now().toString(36)}`,
+                  source: pending.nodeId,
+                  sourceHandle: pending.handleId,
+                  target: node.id,
+                  targetHandle: compatible,
+                }
+              : {
+                  id: `e_${node.id}_${pending.nodeId}_${Date.now().toString(36)}`,
+                  source: node.id,
+                  sourceHandle: compatible,
+                  target: pending.nodeId,
+                  targetHandle: pending.handleId,
+                };
+          setEdges((eds) => {
+            // Honor the one-wire-per-input rule.
+            const cleaned = eds.filter(
+              (e) =>
+                !(
+                  e.target === newEdge.target &&
+                  e.targetHandle === newEdge.targetHandle
+                ),
+            );
+            return [...cleaned, newEdge];
+          });
+        }
+      }
+      setAddMenu(null);
+    },
+    [addMenu, setNodes, setEdges],
+  );
+
   return (
     <div
       ref={wrapperRef}
       className="ebn-flow-wrapper"
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={onContextMenu}
     >
       <ReactFlow
         nodes={nodes}
@@ -305,6 +405,8 @@ function FlowCanvasInner({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
         isValidConnection={isValidConnection}
         onEdgeUpdate={onReconnect}
         onEdgeUpdateStart={onReconnectStart}
@@ -336,6 +438,19 @@ function FlowCanvasInner({
             strokeDasharray="5 4"
           />
         </svg>
+      )}
+
+      {addMenu && (
+        <AddNodeMenu
+          screen={addMenu.screen}
+          onPick={onPickFromMenu}
+          onClose={() => setAddMenu(null)}
+          hint={
+            addMenu.pending
+              ? `Connecting from ${addMenu.pending.handleId}`
+              : null
+          }
+        />
       )}
     </div>
   );
