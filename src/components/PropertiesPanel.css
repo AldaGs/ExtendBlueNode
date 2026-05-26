@@ -77,3 +77,15 @@
   font-size: 10px;
   color: #6e6e6e;
 }
+
+.ebn-props__input--invalid,
+.ebn-props__input--invalid:focus {
+  border-color: #ff5a5a;
+  background: #2a1d1d;
+  box-shadow: 0 0 0 1px rgba(255, 90, 90, 0.55), 0 0 10px rgba(255, 90, 90, 0.35);
+}
+
+.ebn-props__error {
+  font-size: 10px;
+  color: #ff8a8a;
+}

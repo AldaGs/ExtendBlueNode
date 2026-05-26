@@ -21,6 +21,7 @@ function AppShell() {
   const [generatedCode, setGeneratedCode] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
   const [activeTab, setActiveTab] = useState('code'); // 'code' | 'props'
+  const [propsValid, setPropsValid] = useState(true);
   const activeComp = 'Main_Comp_01';
 
   useEffect(() => {
@@ -30,9 +31,13 @@ function AppShell() {
   useOnSelectionChange({
     onChange: useCallback(({ nodes: selected }) => {
       setSelectedNode(selected[0] ?? null);
-      if (selected[0]) setActiveTab('props');
     }, []),
   });
+
+  const goToCodeTab = useCallback(() => {
+    if (!propsValid) return;
+    setActiveTab('code');
+  }, [propsValid]);
 
   // Keep the selected node reference fresh as the user types in the panel.
   const liveSelected = selectedNode
@@ -67,8 +72,10 @@ function AppShell() {
           <div className="ebn-pane">
             <div className="ebn-tabs">
               <button
-                className={`ebn-tab${activeTab === 'code' ? ' ebn-tab--active' : ''}`}
-                onClick={() => setActiveTab('code')}
+                className={`ebn-tab${activeTab === 'code' ? ' ebn-tab--active' : ''}${!propsValid ? ' ebn-tab--disabled' : ''}`}
+                onClick={goToCodeTab}
+                disabled={!propsValid}
+                title={propsValid ? '' : 'Fix invalid properties first'}
                 type="button"
               >
                 Code
@@ -79,6 +86,7 @@ function AppShell() {
                 type="button"
               >
                 Properties
+                {!propsValid && <span className="ebn-tab__dot" aria-hidden="true" />}
               </button>
             </div>
             <div className="ebn-pane__body">
@@ -92,7 +100,11 @@ function AppShell() {
                 className="ebn-tab-panel"
                 style={{ display: activeTab === 'props' ? 'block' : 'none' }}
               >
-                <PropertiesPanel selectedNode={liveSelected} setNodes={setNodes} />
+                <PropertiesPanel
+                  selectedNode={liveSelected}
+                  setNodes={setNodes}
+                  onValidityChange={setPropsValid}
+                />
               </div>
             </div>
           </div>

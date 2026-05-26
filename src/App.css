@@ -211,6 +211,23 @@
   background: var(--ebn-accent);
 }
 
+.ebn-tab--disabled,
+.ebn-tab[disabled] {
+  color: #555;
+  cursor: not-allowed;
+}
+
+.ebn-tab__dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff5a5a;
+  box-shadow: 0 0 6px rgba(255, 90, 90, 0.7);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 .ebn-tab-panel {
   position: absolute;
   inset: 0;
