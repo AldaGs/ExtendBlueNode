@@ -154,63 +154,63 @@ export function compileToExtendScript(nodes, edges, globalVariables = []) {
   // orphans through the reached-set check below.
   const start = nodes.find((n) => n.data?.label === 'Get Active Comp');
 
-  if (start) {
-    let current = start;
-    let safety = 0;
-    while (current && safety < 100) {
-      safety += 1;
-      reachedIds.add(current.id);
+  // Emit code for a single (already visited) node.
+  function emitNode(node) {
+    if (node.type === 'reroute') return; // transparent pass-through
 
-      if (current.type === 'reroute') {
-        const nextEdge = execEdges.find((e) => e.source === current.id);
-        current = nextEdge ? byId.get(nextEdge.target) : null;
-        continue;
-      }
-
-      if (current.type === 'setGlobal') {
-        const g = globalVariables.find((x) => x.id === current.data?.globalId);
-        if (g) {
-          const expr = resolveInput(current, {
-            id: 'value',
-            type: g.type === 'String' ? 'text' : 'number',
-          });
-          stepLines.push(`  ${globalVarName(g)} = ${expr};\n`);
-        } else {
-          stepLines.push('  // WARNING: Set Global with no target selected\n');
-        }
-        const nextEdge = execEdges.find((e) => e.source === current.id);
-        current = nextEdge ? byId.get(nextEdge.target) : null;
-        continue;
-      }
-
-      const tpl = NODE_SNIPPETS[current.data?.label];
-      if (tpl) {
-        const inputs = (current.data?.inputs || []).filter((p) => p.type !== 'exec');
-        const params = {};
-        for (const port of inputs) {
-          params[port.id] = resolveInput(current, port);
-        }
-        const snippet = tpl.replace(/\{(\w+)\}/g, (_, k) => {
-          if (params[k] !== undefined) return params[k];
-          if (DEFAULTS[k] !== undefined) {
-            return literalFor(
-              typeof DEFAULTS[k] === 'number' ? 'number' : 'text',
-              DEFAULTS[k],
-            );
-          }
-          return `/* missing:${k} */`;
+    if (node.type === 'setGlobal') {
+      const g = globalVariables.find((x) => x.id === node.data?.globalId);
+      if (g) {
+        const expr = resolveInput(node, {
+          id: 'value',
+          type: g.type === 'String' ? 'text' : 'number',
         });
-        stepLines.push(snippet);
+        stepLines.push(`  ${globalVarName(g)} = ${expr};\n`);
       } else {
-        stepLines.push(
-          `  // WARNING: Unknown node type '${current.data?.label}'\n`,
+        stepLines.push('  // WARNING: Set Global with no target selected\n');
+      }
+      return;
+    }
+
+    const tpl = NODE_SNIPPETS[node.data?.label];
+    if (!tpl) {
+      stepLines.push(
+        `  // WARNING: Unknown node type '${node.data?.label}'\n`,
+      );
+      return;
+    }
+    const inputs = (node.data?.inputs || []).filter((p) => p.type !== 'exec');
+    const params = {};
+    for (const port of inputs) {
+      params[port.id] = resolveInput(node, port);
+    }
+    const snippet = tpl.replace(/\{(\w+)\}/g, (_, k) => {
+      if (params[k] !== undefined) return params[k];
+      if (DEFAULTS[k] !== undefined) {
+        return literalFor(
+          typeof DEFAULTS[k] === 'number' ? 'number' : 'text',
+          DEFAULTS[k],
         );
       }
-
-      const nextEdge = execEdges.find((e) => e.source === current.id);
-      current = nextEdge ? byId.get(nextEdge.target) : null;
-    }
+      return `/* missing:${k} */`;
+    });
+    stepLines.push(snippet);
   }
+
+  // DFS over execution edges so EVERY downstream branch from a node
+  // with multiple exec_out wires is walked, not just the first one
+  // matched by Array.find. `reachedIds` doubles as the cycle guard.
+  function walk(nodeId) {
+    if (reachedIds.has(nodeId)) return;
+    reachedIds.add(nodeId);
+    const node = byId.get(nodeId);
+    if (!node) return;
+    emitNode(node);
+    const outs = execEdges.filter((e) => e.source === nodeId);
+    for (const e of outs) walk(e.target);
+  }
+
+  if (start) walk(start.id);
 
   // Anything that contributes to the script logic but wasn't reached.
   // Primitives are always hoisted so they don't count as orphans here.
