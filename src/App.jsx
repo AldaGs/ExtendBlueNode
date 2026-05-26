@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNodesState, useEdgesState } from 'reactflow';
+
 import FlowCanvas from './components/FlowCanvas';
 import CodeEditor from './components/CodeEditor';
+import { initialNodes, initialEdges } from './graph/initialGraph';
+import { compileToExtendScript } from './compiler/astCompiler';
 import './App.css';
-
-const INITIAL_CODE = `// EBN Auto-Generated Code
-// Wire nodes on the canvas to generate ExtendScript...
-`;
 
 export default function App() {
   const [chatInput, setChatInput] = useState('');
-  const [generatedCode, setGeneratedCode] = useState(INITIAL_CODE);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [generatedCode, setGeneratedCode] = useState('');
   const activeComp = 'Main_Comp_01';
+
+  useEffect(() => {
+    setGeneratedCode(compileToExtendScript(nodes, edges, { activeComp }));
+  }, [nodes, edges]);
 
   return (
     <div className="ebn-app">
@@ -26,7 +32,14 @@ export default function App() {
 
       <div className="ebn-workspace">
         <section className="ebn-canvas">
-          <FlowCanvas />
+          <FlowCanvas
+            nodes={nodes}
+            edges={edges}
+            setNodes={setNodes}
+            setEdges={setEdges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+          />
         </section>
 
         <aside className="ebn-right">
