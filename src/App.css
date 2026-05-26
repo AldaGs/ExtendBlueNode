@@ -86,13 +86,12 @@
 }
 
 .ebn-canvas .react-flow__node {
-  background: var(--ebn-panel-2);
+  background: transparent;
   color: var(--ebn-text);
-  border: 1px solid var(--ebn-border);
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-size: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .ebn-canvas .react-flow__node.selected {
@@ -100,8 +99,19 @@
 }
 
 .ebn-canvas .react-flow__edge-path {
-  stroke: #6a6a6a;
-  stroke-width: 1.5;
+  stroke: #9aa3ad;
+  stroke-width: 1.6;
+}
+
+.ebn-canvas .react-flow__edge.selected .react-flow__edge-path,
+.ebn-canvas .react-flow__edge:focus .react-flow__edge-path {
+  stroke: var(--ebn-accent);
+  stroke-width: 2;
+}
+
+/* Render edges above nodes so connections stay visible across the graph. */
+.ebn-canvas .react-flow__edges {
+  z-index: 1001 !important;
 }
 
 /* ---------- Right Pane ---------- */

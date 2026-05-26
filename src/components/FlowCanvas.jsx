@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   Background,
@@ -7,6 +7,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
+  updateEdge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -19,8 +20,71 @@ function FlowCanvasInner() {
 
   const nodeTypes = useMemo(() => ({ ebnNode: EBNNode }), []);
 
+  // Inputs are single-fan-in: drop any pre-existing edge to the same
+  // target handle before adding the new one ("split / replace").
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params) =>
+      setEdges((eds) => {
+        const filtered = eds.filter(
+          (e) =>
+            !(
+              e.target === params.target &&
+              e.targetHandle === params.targetHandle
+            ),
+        );
+        return addEdge(params, filtered);
+      }),
+    [setEdges],
+  );
+
+  // Enforce one connection per input handle from any source (paste/programmatic too).
+  const isValidConnection = useCallback(
+    (conn) => {
+      if (conn.source === conn.target) return false;
+      const occupied = edges.some(
+        (e) => e.target === conn.target && e.targetHandle === conn.targetHandle,
+      );
+      // Allowed during reconnect because the old edge is dropped first.
+      return !occupied || edgeReconnectSuccessful.current === false;
+    },
+    [edges],
+  );
+
+  // Reconnect (drag an existing endpoint to a new handle). If the drop
+  // lands on empty canvas, delete the edge instead — that's the
+  // "disconnect" gesture.
+  const edgeReconnectSuccessful = useRef(true);
+
+  const onReconnectStart = useCallback(() => {
+    edgeReconnectSuccessful.current = false;
+  }, []);
+
+  const onReconnect = useCallback(
+    (oldEdge, newConnection) => {
+      edgeReconnectSuccessful.current = true;
+      setEdges((eds) => {
+        // Drop anything occupying the new target slot, then move the edge.
+        const cleared = eds.filter(
+          (e) =>
+            e.id === oldEdge.id ||
+            !(
+              e.target === newConnection.target &&
+              e.targetHandle === newConnection.targetHandle
+            ),
+        );
+        return updateEdge(oldEdge, newConnection, cleared);
+      });
+    },
+    [setEdges],
+  );
+
+  const onReconnectEnd = useCallback(
+    (_, edge) => {
+      if (!edgeReconnectSuccessful.current) {
+        setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+      }
+      edgeReconnectSuccessful.current = true;
+    },
     [setEdges],
   );
 
@@ -32,6 +96,13 @@ function FlowCanvasInner() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      isValidConnection={isValidConnection}
+      onEdgeUpdate={onReconnect}
+      onEdgeUpdateStart={onReconnectStart}
+      onEdgeUpdateEnd={onReconnectEnd}
+      edgesUpdatable
+      edgesFocusable
+      deleteKeyCode={['Backspace', 'Delete']}
       fitView
       proOptions={{ hideAttribution: true }}
     >
