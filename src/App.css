@@ -53,26 +53,19 @@
   background: var(--ebn-accent-hover);
 }
 
-/* ---------- Workspace ---------- */
+/* ---------- Workspace (split panes) ---------- */
 .ebn-workspace {
   flex: 1;
-  display: grid;
-  grid-template-columns: 60% 40%;
   min-height: 0;
-}
-
-/* ---------- Left Pane / Canvas ---------- */
-.ebn-canvas {
   position: relative;
-  background: #1a1a1a;
-  border-right: 1px solid var(--ebn-border);
-  overflow: hidden;
+  background: var(--ebn-bg);
 }
 
 .ebn-flow-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
+  background: #1a1a1a;
 }
 
 .ebn-knife {
@@ -85,22 +78,22 @@
 }
 
 /* React Flow dark theme tweaks */
-.ebn-canvas .react-flow__background {
+.ebn-flow-wrapper .react-flow__background {
   background-color: #1a1a1a;
 }
 
-.ebn-canvas .react-flow__controls button {
+.ebn-flow-wrapper .react-flow__controls button {
   background: var(--ebn-panel-2);
   border-bottom: 1px solid var(--ebn-border);
   color: var(--ebn-text);
   fill: var(--ebn-text);
 }
 
-.ebn-canvas .react-flow__controls button:hover {
+.ebn-flow-wrapper .react-flow__controls button:hover {
   background: var(--ebn-border);
 }
 
-.ebn-canvas .react-flow__node {
+.ebn-flow-wrapper .react-flow__node {
   background: transparent;
   color: var(--ebn-text);
   border: none;
@@ -109,23 +102,23 @@
   overflow: visible;
 }
 
-.ebn-canvas .react-flow__node.selected {
+.ebn-flow-wrapper .react-flow__node.selected {
   border-color: var(--ebn-accent);
 }
 
-.ebn-canvas .react-flow__edge-path {
+.ebn-flow-wrapper .react-flow__edge-path {
   stroke: #9aa3ad;
   stroke-width: 1.6;
 }
 
-.ebn-canvas .react-flow__edge.selected .react-flow__edge-path,
-.ebn-canvas .react-flow__edge:focus .react-flow__edge-path {
+.ebn-flow-wrapper .react-flow__edge.selected .react-flow__edge-path,
+.ebn-flow-wrapper .react-flow__edge:focus .react-flow__edge-path {
   stroke: var(--ebn-accent);
   stroke-width: 2;
 }
 
 /* Render edges above nodes so connections stay visible across the graph. */
-.ebn-canvas .react-flow__edges {
+.ebn-flow-wrapper .react-flow__edges {
   z-index: 1001 !important;
 }
 

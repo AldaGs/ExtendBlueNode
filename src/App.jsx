@@ -5,24 +5,24 @@ import {
   useEdgesState,
   useOnSelectionChange,
 } from 'reactflow';
+import { Group, Panel, Separator } from 'react-resizable-panels';
 
 import FlowCanvas from './components/FlowCanvas';
 import CodeEditor from './components/CodeEditor';
 import PropertiesPanel from './components/PropertiesPanel';
 import GlobalVariablesPanel from './components/GlobalVariablesPanel';
+import CopilotPanel from './components/CopilotPanel';
+import ViewLeaf from './components/ViewLeaf';
 import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
 import './App.css';
 
-// Inner component so useOnSelectionChange can read the ReactFlowProvider context.
 function AppShell() {
-  const [chatInput, setChatInput] = useState('');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [generatedCode, setGeneratedCode] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
-  const [activeTab, setActiveTab] = useState('code'); // 'code' | 'props' | 'globals'
   const [propsValid, setPropsValid] = useState(true);
   const [globalVariables, setGlobalVariables] = useState([]);
   const activeComp = 'Main_Comp_01';
@@ -42,34 +42,20 @@ function AppShell() {
     }, []),
   });
 
-  const switchTab = useCallback(
-    (next) => {
-      if (!propsValid && next !== 'props') return;
-      setActiveTab(next);
-    },
-    [propsValid],
-  );
-
-  // Keep the selected node reference fresh as the user types in the panel.
+  // Keep the panel's reference fresh while editing.
   const liveSelected = selectedNode
     ? nodes.find((n) => n.id === selectedNode.id) ?? null
     : null;
 
-  return (
-    <GlobalsProvider value={globalsContextValue}>
-    <div className="ebn-app">
-      <header className="ebn-header">
-        <div className="ebn-header__title">Extend Blue Node</div>
-        <div className="ebn-header__status">
-          Active Comp:<strong>{activeComp}</strong>
-        </div>
-        <button className="ebn-btn-primary" type="button">
-          Compile &amp; Inject
-        </button>
-      </header>
-
-      <div className="ebn-workspace">
-        <section className="ebn-canvas">
+  // ----- view registry: each entry produces a fresh element on render.
+  // Switching a leaf to a view re-mounts the component. Monaco + ReactFlow
+  // both handle re-mount cleanly thanks to local config (monaco-setup) and
+  // their internal layout systems.
+  const views = useMemo(
+    () => ({
+      canvas: {
+        title: 'Canvas',
+        render: () => (
           <FlowCanvas
             nodes={nodes}
             edges={edges}
@@ -78,95 +64,101 @@ function AppShell() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
           />
-        </section>
+        ),
+      },
+      code: {
+        title: 'Code',
+        render: () => (
+          <CodeEditor value={generatedCode} onChange={setGeneratedCode} />
+        ),
+      },
+      properties: {
+        title: 'Properties',
+        badge: !propsValid ? (
+          <span className="ebn-leaf__badge" aria-hidden="true" />
+        ) : null,
+        render: () => (
+          <PropertiesPanel
+            selectedNode={liveSelected}
+            setNodes={setNodes}
+            onValidityChange={setPropsValid}
+          />
+        ),
+      },
+      globals: {
+        title: 'Globals',
+        render: () => (
+          <GlobalVariablesPanel
+            globalVariables={globalVariables}
+            setGlobalVariables={setGlobalVariables}
+          />
+        ),
+      },
+      copilot: {
+        title: 'Copilot',
+        render: () => <CopilotPanel />,
+      },
+    }),
+    [
+      nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange,
+      generatedCode, liveSelected, propsValid, globalVariables,
+    ],
+  );
 
-        <aside className="ebn-right">
-          <div className="ebn-pane">
-            <div className="ebn-tabs">
-              <button
-                className={`ebn-tab${activeTab === 'code' ? ' ebn-tab--active' : ''}${!propsValid ? ' ebn-tab--disabled' : ''}`}
-                onClick={() => switchTab('code')}
-                disabled={!propsValid}
-                title={propsValid ? '' : 'Fix invalid properties first'}
-                type="button"
-              >
-                Code
-              </button>
-              <button
-                className={`ebn-tab${activeTab === 'props' ? ' ebn-tab--active' : ''}`}
-                onClick={() => switchTab('props')}
-                type="button"
-              >
-                Properties
-                {!propsValid && <span className="ebn-tab__dot" aria-hidden="true" />}
-              </button>
-              <button
-                className={`ebn-tab${activeTab === 'globals' ? ' ebn-tab--active' : ''}${!propsValid ? ' ebn-tab--disabled' : ''}`}
-                onClick={() => switchTab('globals')}
-                disabled={!propsValid}
-                title={propsValid ? '' : 'Fix invalid properties first'}
-                type="button"
-              >
-                Globals
-              </button>
-            </div>
-            <div className="ebn-pane__body">
-              <div
-                className="ebn-tab-panel"
-                style={{ display: activeTab === 'code' ? 'block' : 'none' }}
-              >
-                <CodeEditor value={generatedCode} onChange={setGeneratedCode} />
-              </div>
-              <div
-                className="ebn-tab-panel"
-                style={{ display: activeTab === 'props' ? 'block' : 'none' }}
-              >
-                <PropertiesPanel
-                  selectedNode={liveSelected}
-                  setNodes={setNodes}
-                  onValidityChange={setPropsValid}
-                />
-              </div>
-              <div
-                className="ebn-tab-panel"
-                style={{ display: activeTab === 'globals' ? 'block' : 'none' }}
-              >
-                <GlobalVariablesPanel
-                  globalVariables={globalVariables}
-                  setGlobalVariables={setGlobalVariables}
-                />
-              </div>
-            </div>
+  // Veto leaving 'properties' while the form is invalid.
+  const onBeforeSwitch = useCallback(
+    (from, to) => {
+      if (from === 'properties' && !propsValid) return false;
+      return true;
+    },
+    [propsValid],
+  );
+
+  return (
+    <GlobalsProvider value={globalsContextValue}>
+      <div className="ebn-app">
+        <header className="ebn-header">
+          <div className="ebn-header__title">Extend Blue Node</div>
+          <div className="ebn-header__status">
+            Active Comp:<strong>{activeComp}</strong>
           </div>
+          <button className="ebn-btn-primary" type="button">
+            Compile &amp; Inject
+          </button>
+        </header>
 
-          <div className="ebn-pane">
-            <div className="ebn-pane__header">Copilot</div>
-            <div className="ebn-pane__body">
-              <div className="ebn-copilot">
-                <div className="ebn-copilot__history">
-                  &gt; Local LLM copilot ready.
-                </div>
-                <form
-                  className="ebn-copilot__input"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setChatInput('');
-                  }}
-                >
-                  <input
-                    type="text"
-                    placeholder="Ask the copilot…"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
+        <div className="ebn-workspace">
+          <Group orientation="horizontal" id="ebn-root">
+            <Panel id="left" defaultSize={60} minSize={20}>
+              <ViewLeaf
+                initialView="canvas"
+                views={views}
+                onBeforeSwitch={onBeforeSwitch}
+              />
+            </Panel>
+            <Separator className="ebn-resizer ebn-resizer--v" />
+            <Panel id="right" defaultSize={40} minSize={20}>
+              <Group orientation="vertical" id="ebn-right">
+                <Panel id="top" defaultSize={55} minSize={15}>
+                  <ViewLeaf
+                    initialView="code"
+                    views={views}
+                    onBeforeSwitch={onBeforeSwitch}
                   />
-                  <button type="submit">Send</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </aside>
+                </Panel>
+                <Separator className="ebn-resizer ebn-resizer--h" />
+                <Panel id="bottom" defaultSize={45} minSize={15}>
+                  <ViewLeaf
+                    initialView="copilot"
+                    views={views}
+                    onBeforeSwitch={onBeforeSwitch}
+                  />
+                </Panel>
+              </Group>
+            </Panel>
+          </Group>
+        </div>
       </div>
-    </div>
     </GlobalsProvider>
   );
 }

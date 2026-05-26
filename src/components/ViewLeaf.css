@@ -1,0 +1,89 @@
+.ebn-leaf {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--ebn-panel);
+  min-height: 0;
+  min-width: 0;
+}
+
+.ebn-leaf__header {
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  background: var(--ebn-panel-2);
+  border-bottom: 1px solid var(--ebn-border);
+}
+
+.ebn-leaf__picker {
+  appearance: none;
+  background: #1e1e1e;
+  color: var(--ebn-text);
+  border: 1px solid var(--ebn-border);
+  border-radius: 3px;
+  padding: 2px 22px 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ebn-text-dim) 50%),
+    linear-gradient(135deg, var(--ebn-text-dim) 50%, transparent 50%);
+  background-position:
+    calc(100% - 12px) 50%,
+    calc(100% - 7px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.ebn-leaf__picker:focus {
+  outline: none;
+  border-color: var(--ebn-accent);
+}
+
+.ebn-leaf__body {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Resizer handles */
+.ebn-resizer {
+  position: relative;
+  background: var(--ebn-border);
+  transition: background 0.12s;
+}
+
+.ebn-resizer:hover,
+.ebn-resizer[data-resize-handle-active] {
+  background: var(--ebn-accent);
+}
+
+.ebn-resizer--v {
+  width: 4px;
+  cursor: col-resize;
+}
+
+.ebn-resizer--h {
+  height: 4px;
+  cursor: row-resize;
+}
+
+/* Leaf header right-side badge slot (red dot etc.) */
+.ebn-leaf__badge {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff5a5a;
+  box-shadow: 0 0 6px rgba(255, 90, 90, 0.7);
+  margin-left: 4px;
+}
