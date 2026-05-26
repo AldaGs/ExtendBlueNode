@@ -1,0 +1,50 @@
+.ebn-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: #1e1e1e;
+}
+
+.ebn-editor__header {
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  background: #2d2d30;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.ebn-editor__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #cccccc;
+}
+
+.ebn-editor__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: #d4a35a;
+  background: rgba(212, 163, 90, 0.12);
+  border: 1px solid rgba(212, 163, 90, 0.35);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.ebn-editor__lock {
+  color: #d4a35a;
+}
+
+.ebn-editor__body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}

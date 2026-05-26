@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import FlowCanvas from './components/FlowCanvas';
+import CodeEditor from './components/CodeEditor';
 import './App.css';
+
+const INITIAL_CODE = `// EBN Auto-Generated Code
+// Wire nodes on the canvas to generate ExtendScript...
+`;
 
 export default function App() {
   const [chatInput, setChatInput] = useState('');
+  const [generatedCode, setGeneratedCode] = useState(INITIAL_CODE);
   const activeComp = 'Main_Comp_01';
 
   return (
@@ -25,9 +31,8 @@ export default function App() {
 
         <aside className="ebn-right">
           <div className="ebn-pane">
-            <div className="ebn-pane__header">Code Editor</div>
             <div className="ebn-pane__body">
-              <div className="ebn-placeholder">Monaco Editor Placeholder</div>
+              <CodeEditor value={generatedCode} onChange={setGeneratedCode} />
             </div>
           </div>
 
