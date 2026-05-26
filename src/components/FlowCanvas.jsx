@@ -3,8 +3,10 @@ import ReactFlow, {
   Background,
   Controls,
   MiniMap,
+  ReactFlowProvider,
   addEdge,
   updateEdge,
+  useOnSelectionChange,
   useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -81,7 +83,20 @@ function FlowCanvasInner({
   setEdges,
   onNodesChange,
   onEdgesChange,
+  onSelectionChange,
 }) {
+  // Report selection up to App. Each canvas has its own provider, so this
+  // hook only fires for *this* canvas's selection events. The latest
+  // canvas to receive a click wins App.selectedNode.
+  useOnSelectionChange({
+    onChange: useCallback(
+      ({ nodes: selected }) => {
+        onSelectionChange?.(selected[0] ?? null);
+      },
+      [onSelectionChange],
+    ),
+  });
+
   const rf = useReactFlow();
   const wrapperRef = useRef(null);
   const edgeReconnectSuccessful = useRef(true);
@@ -457,5 +472,12 @@ function FlowCanvasInner({
 }
 
 export default function FlowCanvas(props) {
-  return <FlowCanvasInner {...props} />;
+  // One provider per canvas instance keeps each FlowCanvas's viewport
+  // ("camera") and internal store fully isolated from the others, so
+  // mounting/unmounting one canvas leaf doesn't disturb its siblings.
+  return (
+    <ReactFlowProvider>
+      <FlowCanvasInner {...props} />
+    </ReactFlowProvider>
+  );
 }

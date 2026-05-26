@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import {
-  ReactFlowProvider,
-  useNodesState,
-  useEdgesState,
-  useOnSelectionChange,
-} from 'reactflow';
+import { useNodesState, useEdgesState } from 'reactflow';
 import { Group, Panel, Separator } from 'react-resizable-panels';
 
 import FlowCanvas from './components/FlowCanvas';
@@ -16,15 +11,42 @@ import ViewLeaf from './components/ViewLeaf';
 import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
+import {
+  setLeafView,
+  splitLeaf,
+  closeLeaf,
+  countLeaves,
+} from './layoutTree';
 import './App.css';
 
-function AppShell() {
+const INITIAL_LAYOUT = {
+  type: 'split',
+  id: 'root',
+  orientation: 'h',
+  sizes: [60, 40],
+  children: [
+    { type: 'leaf', id: 'l_canvas', viewId: 'canvas' },
+    {
+      type: 'split',
+      id: 'r',
+      orientation: 'v',
+      sizes: [55, 45],
+      children: [
+        { type: 'leaf', id: 'l_code', viewId: 'code' },
+        { type: 'leaf', id: 'l_copilot', viewId: 'copilot' },
+      ],
+    },
+  ],
+};
+
+export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [generatedCode, setGeneratedCode] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
   const [propsValid, setPropsValid] = useState(true);
   const [globalVariables, setGlobalVariables] = useState([]);
+  const [layout, setLayout] = useState(INITIAL_LAYOUT);
   const activeComp = 'Main_Comp_01';
 
   const globalsContextValue = useMemo(
@@ -36,21 +58,14 @@ function AppShell() {
     setGeneratedCode(compileToExtendScript(nodes, edges, globalVariables));
   }, [nodes, edges, globalVariables]);
 
-  useOnSelectionChange({
-    onChange: useCallback(({ nodes: selected }) => {
-      setSelectedNode(selected[0] ?? null);
-    }, []),
-  });
-
-  // Keep the panel's reference fresh while editing.
   const liveSelected = selectedNode
     ? nodes.find((n) => n.id === selectedNode.id) ?? null
     : null;
 
-  // ----- view registry: each entry produces a fresh element on render.
-  // Switching a leaf to a view re-mounts the component. Monaco + ReactFlow
-  // both handle re-mount cleanly thanks to local config (monaco-setup) and
-  // their internal layout systems.
+  // ----- view registry: each render returns a fresh element.
+  // Canvas in particular intentionally gets a stable React key per leaf
+  // so its internal ReactFlow store / camera is preserved across re-renders
+  // of unrelated tree changes.
   const views = useMemo(
     () => ({
       canvas: {
@@ -63,6 +78,7 @@ function AppShell() {
             setEdges={setEdges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onSelectionChange={setSelectedNode}
           />
         ),
       },
@@ -105,7 +121,6 @@ function AppShell() {
     ],
   );
 
-  // Veto leaving 'properties' while the form is invalid.
   const onBeforeSwitch = useCallback(
     (from, to) => {
       if (from === 'properties' && !propsValid) return false;
@@ -113,6 +128,65 @@ function AppShell() {
     },
     [propsValid],
   );
+
+  const totalLeaves = countLeaves(layout);
+
+  const handleChangeView = useCallback(
+    (leafId, viewId) => setLayout((t) => setLeafView(t, leafId, viewId)),
+    [],
+  );
+  const handleSplit = useCallback(
+    (leafId, orientation) =>
+      setLayout((t) => splitLeaf(t, leafId, orientation)),
+    [],
+  );
+  const handleClose = useCallback(
+    (leafId) => setLayout((t) => closeLeaf(t, leafId)),
+    [],
+  );
+
+  const renderPane = (pane) => {
+    if (pane.type === 'leaf') {
+      return (
+        <ViewLeaf
+          key={pane.id}
+          viewId={pane.viewId}
+          views={views}
+          onChangeView={(v) => handleChangeView(pane.id, v)}
+          onBeforeSwitch={onBeforeSwitch}
+          onSplit={(o) => handleSplit(pane.id, o)}
+          onClose={() => handleClose(pane.id)}
+          canClose={totalLeaves > 1}
+        />
+      );
+    }
+    const horizontal = pane.orientation === 'h';
+    return (
+      <Group
+        key={pane.id}
+        orientation={horizontal ? 'horizontal' : 'vertical'}
+        id={pane.id}
+      >
+        <Panel
+          id={`${pane.id}-a`}
+          defaultSize={pane.sizes[0]}
+          minSize={10}
+        >
+          {renderPane(pane.children[0])}
+        </Panel>
+        <Separator
+          className={`ebn-resizer ebn-resizer--${horizontal ? 'v' : 'h'}`}
+        />
+        <Panel
+          id={`${pane.id}-b`}
+          defaultSize={pane.sizes[1]}
+          minSize={10}
+        >
+          {renderPane(pane.children[1])}
+        </Panel>
+      </Group>
+    );
+  };
 
   return (
     <GlobalsProvider value={globalsContextValue}>
@@ -127,46 +201,8 @@ function AppShell() {
           </button>
         </header>
 
-        <div className="ebn-workspace">
-          <Group orientation="horizontal" id="ebn-root">
-            <Panel id="left" defaultSize={60} minSize={20}>
-              <ViewLeaf
-                initialView="canvas"
-                views={views}
-                onBeforeSwitch={onBeforeSwitch}
-              />
-            </Panel>
-            <Separator className="ebn-resizer ebn-resizer--v" />
-            <Panel id="right" defaultSize={40} minSize={20}>
-              <Group orientation="vertical" id="ebn-right">
-                <Panel id="top" defaultSize={55} minSize={15}>
-                  <ViewLeaf
-                    initialView="code"
-                    views={views}
-                    onBeforeSwitch={onBeforeSwitch}
-                  />
-                </Panel>
-                <Separator className="ebn-resizer ebn-resizer--h" />
-                <Panel id="bottom" defaultSize={45} minSize={15}>
-                  <ViewLeaf
-                    initialView="copilot"
-                    views={views}
-                    onBeforeSwitch={onBeforeSwitch}
-                  />
-                </Panel>
-              </Group>
-            </Panel>
-          </Group>
-        </div>
+        <div className="ebn-workspace">{renderPane(layout)}</div>
       </div>
     </GlobalsProvider>
-  );
-}
-
-export default function App() {
-  return (
-    <ReactFlowProvider>
-      <AppShell />
-    </ReactFlowProvider>
   );
 }
