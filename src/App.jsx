@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useNodesState, useEdgesState } from 'reactflow';
-import { Group, Panel, Separator } from 'react-resizable-panels';
-
+import Split from './components/Split';
 import FlowCanvas from './components/FlowCanvas';
 import CodeEditor from './components/CodeEditor';
 import PropertiesPanel from './components/PropertiesPanel';
@@ -16,6 +15,7 @@ import {
   splitLeaf,
   closeLeaf,
   countLeaves,
+  setSplitSizes,
 } from './layoutTree';
 import './App.css';
 
@@ -160,31 +160,18 @@ export default function App() {
         />
       );
     }
-    const horizontal = pane.orientation === 'h';
     return (
-      <Group
+      <Split
         key={pane.id}
-        orientation={horizontal ? 'horizontal' : 'vertical'}
-        id={pane.id}
+        orientation={pane.orientation}
+        sizes={pane.sizes}
+        onResize={(s) =>
+          setLayout((t) => setSplitSizes(t, pane.id, s))
+        }
       >
-        <Panel
-          id={`${pane.id}-a`}
-          defaultSize={pane.sizes[0]}
-          minSize={10}
-        >
-          {renderPane(pane.children[0])}
-        </Panel>
-        <Separator
-          className={`ebn-resizer ebn-resizer--${horizontal ? 'v' : 'h'}`}
-        />
-        <Panel
-          id={`${pane.id}-b`}
-          defaultSize={pane.sizes[1]}
-          minSize={10}
-        >
-          {renderPane(pane.children[1])}
-        </Panel>
-      </Group>
+        {renderPane(pane.children[0])}
+        {renderPane(pane.children[1])}
+      </Split>
     );
   };
 

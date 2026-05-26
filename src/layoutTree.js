@@ -24,6 +24,12 @@ function map(tree, fn) {
   return next;
 }
 
+export function setSplitSizes(tree, splitId, sizes) {
+  return map(tree, (n) =>
+    n.type === 'split' && n.id === splitId ? { ...n, sizes } : n,
+  );
+}
+
 export function setLeafView(tree, leafId, viewId) {
   return map(tree, (n) =>
     n.type === 'leaf' && n.id === leafId ? { ...n, viewId } : n,

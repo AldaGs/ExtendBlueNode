@@ -1,16 +1,6 @@
+import ViewPicker from './ViewPicker';
 import './ViewLeaf.css';
 
-// A single Blender-style pane. Controlled — the layout tree in App owns
-// the current view and the split/close operations.
-//
-// Props:
-//   viewId          current view id
-//   views           { [id]: { title, render(), badge? } }
-//   onChangeView    (nextId) => void
-//   onBeforeSwitch  (from, to) => boolean (optional veto)
-//   onSplit         ('h' | 'v') => void
-//   onClose         () => void
-//   canClose        boolean — last remaining leaf can't be closed
 export default function ViewLeaf({
   viewId,
   views,
@@ -23,27 +13,15 @@ export default function ViewLeaf({
   const ids = Object.keys(views);
   const view = views[viewId] || views[ids[0]];
 
-  const change = (next) => {
-    if (next === viewId) return;
-    if (onBeforeSwitch && !onBeforeSwitch(viewId, next)) return;
-    onChangeView?.(next);
-  };
-
   return (
     <div className="ebn-leaf">
       <div className="ebn-leaf__header">
-        <select
-          className="ebn-leaf__picker"
-          value={viewId}
-          onChange={(e) => change(e.target.value)}
-          title="Switch view"
-        >
-          {ids.map((id) => (
-            <option key={id} value={id}>
-              {views[id].title}
-            </option>
-          ))}
-        </select>
+        <ViewPicker
+          viewId={viewId}
+          views={views}
+          onChange={onChangeView}
+          onBeforeSwitch={onBeforeSwitch}
+        />
         {view?.badge ?? null}
 
         <span className="ebn-leaf__spacer" />
@@ -52,23 +30,24 @@ export default function ViewLeaf({
           type="button"
           className="ebn-leaf__btn"
           onClick={() => onSplit?.('h')}
-          title="Split horizontally (new pane to the right)"
+          title="Split horizontally"
+          aria-label="Split horizontally"
         >
-          {/* vertical line icon = split horizontal */}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-            <rect x="1" y="1" width="4.5" height="10" fill="none" stroke="currentColor" />
-            <rect x="6.5" y="1" width="4.5" height="10" fill="none" stroke="currentColor" />
+            <rect x="1" y="2" width="4.2" height="8" rx="1" fill="none" stroke="currentColor" />
+            <rect x="6.8" y="2" width="4.2" height="8" rx="1" fill="none" stroke="currentColor" />
           </svg>
         </button>
         <button
           type="button"
           className="ebn-leaf__btn"
           onClick={() => onSplit?.('v')}
-          title="Split vertically (new pane below)"
+          title="Split vertically"
+          aria-label="Split vertically"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-            <rect x="1" y="1" width="10" height="4.5" fill="none" stroke="currentColor" />
-            <rect x="1" y="6.5" width="10" height="4.5" fill="none" stroke="currentColor" />
+            <rect x="2" y="1" width="8" height="4.2" rx="1" fill="none" stroke="currentColor" />
+            <rect x="2" y="6.8" width="8" height="4.2" rx="1" fill="none" stroke="currentColor" />
           </svg>
         </button>
         <button
@@ -76,9 +55,12 @@ export default function ViewLeaf({
           className="ebn-leaf__btn ebn-leaf__btn--close"
           onClick={() => onClose?.()}
           disabled={!canClose}
-          title={canClose ? 'Close this pane' : 'Cannot close the last pane'}
+          title={canClose ? 'Close pane' : 'Cannot close last pane'}
+          aria-label="Close pane"
         >
-          ×
+          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
         </button>
       </div>
       <div className="ebn-leaf__body">{view?.render?.()}</div>

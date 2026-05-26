@@ -10,41 +10,19 @@
 }
 
 .ebn-leaf__header {
-  height: 28px;
+  height: 32px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 8px;
-  background: var(--ebn-panel-2);
-  border-bottom: 1px solid var(--ebn-border);
+  gap: 4px;
+  padding: 0 6px;
+  background: linear-gradient(to bottom, #2f2f33, #2a2a2d);
+  border-bottom: 1px solid #1a1a1a;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.02);
 }
 
-.ebn-leaf__picker {
-  appearance: none;
-  background: #1e1e1e;
-  color: var(--ebn-text);
-  border: 1px solid var(--ebn-border);
-  border-radius: 3px;
-  padding: 2px 22px 2px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-  cursor: pointer;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--ebn-text-dim) 50%),
-    linear-gradient(135deg, var(--ebn-text-dim) 50%, transparent 50%);
-  background-position:
-    calc(100% - 12px) 50%,
-    calc(100% - 7px) 50%;
-  background-size: 5px 5px;
-  background-repeat: no-repeat;
-}
-
-.ebn-leaf__picker:focus {
-  outline: none;
-  border-color: var(--ebn-accent);
+.ebn-leaf__spacer {
+  flex: 1;
 }
 
 .ebn-leaf__body {
@@ -55,7 +33,172 @@
   overflow: hidden;
 }
 
-/* Resizer handles */
+/* ---------- Header buttons ---------- */
+.ebn-leaf__btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--ebn-text-dim);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.ebn-leaf__btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--ebn-text);
+}
+
+.ebn-leaf__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ebn-leaf__btn--close:hover:not(:disabled) {
+  border-color: rgba(255, 90, 90, 0.55);
+  color: #ff7676;
+  background: rgba(255, 90, 90, 0.1);
+}
+
+/* ---------- Validity badge ---------- */
+.ebn-leaf__badge {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff5a5a;
+  box-shadow: 0 0 6px rgba(255, 90, 90, 0.7);
+  margin-left: 2px;
+}
+
+/* ---------- View picker (Adobe-style dark dropdown) ---------- */
+.ebn-picker {
+  position: relative;
+}
+
+.ebn-picker__trigger {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 4px 8px 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ebn-text);
+  cursor: pointer;
+  min-width: 110px;
+  justify-content: space-between;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.ebn-picker__trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ebn-picker__trigger:focus-visible {
+  outline: none;
+  border-color: var(--ebn-accent);
+  box-shadow: 0 0 0 1px rgba(43, 127, 255, 0.4);
+}
+
+.ebn-picker__trigger--open {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--ebn-accent);
+}
+
+.ebn-picker__current {
+  letter-spacing: 0.6px;
+}
+
+.ebn-picker__caret {
+  color: var(--ebn-text-dim);
+  transition: transform 0.15s;
+}
+
+.ebn-picker__caret--up {
+  transform: rotate(180deg);
+  color: var(--ebn-accent);
+}
+
+.ebn-picker__menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 200;
+  min-width: 170px;
+  background: #1f1f22;
+  border: 1px solid #3c3c3c;
+  border-radius: 5px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  animation: ebn-picker-in 0.12s ease-out;
+}
+
+@keyframes ebn-picker-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ebn-picker__item {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ebn-text);
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.1s, color 0.1s;
+}
+
+.ebn-picker__item:hover {
+  background: var(--ebn-accent);
+  color: #fff;
+}
+
+.ebn-picker__item--active {
+  color: #fff;
+}
+
+.ebn-picker__check {
+  width: 12px;
+  display: inline-flex;
+  justify-content: center;
+  color: var(--ebn-accent);
+  font-size: 11px;
+}
+
+.ebn-picker__item:hover .ebn-picker__check {
+  color: #fff;
+}
+
+.ebn-picker__label {
+  flex: 1;
+}
+
+/* ---------- Resizer (kept for any legacy usage) ---------- */
 .ebn-resizer {
   position: relative;
   background: var(--ebn-border);
@@ -67,63 +210,5 @@
   background: var(--ebn-accent);
 }
 
-.ebn-resizer--v {
-  width: 4px;
-  cursor: col-resize;
-}
-
-.ebn-resizer--h {
-  height: 4px;
-  cursor: row-resize;
-}
-
-.ebn-leaf__spacer {
-  flex: 1;
-}
-
-.ebn-leaf__btn {
-  appearance: none;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  color: var(--ebn-text-dim);
-  width: 22px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-}
-
-.ebn-leaf__btn:hover {
-  background: #1e1e1e;
-  border-color: var(--ebn-border);
-  color: var(--ebn-text);
-}
-
-.ebn-leaf__btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.ebn-leaf__btn--close {
-  font-size: 16px;
-  line-height: 1;
-}
-
-.ebn-leaf__btn--close:hover:not(:disabled) {
-  border-color: #ff5a5a;
-  color: #ff5a5a;
-}
-
-/* Leaf header right-side badge slot (red dot etc.) */
-.ebn-leaf__badge {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #ff5a5a;
-  box-shadow: 0 0 6px rgba(255, 90, 90, 0.7);
-  margin-left: 4px;
-}
+.ebn-resizer--v { width: 4px; cursor: col-resize; }
+.ebn-resizer--h { height: 4px; cursor: row-resize; }
