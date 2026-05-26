@@ -37,8 +37,25 @@ function literalFor(portType, raw) {
   return JSON.stringify(raw == null ? '' : String(raw));
 }
 
-function varName(nodeId) {
-  return `node_${nodeId}_val`;
+function defaultVarName(nodeId) {
+  return `var_${String(nodeId).replace(/[^A-Za-z0-9_$]/g, '_')}`;
+}
+
+// Sanitize a user-supplied variable name into a valid JS identifier.
+// - replace non-[A-Za-z0-9_$] with _
+// - prepend _ if it starts with a digit
+// - returns null if nothing usable remains
+function sanitizeVarName(raw) {
+  if (raw == null) return null;
+  const trimmed = String(raw).trim();
+  if (!trimmed) return null;
+  let cleaned = trimmed.replace(/[^A-Za-z0-9_$]/g, '_');
+  if (/^[0-9]/.test(cleaned)) cleaned = `_${cleaned}`;
+  return cleaned || null;
+}
+
+function varNameFor(node) {
+  return sanitizeVarName(node.data?.variableName) ?? defaultVarName(node.id);
 }
 
 // Walk back through any reroute nodes to find the real upstream source.
@@ -110,7 +127,7 @@ export function compileToExtendScript(nodes, edges) {
         if (upstream) {
           const lit = primitiveLiteral(upstream);
           if (lit != null) {
-            const name = varName(upstream.id);
+            const name = varNameFor(upstream);
             variableDecls.set(
               upstream.id,
               `  var ${name} = ${lit};`,

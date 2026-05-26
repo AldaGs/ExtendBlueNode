@@ -1,22 +1,43 @@
-import { useEffect, useState } from 'react';
-import { useNodesState, useEdgesState } from 'reactflow';
+import { useEffect, useState, useCallback } from 'react';
+import {
+  ReactFlowProvider,
+  useNodesState,
+  useEdgesState,
+  useOnSelectionChange,
+} from 'reactflow';
 
 import FlowCanvas from './components/FlowCanvas';
 import CodeEditor from './components/CodeEditor';
+import PropertiesPanel from './components/PropertiesPanel';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
 import './App.css';
 
-export default function App() {
+// Inner component so useOnSelectionChange can read the ReactFlowProvider context.
+function AppShell() {
   const [chatInput, setChatInput] = useState('');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [generatedCode, setGeneratedCode] = useState('');
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [activeTab, setActiveTab] = useState('code'); // 'code' | 'props'
   const activeComp = 'Main_Comp_01';
 
   useEffect(() => {
     setGeneratedCode(compileToExtendScript(nodes, edges));
   }, [nodes, edges]);
+
+  useOnSelectionChange({
+    onChange: useCallback(({ nodes: selected }) => {
+      setSelectedNode(selected[0] ?? null);
+      if (selected[0]) setActiveTab('props');
+    }, []),
+  });
+
+  // Keep the selected node reference fresh as the user types in the panel.
+  const liveSelected = selectedNode
+    ? nodes.find((n) => n.id === selectedNode.id) ?? null
+    : null;
 
   return (
     <div className="ebn-app">
@@ -44,8 +65,35 @@ export default function App() {
 
         <aside className="ebn-right">
           <div className="ebn-pane">
+            <div className="ebn-tabs">
+              <button
+                className={`ebn-tab${activeTab === 'code' ? ' ebn-tab--active' : ''}`}
+                onClick={() => setActiveTab('code')}
+                type="button"
+              >
+                Code
+              </button>
+              <button
+                className={`ebn-tab${activeTab === 'props' ? ' ebn-tab--active' : ''}`}
+                onClick={() => setActiveTab('props')}
+                type="button"
+              >
+                Properties
+              </button>
+            </div>
             <div className="ebn-pane__body">
-              <CodeEditor value={generatedCode} onChange={setGeneratedCode} />
+              <div
+                className="ebn-tab-panel"
+                style={{ display: activeTab === 'code' ? 'block' : 'none' }}
+              >
+                <CodeEditor value={generatedCode} onChange={setGeneratedCode} />
+              </div>
+              <div
+                className="ebn-tab-panel"
+                style={{ display: activeTab === 'props' ? 'block' : 'none' }}
+              >
+                <PropertiesPanel selectedNode={liveSelected} setNodes={setNodes} />
+              </div>
             </div>
           </div>
 
@@ -77,5 +125,13 @@ export default function App() {
         </aside>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ReactFlowProvider>
+      <AppShell />
+    </ReactFlowProvider>
   );
 }

@@ -1,0 +1,79 @@
+.ebn-props {
+  height: 100%;
+  width: 100%;
+  background: #1e1e1e;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.ebn-props--empty {
+  align-items: center;
+  justify-content: center;
+  color: var(--ebn-text-dim);
+  font-size: 12px;
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+.ebn-props__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #2d2d30;
+}
+
+.ebn-props__chip {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #6ab0ff;
+  background: rgba(43, 127, 255, 0.15);
+  border: 1px solid rgba(43, 127, 255, 0.4);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.ebn-props__id {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11px;
+  color: var(--ebn-text-dim);
+}
+
+.ebn-props__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ebn-props__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ebn-text-dim);
+}
+
+.ebn-props__input {
+  background: #252526;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  color: #d4d4d4;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  padding: 6px 8px;
+  outline: none;
+}
+
+.ebn-props__input:focus {
+  border-color: var(--ebn-accent);
+  background: #2a2a2c;
+}
+
+.ebn-props__hint {
+  font-size: 10px;
+  color: #6e6e6e;
+}

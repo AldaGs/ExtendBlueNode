@@ -169,6 +169,54 @@
   position: relative;
 }
 
+.ebn-tabs {
+  display: flex;
+  flex-shrink: 0;
+  height: 30px;
+  background: var(--ebn-panel-2);
+  border-bottom: 1px solid var(--ebn-border);
+}
+
+.ebn-tab {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--ebn-border);
+  color: var(--ebn-text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0 14px;
+  cursor: pointer;
+  position: relative;
+}
+
+.ebn-tab:hover {
+  color: var(--ebn-text);
+}
+
+.ebn-tab--active {
+  color: var(--ebn-text);
+  background: #1e1e1e;
+}
+
+.ebn-tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--ebn-accent);
+}
+
+.ebn-tab-panel {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
 /* Placeholder centered text */
 .ebn-placeholder {
   height: 100%;

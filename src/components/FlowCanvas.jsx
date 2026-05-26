@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactFlow, {
-  ReactFlowProvider,
   Background,
   Controls,
   MiniMap,
@@ -339,9 +338,5 @@ function FlowCanvasInner({
 }
 
 export default function FlowCanvas(props) {
-  return (
-    <ReactFlowProvider>
-      <FlowCanvasInner {...props} />
-    </ReactFlowProvider>
-  );
+  return <FlowCanvasInner {...props} />;
 }
