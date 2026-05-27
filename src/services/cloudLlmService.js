@@ -33,8 +33,8 @@ export const CLOUD_PROVIDERS = {
   },
   gemini: {
     label: 'Gemini (Google)',
-    defaultModel: 'gemini-2.0-flash',
-    models: ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'],
+    defaultModel: 'gemini-2.5-flash',
+    models: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'],
     keyStorage: KEY_STORAGE.gemini,
     keyHelp: 'Google AI Studio API key',
   },

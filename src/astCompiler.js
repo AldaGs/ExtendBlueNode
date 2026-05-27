@@ -182,7 +182,12 @@ export function compileToIR(nodes, edges, globalVariables = []) {
 
   /* --- walk first so helpers / reached / orphans are all settled --- */
 
-  const start = nodes.find((n) => n.data?.label === 'Get Active Comp');
+  // Chain entry point: prefer an explicit `Start` node, then fall back to
+  // `Get Active Comp` so old graphs keep compiling. Both expose `exec_out`
+  // and no `exec_in`, so either can act as the root.
+  const start =
+    nodes.find((n) => n.data?.label === 'Start') ||
+    nodes.find((n) => n.data?.label === 'Get Active Comp');
   const chainIR = start ? walk(start.id) : null;
 
   /* --- now assemble the output in document order --- */
@@ -216,7 +221,7 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     out.push(ir.comment('--- Execution Chain ---'));
     out.push(...chainIR);
   } else {
-    out.push(ir.comment("(No exec chain — add a 'Get Active Comp' node to begin.)"));
+    out.push(ir.comment("(No exec chain — add a 'Start' or 'Get Active Comp' node to begin.)"));
   }
 
   // Orphan report — every node that contributes logic but wasn't

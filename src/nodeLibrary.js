@@ -31,6 +31,40 @@ const _BASE_NODE_LIBRARY = [
           data: {},
         }),
       },
+      {
+        type: 'start',
+        label: 'Start',
+        keywords: ['entry', 'begin', 'on run', 'main'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Start',
+            category: 'flow',
+            themeColor: NODE_THEME.selector,
+            inputs: [],
+            outputs: [{ id: 'exec_out', label: 'Execution' }],
+          },
+        }),
+      },
+      {
+        type: 'getApplication',
+        label: 'Get Application',
+        keywords: ['app', 'application', 'global'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Get Application',
+            category: 'data',
+            themeColor: NODE_THEME.selector,
+            inputs: [],
+            outputs: [{ id: 'value', label: 'app' }],
+          },
+        }),
+      },
     ],
   },
   {

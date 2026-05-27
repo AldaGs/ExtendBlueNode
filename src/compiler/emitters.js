@@ -114,6 +114,9 @@ const EBN_NODE_EMITTERS = {
     return [ir.varDecl(name, expr)];
   },
 
+  // Pure entry point — emits no code, just anchors the exec chain.
+  'Start': () => [],
+
   // Legacy fixture from the original Phase 5 spec.
   'Set Opacity to 50%': () => [
     ir.raw('targetLayer.property("ADBE Opacity").setValue(50);'),
@@ -264,6 +267,8 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
 const EBN_DATA_EMITTERS = {
   // Expose execution variables to the data graph when explicitly wired
   'Get Active Comp': () => 'activeComp',
+  // The global `app` object — wire into any AE getter's `Application` input.
+  'Get Application': () => 'app',
   'Select Layer by ID': () => 'targetLayer',
   'Select Layer by Name': () => 'targetLayer',
   'Select Layer by Index': () => 'targetLayer',

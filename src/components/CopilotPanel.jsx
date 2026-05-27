@@ -183,6 +183,8 @@ Required JSON shape:
 Rules:
 - Every "label" MUST be a verbatim copy of one entry from the list above. Case-sensitive. No paraphrasing, no inventing.
 - Exec-flow handles are "exec_out" / "exec_in". For data wires, use the property key name as the handle.
+- Action nodes (any node that exposes BOTH "exec_in" and "exec_out") MUST be chained: connect "exec_out" of one action to "exec_in" of the next, in the order they should run. The chain MUST start at a node that has "exec_out" but no "exec_in" — typically "Start" (for general scripts) or "Get Active Comp" (when you need the active composition). Without this, the actions become orphans and are not executed.
+- Any AE getter whose input is "Application" must be wired from a "Get Application" node — there is no implicit global "app".
 - Lay nodes left-to-right: first at x=100, then +260 per node, y around 100.
 - If the request cannot be fulfilled with the labels above, return {"reply": "<explanation>", "nodes": [], "edges": []}.
 - The JSON must be complete and parseable. Close every brace and bracket.
