@@ -7,7 +7,11 @@ function newId() {
   return `gv_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
 }
 
-export default function GlobalVariablesPanel({ globalVariables, setGlobalVariables }) {
+export default function GlobalVariablesPanel({
+  globalVariables,
+  setGlobalVariables,
+  onSpawnRef,
+}) {
   const add = useCallback(() => {
     setGlobalVariables((vs) => [
       ...vs,
@@ -71,6 +75,24 @@ export default function GlobalVariablesPanel({ globalVariables, setGlobalVariabl
               value={v.initialValue}
               onChange={(e) => patch(v.id, 'initialValue', e.target.value)}
             />
+            <button
+              type="button"
+              className="ebn-globals__chip ebn-globals__chip--get"
+              onClick={() => onSpawnRef?.(v.id, 'get')}
+              disabled={!v.name?.trim() || !onSpawnRef}
+              title="Add Get Global node referencing this variable"
+            >
+              + Get
+            </button>
+            <button
+              type="button"
+              className="ebn-globals__chip ebn-globals__chip--set"
+              onClick={() => onSpawnRef?.(v.id, 'set')}
+              disabled={!v.name?.trim() || !onSpawnRef}
+              title="Add Set Global node referencing this variable"
+            >
+              + Set
+            </button>
             <button
               type="button"
               className="ebn-globals__del"

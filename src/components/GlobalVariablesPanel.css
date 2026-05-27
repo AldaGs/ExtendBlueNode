@@ -44,7 +44,9 @@
 
 .ebn-globals__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 90px minmax(0, 1fr) 24px;
+  grid-template-columns:
+    minmax(0, 1fr) 90px minmax(0, 1fr)
+    auto auto 24px;
   gap: 6px;
   align-items: center;
 }
@@ -91,4 +93,44 @@
 .ebn-globals__del:hover {
   border-color: #ff5a5a;
   color: #ff5a5a;
+}
+
+.ebn-globals__chip {
+  appearance: none;
+  background: rgba(43, 127, 255, 0.08);
+  border: 1px solid rgba(43, 127, 255, 0.35);
+  border-radius: 10px;
+  color: #6ab0ff;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 2px 7px;
+  height: 22px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.ebn-globals__chip:hover:not(:disabled) {
+  background: rgba(43, 127, 255, 0.22);
+  color: #ffffff;
+  border-color: var(--ebn-accent);
+}
+
+.ebn-globals__chip:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ebn-globals__chip--set {
+  color: #d4a35a;
+  background: rgba(212, 163, 90, 0.08);
+  border-color: rgba(212, 163, 90, 0.35);
+}
+
+.ebn-globals__chip--set:hover:not(:disabled) {
+  background: rgba(212, 163, 90, 0.22);
+  color: #ffffff;
+  border-color: #d4a35a;
 }

@@ -73,6 +73,9 @@ export default function App() {
   const [lastRun, setLastRun] = useState(null); // {at, ok, message, offline}
   const activeComp = 'Main_Comp_01';
 
+  // Cursor for staggering spawned-from-panel nodes so they don't pile on top.
+  const spawnCursorRef = useRef(0);
+
   const globalsContextValue = useMemo(
     () => ({ globalVariables, setGlobalVariables }),
     [globalVariables],
@@ -131,6 +134,40 @@ export default function App() {
       window.alert(`Couldn't open project: ${e.message}`);
     }
   }, [setNodes, setEdges]);
+
+  /* ----------------------------- Globals -> canvas ----------------------------- */
+
+  const onSpawnGlobalRef = useCallback(
+    (globalId, kind /* 'get' | 'set' */) => {
+      // Stagger spawns so successive clicks don't stack the new nodes
+      // on top of each other.
+      const i = spawnCursorRef.current;
+      spawnCursorRef.current = (i + 1) % 24;
+      const base = { x: 80 + i * 24, y: 80 + i * 24 };
+
+      const node =
+        kind === 'set'
+          ? {
+              id: `setg_${Date.now().toString(36)}_${Math.random()
+                .toString(36)
+                .slice(2, 5)}`,
+              type: 'setGlobal',
+              position: base,
+              data: { globalId, values: {} },
+            }
+          : {
+              id: `getg_${Date.now().toString(36)}_${Math.random()
+                .toString(36)
+                .slice(2, 5)}`,
+              type: 'getGlobal',
+              position: base,
+              data: { globalId },
+            };
+
+      setNodes((nds) => [...nds, node]);
+    },
+    [setNodes],
+  );
 
   /* ----------------------------- Compile & Inject ----------------------------- */
 
@@ -235,6 +272,7 @@ export default function App() {
           <GlobalVariablesPanel
             globalVariables={globalVariables}
             setGlobalVariables={setGlobalVariables}
+            onSpawnRef={onSpawnGlobalRef}
           />
         ),
       },
@@ -246,6 +284,7 @@ export default function App() {
     [
       nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange,
       generatedCode, liveSelected, propsValid, globalVariables,
+      onSpawnGlobalRef,
     ],
   );
 

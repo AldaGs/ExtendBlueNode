@@ -105,6 +105,14 @@ const EBN_NODE_EMITTERS = {
     return [ir.raw(`${layer}${propChain}.setValue(${value});`)];
   },
 
+  'Set Local Variable': (node, ctx) => {
+    const varName = ctx.resolveInput(node, { id: 'varName', type: 'text' });
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    
+    // This creates: var "myVar" = 100;
+    return [ir.raw(`var ${varName.replace(/['"]/g, '')} = ${val};`)];
+  },
+
   // Legacy fixture from the original Phase 5 spec.
   'Set Opacity to 50%': () => [
     ir.raw('targetLayer.property("ADBE Opacity").setValue(50);'),
@@ -220,6 +228,18 @@ export function resolveExpressionFor(node, ctx) {
   // Wiring it outside the loop body is the user's responsibility for now.
   if (node.type === 'forEachSelected') {
     return 'loopLayer';
+  }
+
+  if (node.data.label === 'Get Property Value') {
+    const layer = ctx.resolveInput(node, { id: 'layer', type: 'expr' });
+    const propPath = ctx.resolveInput(node, { id: 'propPath', type: 'text' });
+    return `${layer}.property(${propPath}).value`; 
+  }
+
+  if (node.data.label === 'Vector 2 Array') {
+    const x = ctx.resolveInput(node, { id: 'x', type: 'number' });
+    const y = ctx.resolveInput(node, { id: 'y', type: 'number' });
+    return `[${x}, ${y}]`; 
   }
 
   return null;
