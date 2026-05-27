@@ -31,4 +31,13 @@ export const HELPERS = {
     '    }\n' +
     '    return r;\n' +
     '  }',
+  ebnHexToRgb:
+    'function ebnHexToRgb(h, scale, includeAlpha) {\n' +
+    '    if (typeof h !== "string") return includeAlpha ? [0, 0, 0, 1] : [0, 0, 0];\n' +
+    '    if (h.charAt(0) === "#") h = h.substring(1);\n' +
+    '    var r = parseInt(h.substring(0, 2), 16) / scale;\n' +
+    '    var g = parseInt(h.substring(2, 4), 16) / scale;\n' +
+    '    var b = parseInt(h.substring(4, 6), 16) / scale;\n' +
+    '    return includeAlpha ? [r, g, b, 1] : [r, g, b];\n' +
+    '  }',
 };

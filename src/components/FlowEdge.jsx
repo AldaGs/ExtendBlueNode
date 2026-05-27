@@ -16,6 +16,7 @@ export default function FlowEdge({
   style,
   selected,
   sourceHandleId,
+  data,
 }) {
   const [path] = getBezierPath({
     sourceX,
@@ -26,6 +27,9 @@ export default function FlowEdge({
     targetPosition,
   });
   const isExec = sourceHandleId === 'exec_out';
+  // Hide the moving dot on wires that aren't part of an execution chain
+  // rooted at an entry node — they're inert until something triggers them.
+  const live = data?.live !== false;
 
   return (
     <>
@@ -35,7 +39,7 @@ export default function FlowEdge({
         markerEnd={markerEnd}
         style={style}
       />
-      <circle
+      {live && <circle
         r={isExec ? 2.6 : 2.1}
         className={[
           'ebn-edge__dot',
@@ -51,7 +55,7 @@ export default function FlowEdge({
           path={path}
           rotate="auto"
         />
-      </circle>
+      </circle>}
     </>
   );
 }

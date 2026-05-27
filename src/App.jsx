@@ -278,7 +278,15 @@ export default function App() {
       },
       copilot: {
         title: 'Copilot',
-        render: () => <CopilotPanel />,
+        render: () => (
+          <CopilotPanel
+            nodes={nodes}
+            edges={edges}
+            setNodes={setNodes}
+            setEdges={setEdges}
+            globalVariables={globalVariables}
+          />
+        ),
       },
     }),
     [

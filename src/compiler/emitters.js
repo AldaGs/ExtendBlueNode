@@ -8,9 +8,8 @@
 // ctx shape:
 //   resolveInput(node, port) -> string  (JS expression text)
 //   globals: GlobalVariable[]
-//   walkBranch(nodeId, handleId) -> IRStmt[]  // DFS following an exec_out
-
 import { ir } from './ir';
+import { AE_NODE_EMITTERS, AE_DATA_EMITTERS } from '../generated/aeEmitters';
 
 /* ----------------------------- property paths ----------------------------- */
 
@@ -119,6 +118,7 @@ const EBN_NODE_EMITTERS = {
   'Set Opacity to 50%': () => [
     ir.raw('targetLayer.property("ADBE Opacity").setValue(50);'),
   ],
+  ...AE_NODE_EMITTERS,
 };
 
 /* ----------------------------- top-level dispatcher ----------------------------- */
@@ -253,7 +253,7 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
   // the generic shell and still participate in expression composition.
   if (node.type === 'ebnNode') {
     const fn = EBN_DATA_EMITTERS[node.data?.label];
-    if (fn) return fn(node, ctx);
+    if (fn) return fn(node, ctx, outputHandle);
   }
 
   return null;
@@ -262,6 +262,31 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
 /* ----------------------------- data-side label dispatch ----------------------------- */
 
 const EBN_DATA_EMITTERS = {
+  // Expose execution variables to the data graph when explicitly wired
+  'Get Active Comp': () => 'activeComp',
+  'Select Layer by ID': () => 'targetLayer',
+  'Select Layer by Name': () => 'targetLayer',
+  'Select Layer by Index': () => 'targetLayer',
+  'Set Local Variable': (node, ctx) => ctx.varName(node),
+
+  'New File': (node, ctx) => {
+    const pathStr = ctx.resolveInput(node, { id: 'path', type: 'text' });
+    return `new File(${pathStr})`;
+  },
+  'New Folder': (node, ctx) => {
+    const pathStr = ctx.resolveInput(node, { id: 'path', type: 'text' });
+    return `new Folder(${pathStr})`;
+  },
+
+  'Color Picker': (node, ctx, outputHandle) => {
+    const hex = ctx.resolveInput(node, { id: 'color', type: 'text', default: '#ff0000' });
+    if (outputHandle === 'hex') return hex;
+    ctx.useHelper?.('ebnHexToRgb');
+    if (outputHandle === 'rgb255') return `ebnHexToRgb(${hex}, 1, false)`;
+    if (outputHandle === 'rgba') return `ebnHexToRgb(${hex}, 255, true)`;
+    return `ebnHexToRgb(${hex}, 255, false)`; // default 'rgb' is 0-1 scale without alpha
+  },
+
   // Reads layer.property("…").property("…").value, reusing the same
   // slash-path expansion as Set Property so paths stay uniform.
   'Get Property Value': (node, ctx) => {
@@ -277,6 +302,7 @@ const EBN_DATA_EMITTERS = {
     const y = ctx.resolveInput(node, { id: 'y', type: 'number' });
     return `[${x}, ${y}]`;
   },
+  ...AE_DATA_EMITTERS,
 };
 
 export const MATH_OPS = {

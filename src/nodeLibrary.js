@@ -8,6 +8,7 @@
 //   factory(flowPos) -> a React Flow node payload, ready for setNodes
 
 import { NODE_THEME } from './graph/initialGraph';
+import { AE_NODE_LIBRARY } from './generated/aeNodeLibrary';
 
 let counter = 0;
 function uid(prefix) {
@@ -15,7 +16,7 @@ function uid(prefix) {
   return `${prefix}_${Date.now().toString(36)}_${counter}`;
 }
 
-export const NODE_LIBRARY = [
+const _BASE_NODE_LIBRARY = [
   {
     category: 'Flow',
     items: [
@@ -228,6 +229,75 @@ export const NODE_LIBRARY = [
         }),
       },
       {
+        type: 'colorPicker',
+        label: 'Color Picker',
+        keywords: ['color', 'rgb', 'hex', 'hsv', 'palette'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Color Picker',
+            category: 'data',
+            themeColor: '#e84393',
+            inputs: [
+              { id: 'color', label: 'Color', type: 'color' },
+            ],
+            outputs: [
+              { id: 'hex', label: 'HEX' },
+              { id: 'rgb', label: 'RGB [0-1]' },
+              { id: 'rgba', label: 'RGBA [0-1]' },
+              { id: 'rgb255', label: 'RGB [0-255]' },
+            ],
+            values: { color: '#ff0000' },
+          },
+        }),
+      },
+      {
+        type: 'newFile',
+        label: 'New File',
+        keywords: ['file', 'path', 'io'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'New File',
+            category: 'data',
+            themeColor: '#e67e22',
+            inputs: [
+              { id: 'path', label: 'Path', type: 'text', placeholder: '~/Desktop/render.png' },
+            ],
+            outputs: [
+              { id: 'file', label: 'File' },
+            ],
+            values: { path: '' },
+          },
+        }),
+      },
+      {
+        type: 'newFolder',
+        label: 'New Folder',
+        keywords: ['folder', 'path', 'io', 'directory'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'New Folder',
+            category: 'data',
+            themeColor: '#e67e22',
+            inputs: [
+              { id: 'path', label: 'Path', type: 'text', placeholder: '~/Desktop/renders' },
+            ],
+            outputs: [
+              { id: 'folder', label: 'Folder' },
+            ],
+            values: { path: '' },
+          },
+        }),
+      },
+      {
         type: 'splitVec',
         label: 'Split Vector',
         keywords: ['split', 'vector', 'decompose', 'xy', 'components', 'x', 'y'],
@@ -401,6 +471,8 @@ export const NODE_LIBRARY = [
   },
 ];
 
+export const NODE_LIBRARY = [..._BASE_NODE_LIBRARY, ...AE_NODE_LIBRARY];
+
 // Flattened list with category attached — handy for search ranking.
 export function flattenLibrary() {
   const out = [];
@@ -410,6 +482,30 @@ export function flattenLibrary() {
     }
   }
   return out;
+}
+
+// Build a human-readable catalog of every node, including its input/output handles.
+// Used to inject the allowed vocabulary into the Copilot LLM's system prompt so
+// it stops hallucinating node types that don't exist.
+export function getNodeCatalogSummary() {
+  const lines = [];
+  for (const entry of flattenLibrary()) {
+    let inputs = [];
+    let outputs = [];
+    try {
+      const sample = entry.factory({ x: 0, y: 0 });
+      const data = sample?.data || {};
+      inputs = Array.isArray(data.inputs) ? data.inputs.map(p => p.id) : [];
+      outputs = Array.isArray(data.outputs) ? data.outputs.map(p => p.id) : [];
+    } catch {
+      // Some node types (reroute, getGlobal, setGlobal) don't declare inputs/outputs;
+      // fall back to an empty handle list rather than crashing the prompt build.
+    }
+    const inStr = inputs.length ? inputs.join(', ') : '—';
+    const outStr = outputs.length ? outputs.join(', ') : '—';
+    lines.push(`- "${entry.label}" (Inputs: ${inStr}. Outputs: ${outStr})`);
+  }
+  return lines.join('\n');
 }
 
 // Find the first input/output port on a node template that matches a source

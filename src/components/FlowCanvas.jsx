@@ -133,6 +133,66 @@ function FlowCanvasInner({
   // Override the default edge so every wire shows a moving dot.
   const edgeTypes = useMemo(() => ({ default: FlowEdge, flow: FlowEdge }), []);
 
+  // A wire is "live" only if it participates in an exec chain rooted at the
+  // entry node (Get Active Comp) — either an exec edge in that chain, or a
+  // data edge feeding a node that the chain reaches. Inert wires render
+  // without the moving dot so the canvas reads less busy.
+  const liveEdgeIds = useMemo(() => {
+    const live = new Set();
+    const entry = nodes.find((n) => n.data?.label === 'Get Active Comp');
+    if (!entry) return live;
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    const liveNodes = new Set();
+
+    const execStack = [entry.id];
+    while (execStack.length) {
+      const id = execStack.pop();
+      if (liveNodes.has(id)) continue;
+      liveNodes.add(id);
+      const node = byId.get(id);
+      if (!node) continue;
+      for (const e of edges) {
+        if (e.source !== id) continue;
+        const isExec =
+          e.sourceHandle?.startsWith('exec_') && e.targetHandle === 'exec_in';
+        const isReroutePass =
+          node.type === 'reroute' && e.sourceHandle === 'out';
+        if (isExec || isReroutePass) {
+          live.add(e.id);
+          execStack.push(e.target);
+        }
+      }
+    }
+
+    const dataStack = Array.from(liveNodes);
+    const visitedData = new Set();
+    while (dataStack.length) {
+      const id = dataStack.pop();
+      if (visitedData.has(id)) continue;
+      visitedData.add(id);
+      for (const e of edges) {
+        if (e.target !== id) continue;
+        const isExec =
+          e.sourceHandle?.startsWith('exec_') && e.targetHandle === 'exec_in';
+        if (isExec) continue;
+        live.add(e.id);
+        dataStack.push(e.source);
+      }
+    }
+
+    return live;
+  }, [nodes, edges]);
+
+  const decoratedEdges = useMemo(
+    () =>
+      edges.map((e) =>
+        liveEdgeIds.has(e.id) === !!e.data?.live
+          ? e
+          : { ...e, data: { ...e.data, live: liveEdgeIds.has(e.id) } },
+      ),
+    [edges, liveEdgeIds],
+  );
+
   /* ------------ connection + reconnect (one wire per input) ------------ */
 
   const onConnect = useCallback(
@@ -435,7 +495,7 @@ function FlowCanvasInner({
     >
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={decoratedEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}

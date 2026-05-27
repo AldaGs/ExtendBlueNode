@@ -121,7 +121,11 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
   // coords stop being correct otherwise.
   useEffect(() => {
     if (!openCat) return;
-    const onScroll = () => setOpenCat(null);
+    const onScroll = (e) => {
+      // Allow scrolling the submenu itself without closing it
+      if (subRef.current && subRef.current.contains(e.target)) return;
+      setOpenCat(null);
+    };
     window.addEventListener('scroll', onScroll, true);
     return () => window.removeEventListener('scroll', onScroll, true);
   }, [openCat]);

@@ -57,9 +57,9 @@ export default function SmartInput({
           </span>
         ) : (
           <input
-            className="ebn-smart__input"
-            type={type === 'number' ? 'number' : 'text'}
-            value={value ?? ''}
+            className={`ebn-smart__input${type === 'color' ? ' ebn-smart__input--color' : ''}`}
+            type={type === 'number' ? 'number' : type === 'color' ? 'color' : 'text'}
+            value={value ?? (type === 'color' ? '#000000' : '')}
             placeholder={placeholder}
             onChange={onChange}
             onPointerDown={(e) => e.stopPropagation()}
