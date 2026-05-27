@@ -64,10 +64,6 @@
 }
 
 /* ---------- Cascade categories ---------- */
-.ebn-addmenu__cat {
-  position: relative;
-}
-
 .ebn-addmenu__cat-row {
   width: 100%;
   display: flex;
@@ -81,17 +77,16 @@
   font-weight: 500;
   text-align: left;
   cursor: default;
+  font-family: inherit;
 }
 
 .ebn-addmenu__cat-row:hover,
-.ebn-addmenu__cat:focus-within .ebn-addmenu__cat-row {
+.ebn-addmenu__cat-row--open {
   background: #094771;
   color: #ffffff;
 }
 
-.ebn-addmenu__cat-name {
-  flex: 1;
-}
+.ebn-addmenu__cat-name { flex: 1; }
 
 .ebn-addmenu__cat-count {
   font-size: 10px;
@@ -99,27 +94,24 @@
   font-family: ui-monospace, Consolas, monospace;
 }
 
-.ebn-addmenu__cat:hover .ebn-addmenu__cat-count,
-.ebn-addmenu__cat:focus-within .ebn-addmenu__cat-count {
+.ebn-addmenu__cat-row:hover .ebn-addmenu__cat-count,
+.ebn-addmenu__cat-row--open .ebn-addmenu__cat-count {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.ebn-addmenu__cat-arrow {
-  color: #6e6e6e;
-}
+.ebn-addmenu__cat-arrow { color: #6e6e6e; }
 
-.ebn-addmenu__cat:hover .ebn-addmenu__cat-arrow,
-.ebn-addmenu__cat:focus-within .ebn-addmenu__cat-arrow {
+.ebn-addmenu__cat-row:hover .ebn-addmenu__cat-arrow,
+.ebn-addmenu__cat-row--open .ebn-addmenu__cat-arrow {
   color: #ffffff;
 }
 
+/* Floating submenu rendered at the document root (position: fixed
+   coords come from JS) so it can escape the parent's overflow. */
 .ebn-addmenu__sub {
-  display: none;
-  position: absolute;
-  top: -4px;
-  left: 100%;
+  z-index: 3100;
   min-width: 200px;
-  max-height: 360px;
+  max-height: min(380px, calc(100vh - 16px));
   overflow-y: auto;
   background: #1f1f22;
   border: 1px solid #3c3c3c;
@@ -128,13 +120,27 @@
     0 10px 30px rgba(0, 0, 0, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.4);
   padding: 4px;
-  z-index: 10;
-}
-
-.ebn-addmenu__cat:hover > .ebn-addmenu__sub,
-.ebn-addmenu__cat:focus-within > .ebn-addmenu__sub {
   display: flex;
   flex-direction: column;
+  animation: ebn-addmenu-sub-in 0.1s ease-out;
+}
+
+@keyframes ebn-addmenu-sub-in {
+  from { opacity: 0; transform: translateX(-3px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Category tag chip used in search-result rows. */
+.ebn-addmenu__cat-tag {
+  font-size: 10px;
+  color: #6e6e6e;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.ebn-addmenu__item--hot .ebn-addmenu__cat-tag,
+.ebn-addmenu__item:hover .ebn-addmenu__cat-tag {
+  color: #b8d4ff;
 }
 
 .ebn-addmenu__item {
@@ -156,17 +162,6 @@
 .ebn-addmenu__item--hot {
   background: #094771;
   color: #ffffff;
-}
-
-.ebn-addmenu__cat {
-  font-size: 10px;
-  color: #6e6e6e;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.ebn-addmenu__item--hot .ebn-addmenu__cat {
-  color: #b8d4ff;
 }
 
 .ebn-addmenu__empty {
