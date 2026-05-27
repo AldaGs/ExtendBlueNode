@@ -432,6 +432,133 @@ describe('property path chains', () => {
   });
 });
 
+describe('local vars, get property, vector2', () => {
+  function setLocalVar(id, name, value) {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Set Local Variable',
+        variableName: name,
+        inputs: [
+          { id: 'exec_in', type: 'exec' },
+          { id: 'value',   type: 'expr' },
+        ],
+        outputs: [
+          { id: 'exec_out' },
+          { id: 'value' },
+        ],
+        values: { value },
+      },
+    };
+  }
+
+  function getPropertyValue(id, propertyPath = 'ADBE Transform Group/ADBE Opacity') {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Get Property Value',
+        inputs: [
+          { id: 'layer',    type: 'expr' },
+          { id: 'property', type: 'text' },
+        ],
+        outputs: [{ id: 'value' }],
+        values: { property: propertyPath },
+      },
+    };
+  }
+
+  function vector2(id, x = 0, y = 0) {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Vector 2 Array',
+        inputs: [
+          { id: 'x', type: 'number' },
+          { id: 'y', type: 'number' },
+        ],
+        outputs: [{ id: 'value' }],
+        values: { x, y },
+      },
+    };
+  }
+
+  it('Set Local Variable emits var <sanitized name> = <expr>;', () => {
+    const a = getActiveComp('a');
+    const lv = setLocalVar('lv', 'my offset!', '12 + 5');
+    const out = compileToExtendScript(
+      [a, lv],
+      [execEdge('e1', 'a', 'lv')],
+    );
+    // Sanitized: "my offset!" -> "my_offset_"
+    expect(out).toMatch(/var my_offset_ = 12 \+ 5;/);
+  });
+
+  it('Set Local Variable falls back to a stable id-derived name when blank', () => {
+    const a = getActiveComp('a');
+    const lv = {
+      ...setLocalVar('lv7', '', '42'),
+      data: { ...setLocalVar('lv7', '', '42').data, variableName: '' },
+    };
+    const out = compileToExtendScript(
+      [a, lv],
+      [execEdge('e1', 'a', 'lv7')],
+    );
+    expect(out).toMatch(/var var_lv7 = 42;/);
+  });
+
+  it('Get Property Value reads .value at the end of the chain', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const g = getPropertyValue('g', 'ADBE Transform Group/ADBE Opacity');
+    const out = compileToExtendScript(
+      [a, b, c, g],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'g', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(targetLayer\.property\("ADBE Transform Group"\)\.property\("ADBE Opacity"\)\.value\)/);
+  });
+
+  it('Get Property Value honors a wired Layer input', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const g = getPropertyValue('g', 'ADBE Transform Group/ADBE Position');
+    // For Each loops would normally drive `layer` — emulate that
+    // with a tiny upstream that resolves to a known identifier.
+    const f = { id: 'f', type: 'forEachSelected', position: { x: 0, y: 0 }, data: {} };
+    const out = compileToExtendScript(
+      [a, b, c, g, f],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'g', 'value', 'c', 'value'),
+        dataEdge('d2', 'f', 'layer', 'g', 'layer'),
+      ],
+    );
+    expect(out).toMatch(/loopLayer\.property\("ADBE Transform Group"\)\.property\("ADBE Position"\)\.value/);
+  });
+
+  it('Vector 2 Array emits [x, y] inline', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const v = vector2('v', 960, 540);
+    const out = compileToExtendScript(
+      [a, b, c, v],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'v', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(\[960, 540\]\)/);
+  });
+});
+
 describe('compileToIR', () => {
   it('produces statements not strings', () => {
     const irOut = compileToIR([getActiveComp('a')], []);

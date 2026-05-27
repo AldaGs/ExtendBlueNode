@@ -124,6 +124,7 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     sourceOf(node, portId) {
       return resolveSourceNode(byId, edges, node.id, portId);
     },
+    sanitizeVarName, // exposed for emitters that need raw identifier hygiene
     walkBranch(nodeId, handleId) {
       const outs = execEdges.filter(
         (e) => e.source === nodeId && e.sourceHandle === handleId,

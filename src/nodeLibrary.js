@@ -204,6 +204,52 @@ export const NODE_LIBRARY = [
           },
         }),
       },
+      {
+        type: 'getPropertyValue',
+        label: 'Get Property Value',
+        keywords: ['get', 'property', 'value', 'read'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Get Property Value',
+            category: 'data',
+            themeColor: '#3a6b54',
+            inputs: [
+              { id: 'layer',    label: 'Layer',    type: 'expr' },
+              { id: 'property', label: 'Property', type: 'text', placeholder: 'ADBE Transform Group/ADBE Position' },
+            ],
+            outputs: [
+              { id: 'value', label: 'Value' },
+            ],
+            values: { property: 'ADBE Transform Group/ADBE Position' },
+          },
+        }),
+      },
+      {
+        type: 'vector2',
+        label: 'Vector 2 Array',
+        keywords: ['array', 'vector', 'position', 'scale', '2d', 'xy'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Vector 2 Array',
+            category: 'data',
+            themeColor: '#9b59b6',
+            inputs: [
+              { id: 'x', label: 'X', type: 'number' },
+              { id: 'y', label: 'Y', type: 'number' },
+            ],
+            outputs: [
+              { id: 'value', label: '[X, Y]' },
+            ],
+            values: { x: 960, y: 540 },
+          },
+        }),
+      },
     ],
   },
   {
@@ -258,6 +304,34 @@ export const NODE_LIBRARY = [
           data: { values: { cond: 'true', if_true: 1, if_false: 0 } },
         }),
       },
+      {
+        type: 'setLocalVar',
+        label: 'Set Local Variable',
+        keywords: ['set', 'variable', 'var', 'store', 'local', 'let'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Set Local Variable',
+            category: 'logic',
+            themeColor: '#a36b1f',
+            // Variable name lives in data.variableName so it shows up in the
+            // Properties panel like every other identifier. The compiler
+            // sanitizes it; falls back to a node-id default if blank.
+            variableName: '',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'value',   label: 'Value',     type: 'expr' },
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' },
+              { id: 'value',    label: 'Variable' },
+            ],
+            values: { value: '0' },
+          },
+        }),
+      },
     ],
   },
   {
@@ -302,77 +376,6 @@ export const NODE_LIBRARY = [
         }),
       },
     ],
-  },
-  {
-  type: 'getProperty',
-  label: 'Get Property Value',
-  keywords: ['get', 'property', 'value', 'read'],
-    factory: (pos) => ({
-      id: uid('node'),
-      type: 'ebnNode',
-      position: pos,
-      data: {
-        label: 'Get Property Value',
-        category: 'data',
-        themeColor: '#3498db', // Blue for data
-        inputs: [
-          { id: 'layer', label: 'Layer', type: 'expr' },
-          { id: 'propPath', label: 'Property Path', type: 'text', default: 'ADBE Position' },
-        ],
-        outputs: [
-          { id: 'value', label: 'Value' },
-        ],
-        values: { propPath: 'ADBE Position' },
-      },
-    }),
-  },
-  {
-  type: 'setLocalVar',
-  label: 'Set Local Variable',
-  keywords: ['set', 'variable', 'var', 'store'],
-    factory: (pos) => ({
-      id: uid('node'),
-      type: 'ebnNode',
-      position: pos,
-      data: {
-        label: 'Set Local Variable',
-        category: 'action',
-        themeColor: '#e67e22', // Orange for actions
-        inputs: [
-          { id: 'exec_in', label: 'Execution', type: 'exec' },
-          { id: 'varName', label: 'Var Name', type: 'text', default: 'myVar' },
-          { id: 'value', label: 'Value', type: 'expr' },
-        ],
-        outputs: [
-          { id: 'exec_out', label: 'Execution' },
-          { id: 'outValue', label: 'Variable' }, // Passes the variable name forward
-        ],
-        values: { varName: 'myVar', value: '0' },
-      },
-    }),
-  },
-  {
-  type: 'vector2',
-  label: 'Vector 2 Array',
-  keywords: ['array', 'vector', 'position', 'scale', '2d'],
-    factory: (pos) => ({
-      id: uid('node'),
-      type: 'ebnNode',
-      position: pos,
-      data: {
-        label: 'Vector 2 Array',
-        category: 'data',
-        themeColor: '#9b59b6', // Purple for complex data
-        inputs: [
-          { id: 'x', label: 'X', type: 'number' },
-          { id: 'y', label: 'Y', type: 'number' },
-        ],
-        outputs: [
-          { id: 'arrayOut', label: '[X, Y]' },
-        ],
-        values: { x: 960, y: 540 },
-      },
-    }),
   },
 ];
 

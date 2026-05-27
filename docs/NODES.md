@@ -220,6 +220,9 @@ Run with `npm test` (or `npm run test:watch`).
 | If | `if` | `emitterFor` switch (control-flow) |
 | For Each Selected Layer | `forEachSelected` | `emitterFor` switch (control-flow) |
 | Property Path | `propertyPath` | special-cased in Set Property's `resolvePropertyChain` |
+| Get Property Value | `ebnNode` ("Get Property Value") | `EBN_DATA_EMITTERS` — data-side, reads `.value` off a chain |
+| Vector 2 Array | `ebnNode` ("Vector 2 Array") | `EBN_DATA_EMITTERS` — emits `[x, y]` for array-valued props |
+| Set Local Variable | `ebnNode` ("Set Local Variable") | `EBN_NODE_EMITTERS` — emits `var <name> = <expr>;` |
 
 ### Property paths
 

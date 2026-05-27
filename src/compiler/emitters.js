@@ -106,11 +106,13 @@ const EBN_NODE_EMITTERS = {
   },
 
   'Set Local Variable': (node, ctx) => {
-    const varName = ctx.resolveInput(node, { id: 'varName', type: 'text' });
-    const val = ctx.resolveInput(node, { id: 'value', type: 'expr' });
-    
-    // This creates: var "myVar" = 100;
-    return [ir.raw(`var ${varName.replace(/['"]/g, '')} = ${val};`)];
+    // The identifier lives in data.variableName (edited via the
+    // Properties panel) so it shows up wherever the IR talks about
+    // variable names. Fall back to a stable per-node id-derived name
+    // when blank so we never emit an invalid `var = …;`.
+    const name = ctx.varName(node);
+    const expr = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.varDecl(name, expr)];
   },
 
   // Legacy fixture from the original Phase 5 spec.
@@ -230,20 +232,35 @@ export function resolveExpressionFor(node, ctx) {
     return 'loopLayer';
   }
 
-  if (node.data.label === 'Get Property Value') {
-    const layer = ctx.resolveInput(node, { id: 'layer', type: 'expr' });
-    const propPath = ctx.resolveInput(node, { id: 'propPath', type: 'text' });
-    return `${layer}.property(${propPath}).value`; 
-  }
-
-  if (node.data.label === 'Vector 2 Array') {
-    const x = ctx.resolveInput(node, { id: 'x', type: 'number' });
-    const y = ctx.resolveInput(node, { id: 'y', type: 'number' });
-    return `[${x}, ${y}]`; 
+  // Data-side ebnNode dispatch — keyed by label so these nodes can use
+  // the generic shell and still participate in expression composition.
+  if (node.type === 'ebnNode') {
+    const fn = EBN_DATA_EMITTERS[node.data?.label];
+    if (fn) return fn(node, ctx);
   }
 
   return null;
 }
+
+/* ----------------------------- data-side label dispatch ----------------------------- */
+
+const EBN_DATA_EMITTERS = {
+  // Reads layer.property("…").property("…").value, reusing the same
+  // slash-path expansion as Set Property so paths stay uniform.
+  'Get Property Value': (node, ctx) => {
+    const layer = ctx.resolveInput(node, {
+      id: 'layer', type: 'expr', default: 'targetLayer',
+    });
+    const propChain = resolvePropertyChain(node, ctx);
+    return `${layer}${propChain}.value`;
+  },
+
+  'Vector 2 Array': (node, ctx) => {
+    const x = ctx.resolveInput(node, { id: 'x', type: 'number' });
+    const y = ctx.resolveInput(node, { id: 'y', type: 'number' });
+    return `[${x}, ${y}]`;
+  },
+};
 
 export const MATH_OPS = {
   add: '+', sub: '-', mul: '*', div: '/', mod: '%',
