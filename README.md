@@ -10,20 +10,32 @@ EBN is a visual programming environment and IDE for Adobe After Effects. It pair
 
 - **Splittable workspace.** A Blender-style layout tree — every pane can be split horizontally or vertically, resized by dragging the gutter, or closed. Any pane can host any view (Canvas / Code / Properties / Globals / Copilot) via a modern Adobe-styled view picker.
 - **Multi-canvas with independent cameras.** Each canvas leaf has its own `ReactFlowProvider`, so you can open two canvases with independent pan/zoom and selection.
-- **Custom node aesthetic.** ComfyUI/Blender-inspired dark cards with themed headers per category (Selectors / Actions / Mutators / Data / Globals). Handles are unclipped, wires render above nodes, single-input enforcement.
+- **Compile & Inject into After Effects.** A real CEP bridge: `EBN.run(script)` in `jsx/host.jsx` evals the generated ExtendScript inside AE and returns a typed result; the header shows a live Run-status pill (Injected / Run error / Browser mode) with the timestamp + tooltip.
+- **Persistence.** Layout tree + graph + globals are autosaved to `localStorage` (debounced 500 ms) and exportable as a `.ebn` project file (schema-versioned, forward-migration ready). Header has a *Project* menu (New / Open / Save As) plus Ctrl/Cmd-S / Ctrl/Cmd-O shortcuts.
+- **Compiler IR pipeline.** The DAG is lowered to a typed-statement IR first (`varDecl` / `assign` / `ifElse` / `forIn` / `tryCatch` / …) then printed. Per-node-kind emitters live in `src/compiler/emitters.js`. 23/23 Vitest regression cases.
+- **Rich node catalog.**
+  - **Selectors:** Get Active Comp, Select Layer by ID / Name / Index
+  - **Actions:** *(extensible — register more under `Actions` in `nodeLibrary.js`)*
+  - **Mutators:** Set Property (honors wired Layer + nested property-path chains)
+  - **Data:** Integer, String, Property Path (presets for transform sub-properties)
+  - **Math:** single Math node with op dropdown (`+ − × ÷ %`), Compare (`== != < <= > >=`)
+  - **Logic:** If (real `if/else` exec branching), Select (inline ternary)
+  - **Loops:** For Each Selected Layer (emits a real `for` over `activeComp.selectedLayers`, exposes `loopLayer`)
+  - **Globals:** Get Global, Set Global (with hoisted `var global_<name>` declarations)
+  - **Flow:** Reroute relay
+- **Custom node aesthetic.** ComfyUI/Blender-inspired dark cards with themed headers per category. Handles are unclipped, wires render above nodes, single-input enforcement.
+- **Animated edges.** A subtle moving dot rides each wire — exec wires are brighter / faster, data wires are tinted blue / slower.
 - **Smart Input ports.** Each input renders either an inline dark editor (number / text) or a "Linked" pill when a wire is plugged in. Editing writes into `node.data.values[handleId]`.
-- **Primitive data nodes.** `Integer` and `String` literal nodes drive any input by wire — the compiler hoists their values into named variables.
-- **Global variables.** Defined in the Globals panel (`{ id, name, type, initialValue }`). `Get Global` and `Set Global` nodes use them on the canvas. The compiler hoists every global to the top of the script and emits assignments in the exec chain.
 - **Properties panel.** Edits a selected node's `label` and `variableName` with live validation — a red glow + shake on invalid identifiers, and the panel blocks tab-switching away while invalid.
-- **Add-node menu.** Right-click on empty canvas opens a categorized, searchable picker. Drag a wire onto empty pane and it opens pre-targeted, auto-wiring the spawned node to the source handle on compatible ports.
+- **Add Node menu (cascade).** Right-click on empty canvas opens a Blender-style cascade: categories with item counts on the root popup, viewport-fixed submenu that auto-flips and scrolls into view, plus search across everything. Dropping a wire on empty pane opens it pre-targeted and auto-wires the new node.
 - **Canvas gestures.**
   - Drag node onto a wire → edge splits and rewires through the node.
   - **Shift+click** empty canvas → drops a Reroute relay node.
   - **Ctrl/Cmd-drag** → knife tool; deletes every edge it crosses.
   - Drag an edge endpoint to another handle → reconnects; drop on empty canvas → disconnects.
   - Delete / Backspace deletes selected edges.
-- **Live AST → ExtendScript.** [`src/astCompiler.js`](src/astCompiler.js) walks the execution edges from `Get Active Comp`, hoists globals + primitives, substitutes `{token}` slots with either inline values or wired references, and emits a `try { app.beginUndoGroup(...) … } catch { alert(...) }` block. Recompiles on every graph change.
-- **Local Monaco.** Bundled locally with `monaco-editor` + Vite `?worker` imports — no CDN, works under `file://` in CEP.
+- **Live AST → ExtendScript.** [`src/astCompiler.js`](src/astCompiler.js) walks every outgoing execution branch from `Get Active Comp` via DFS, hoists globals + primitives, composes inline math / compare / select / property-path expressions, emits typed IR statements that print as a `try { app.beginUndoGroup(...) … } catch { alert(...) }` block. Recompiles on every graph change.
+- **Local Monaco.** Bundled locally with `monaco-editor` + Vite `?worker` imports — no CDN, works under `file://` in CEP. Code-split into its own chunk so the app shell loads first.
 
 ## 🛠 Tech stack
 
@@ -89,6 +101,11 @@ npm run ae:preview             # build + install into %APPDATA%/Adobe/CEP/extens
 ```
 Launch After Effects → **Window → Extensions → Extend Blue Node**.
 To attach DevTools, open `http://localhost:8088` in any browser while AE has the panel open.
+
+If the panel won't load, run the doctor:
+```bash
+npm run cep:doctor             # registry, extension folder, manifest, dev port
+```
 
 ## ⌨ Canvas reference
 
