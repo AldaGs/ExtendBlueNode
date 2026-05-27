@@ -29,6 +29,12 @@ function literalFor(portType, raw) {
   if (portType === 'boolean') {
     return String(raw === true || raw === 'true');
   }
+  if (portType === 'expr') {
+    // raw is already a JS expression (e.g. "myVar > 5"). Use verbatim;
+    // fall back to `false` for empty so the script stays valid.
+    if (raw == null || raw === '') return 'false';
+    return String(raw);
+  }
   return JSON.stringify(raw == null ? '' : String(raw));
 }
 

@@ -17,6 +17,9 @@ import IntegerNode from './IntegerNode';
 import StringNode from './StringNode';
 import GetGlobalNode from './GetGlobalNode';
 import SetGlobalNode from './SetGlobalNode';
+import MathNode from './MathNode';
+import CompareNode from './CompareNode';
+import IfNode from './IfNode';
 import AddNodeMenu from './AddNodeMenu';
 import FlowEdge from './FlowEdge';
 import { findCompatibleHandle } from '../nodeLibrary';
@@ -110,6 +113,9 @@ function FlowCanvasInner({
       string: StringNode,
       getGlobal: GetGlobalNode,
       setGlobal: SetGlobalNode,
+      math: MathNode,
+      compare: CompareNode,
+      if: IfNode,
     }),
     [],
   );

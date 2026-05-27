@@ -173,6 +173,88 @@ describe('compileToExtendScript', () => {
   });
 });
 
+describe('math / compare / if', () => {
+  function math(id, op, values = { a: 0, b: 0 }) {
+    return { id, type: 'math', position: { x: 0, y: 0 }, data: { op, values } };
+  }
+  function compare(id, op, values = { a: 0, b: 0 }) {
+    return { id, type: 'compare', position: { x: 0, y: 0 }, data: { op, values } };
+  }
+  function ifNode(id, condInline = 'true') {
+    return { id, type: 'if', position: { x: 0, y: 0 }, data: { values: { cond: condInline } } };
+  }
+
+  it('inlines a Math (Add) node into a wired Set Property value', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const m = math('m', 'mul', { a: 10, b: 5 });
+    const out = compileToExtendScript(
+      [a, b, c, m],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'm', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(\(10 \* 5\)\)/);
+  });
+
+  it('chains math nodes into nested expressions', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const m1 = math('m1', 'add', { a: 1, b: 2 });
+    const m2 = math('m2', 'mul', { a: 0, b: 4 });
+    // m2.a is driven by m1's output
+    const out = compileToExtendScript(
+      [a, b, c, m1, m2],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'm1', 'value', 'm2', 'a'),
+        dataEdge('d2', 'm2', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(\(\(1 \+ 2\) \* 4\)\)/);
+  });
+
+  it('Compare emits its operator', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const cmp = compare('cmp', 'gt', { a: 7, b: 3 });
+    const out = compileToExtendScript(
+      [a, b, c, cmp],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'cmp', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(\(7 > 3\)\)/);
+  });
+
+  it('If emits if/else with separate then/else branches', () => {
+    const a = getActiveComp('a');
+    const iff = ifNode('iff', 'true');
+    const t = setProperty('t', { property: 'ADBE Opacity', value: 100 });
+    const f = setProperty('f', { property: 'ADBE Opacity', value: 0 });
+    const out = compileToExtendScript(
+      [a, iff, t, f],
+      [
+        execEdge('e1', 'a', 'iff'),
+        { id: 'et', source: 'iff', sourceHandle: 'exec_then', target: 't', targetHandle: 'exec_in' },
+        { id: 'ee', source: 'iff', sourceHandle: 'exec_else', target: 'f', targetHandle: 'exec_in' },
+      ],
+    );
+    expect(out).toMatch(/if \(true\) \{/);
+    expect(out).toMatch(/\.setValue\(100\)/);
+    expect(out).toMatch(/} else \{/);
+    expect(out).toMatch(/\.setValue\(0\)/);
+  });
+});
+
 describe('compileToIR', () => {
   it('produces statements not strings', () => {
     const irOut = compileToIR([getActiveComp('a')], []);

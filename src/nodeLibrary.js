@@ -143,6 +143,49 @@ export const NODE_LIBRARY = [
     ],
   },
   {
+    category: 'Math',
+    items: [
+      {
+        type: 'math',
+        label: 'Math',
+        keywords: ['add', 'subtract', 'multiply', 'divide', 'modulo', 'arithmetic'],
+        factory: (pos) => ({
+          id: uid('math'),
+          type: 'math',
+          position: pos,
+          data: { op: 'add', values: { a: 0, b: 0 } },
+        }),
+      },
+      {
+        type: 'compare',
+        label: 'Compare',
+        keywords: ['equal', 'less', 'greater', 'boolean', 'condition'],
+        factory: (pos) => ({
+          id: uid('cmp'),
+          type: 'compare',
+          position: pos,
+          data: { op: 'eq', values: { a: 0, b: 0 } },
+        }),
+      },
+    ],
+  },
+  {
+    category: 'Logic',
+    items: [
+      {
+        type: 'if',
+        label: 'If',
+        keywords: ['branch', 'condition', 'then', 'else'],
+        factory: (pos) => ({
+          id: uid('if'),
+          type: 'if',
+          position: pos,
+          data: { values: { cond: 'true' } },
+        }),
+      },
+    ],
+  },
+  {
     category: 'Globals',
     items: [
       {

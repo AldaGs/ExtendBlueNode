@@ -76,7 +76,10 @@ export function emitterFor(node) {
 
   if (node.type === 'if') {
     return (n, ctx) => {
-      const cond = ctx.resolveInput(n, { id: 'cond', type: 'text' });
+      // 'expr' port type means: use the inline string verbatim (so the
+      // user can write `myVar > 5`) and fall through unchanged when a
+      // Compare node is wired in.
+      const cond = ctx.resolveInput(n, { id: 'cond', type: 'expr' });
       const thenBody = ctx.walkBranch(n.id, 'exec_then');
       const elseBody = ctx.walkBranch(n.id, 'exec_else');
       return [ir.ifElse(cond, thenBody, elseBody)];

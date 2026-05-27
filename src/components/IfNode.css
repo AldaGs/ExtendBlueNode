@@ -1,0 +1,4 @@
+.ebn-if__body {
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
