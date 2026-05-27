@@ -228,6 +228,17 @@ export const NODE_LIBRARY = [
         }),
       },
       {
+        type: 'splitVec',
+        label: 'Split Vector',
+        keywords: ['split', 'vector', 'decompose', 'xy', 'components', 'x', 'y'],
+        factory: (pos) => ({
+          id: uid('svec'),
+          type: 'splitVec',
+          position: pos,
+          data: { values: { vec: '' } },
+        }),
+      },
+      {
         type: 'vector2',
         label: 'Vector 2 Array',
         keywords: ['array', 'vector', 'position', 'scale', '2d', 'xy'],

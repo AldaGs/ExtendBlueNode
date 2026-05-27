@@ -186,7 +186,7 @@ export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
 // Inlined when a data-side node is upstream of a wired input. Returns
 // a JS expression string. Recursive: math taking math taking integer
 // composes naturally.
-export function resolveExpressionFor(node, ctx) {
+export function resolveExpressionFor(node, ctx, outputHandle) {
   if (!node) return null;
 
   if (node.type === 'getGlobal') {
@@ -235,6 +235,12 @@ export function resolveExpressionFor(node, ctx) {
     const a = ctx.resolveInput(node, { id: 'a', type: 'expr' });
     const b = ctx.resolveInput(node, { id: 'b', type: 'expr' });
     return `ebnVec(${a}, ${b}, ${JSON.stringify(op)})`;
+  }
+
+  if (node.type === 'splitVec') {
+    const vec = ctx.resolveInput(node, { id: 'vec', type: 'expr' });
+    const idx = outputHandle === 'y' ? 1 : 0;
+    return `(${vec})[${idx}]`;
   }
 
   // For-Each-Selected's `layer` output references the loop-local variable.

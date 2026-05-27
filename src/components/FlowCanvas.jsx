@@ -24,6 +24,7 @@ import SelectNode from './SelectNode';
 import ForEachSelectedNode from './ForEachSelectedNode';
 import PropertyPathNode from './PropertyPathNode';
 import VectorMathNode from './VectorMathNode';
+import SplitVectorNode from './SplitVectorNode';
 import AddNodeMenu from './AddNodeMenu';
 import FlowEdge from './FlowEdge';
 import { findCompatibleHandle } from '../nodeLibrary';
@@ -124,6 +125,7 @@ function FlowCanvasInner({
       forEachSelected: ForEachSelectedNode,
       propertyPath: PropertyPathNode,
       vecMath: VectorMathNode,
+      splitVec: SplitVectorNode,
     }),
     [],
   );

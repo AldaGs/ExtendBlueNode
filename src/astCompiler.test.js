@@ -646,6 +646,86 @@ describe('local vars, get property, vector2', () => {
     );
     expect(out).toMatch(/setValue\(\[960, 540\]\)/);
   });
+
+  it('Split Vector emits vec[0] for X and vec[1] for Y', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const cX = setProperty('cX');
+    const cY = setProperty('cY');
+    const sv = {
+      id: 'sv', type: 'splitVec', position: { x: 0, y: 0 },
+      data: { values: { vec: '[100, 200]' } },
+    };
+    const outX = compileToExtendScript(
+      [a, b, cX, sv],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'cX'),
+        dataEdge('dx', 'sv', 'x', 'cX', 'value'),
+      ],
+    );
+    expect(outX).toMatch(/setValue\(\(\[100, 200\]\)\[0\]\)/);
+
+    const outY = compileToExtendScript(
+      [a, b, cY, sv],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'cY'),
+        dataEdge('dy', 'sv', 'y', 'cY', 'value'),
+      ],
+    );
+    expect(outY).toMatch(/setValue\(\(\[100, 200\]\)\[1\]\)/);
+  });
+
+  it('Split Vector + scalar Math + Vector 2 Array round-trips position components', () => {
+    // Graph: Get Position → Split Vector → Math(X * 2) + Math(Y + 10) → Vector 2 Array → Set Position
+    const a = getActiveComp('a');
+    const f = { id: 'f', type: 'forEachSelected', position: { x: 0, y: 0 }, data: {} };
+    const pp = { id: 'pp', type: 'propertyPath', position: { x: 0, y: 0 }, data: { path: 'ADBE Transform Group/ADBE Position' } };
+    const g = getPropertyValue('g', 'ADBE Transform Group/ADBE Position');
+    const sv = { id: 'sv', type: 'splitVec', position: { x: 0, y: 0 }, data: { values: { vec: '' } } };
+    const mx = { id: 'mx', type: 'math', position: { x: 0, y: 0 }, data: { op: 'mul', values: { a: 0, b: 2 } } };
+    const my = { id: 'my', type: 'math', position: { x: 0, y: 0 }, data: { op: 'add', values: { a: 0, b: 10 } } };
+    const v2 = vector2('v2', 0, 0);
+    const setPos = {
+      id: 'setPos', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Set Property',
+        inputs: [
+          { id: 'exec_in',  type: 'exec' },
+          { id: 'layer',    type: 'expr' },
+          { id: 'property', type: 'text' },
+          { id: 'value',    type: 'number' },
+        ],
+        outputs: [{ id: 'exec_out' }],
+        values: {},
+      },
+    };
+
+    const out = compileToExtendScript(
+      [a, f, pp, g, sv, mx, my, v2, setPos],
+      [
+        execEdge('e1', 'a', 'f'),
+        { id: 'eb', source: 'f', sourceHandle: 'exec_body', target: 'setPos', targetHandle: 'exec_in' },
+        dataEdge('dl1', 'f', 'layer', 'g', 'layer'),
+        dataEdge('dl2', 'f', 'layer', 'setPos', 'layer'),
+        dataEdge('dp1', 'pp', 'value', 'g', 'property'),
+        dataEdge('dp2', 'pp', 'value', 'setPos', 'property'),
+        dataEdge('dg', 'g', 'value', 'sv', 'vec'),
+        dataEdge('dsx', 'sv', 'x', 'mx', 'a'),
+        dataEdge('dsy', 'sv', 'y', 'my', 'a'),
+        dataEdge('dmx', 'mx', 'value', 'v2', 'x'),
+        dataEdge('dmy', 'my', 'value', 'v2', 'y'),
+        dataEdge('dv2', 'v2', 'value', 'setPos', 'value'),
+      ],
+    );
+
+    // X component: (position.value)[0] * 2, Y: (position.value)[1] + 10
+    const posRead = 'loopLayer\\.property\\("ADBE Transform Group"\\)\\.property\\("ADBE Position"\\)\\.value';
+    expect(out).toMatch(new RegExp(`\\(\\(${posRead}\\)\\[0\\] \\* 2\\)`));
+    expect(out).toMatch(new RegExp(`\\(\\(${posRead}\\)\\[1\\] \\+ 10\\)`));
+    expect(out).not.toMatch(/Orphan/);
+  });
 });
 
 describe('compileToIR', () => {

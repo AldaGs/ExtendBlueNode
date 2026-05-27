@@ -81,20 +81,23 @@ function primDeclFor(node) {
 }
 
 // Walk back through reroute relays to reach the real upstream node.
+// Returns { node, handle } where handle is the sourceHandle on the upstream node.
 function resolveSourceNode(byId, edges, targetId, handleId) {
   const edge = edges.find(
     (e) => e.target === targetId && e.targetHandle === handleId,
   );
-  if (!edge) return null;
+  if (!edge) return { node: null, handle: null };
   let src = byId.get(edge.source);
+  let handle = edge.sourceHandle;
   while (src && src.type === 'reroute') {
     const up = edges.find(
       (e) => e.target === src.id && e.targetHandle === 'in',
     );
-    if (!up) return null;
+    if (!up) return { node: null, handle: null };
+    handle = up.sourceHandle;
     src = byId.get(up.source);
   }
-  return src;
+  return { node: src, handle };
 }
 
 /* ----------------------------- IR build pass ----------------------------- */
@@ -120,13 +123,13 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     varName: varNameFor,
     globalName: globalVarName,
     resolveInput(node, port) {
-      const upstream = resolveSourceNode(byId, edges, node.id, port.id);
+      const { node: upstream, handle: srcHandle } = resolveSourceNode(byId, edges, node.id, port.id);
       if (upstream) {
         // Mark the upstream so it doesn't get reported as an orphan.
         // The same applies transitively because resolveExpressionFor
         // recurses through ctx.resolveInput.
         markReached(upstream);
-        const expr = resolveExpressionFor(upstream, ctx);
+        const expr = resolveExpressionFor(upstream, ctx, srcHandle);
         if (expr != null) return expr;
       }
       const inline = node.data?.values?.[port.id];
@@ -136,7 +139,7 @@ export function compileToIR(nodes, edges, globalVariables = []) {
       return literalFor(port.type, DEFAULTS[port.id]);
     },
     sourceOf(node, portId) {
-      const upstream = resolveSourceNode(byId, edges, node.id, portId);
+      const { node: upstream } = resolveSourceNode(byId, edges, node.id, portId);
       // Emitters that introspect their upstream (Set Property reading
       // PropertyPath, Get Property Value reading PropertyPath, …) also
       // count as reaching that node.
