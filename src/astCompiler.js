@@ -13,6 +13,7 @@ import {
   SELF_BRANCHING_TYPES,
   resolveExpressionFor,
 } from './compiler/emitters';
+import { HELPERS } from './compiler/helpers';
 
 const EXEC_OUT = 'exec_out';
 const EXEC_IN  = 'exec_in';
@@ -110,6 +111,10 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     if (node) reached.add(node.id);
   }
 
+  // Set of helper function names any emitter requested. Each is emitted
+  // exactly once at the top of the try-block (after beginUndoGroup).
+  const usedHelpers = new Set();
+
   const ctx = {
     globals: globalVariables,
     varName: varNameFor,
@@ -139,6 +144,9 @@ export function compileToIR(nodes, edges, globalVariables = []) {
       return upstream;
     },
     sanitizeVarName, // exposed for emitters that need raw identifier hygiene
+    useHelper(name) {
+      if (HELPERS[name]) usedHelpers.add(name);
+    },
     walkBranch(nodeId, handleId) {
       const outs = execEdges.filter(
         (e) => e.source === nodeId && e.sourceHandle === handleId,
@@ -169,9 +177,22 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     return [...own, ...next];
   }
 
-  /* --- hoists --- */
+  /* --- walk first so helpers / reached / orphans are all settled --- */
+
+  const start = nodes.find((n) => n.data?.label === 'Get Active Comp');
+  const chainIR = start ? walk(start.id) : null;
+
+  /* --- now assemble the output in document order --- */
 
   const out = [];
+
+  if (usedHelpers.size) {
+    out.push(ir.comment('--- Runtime Helpers ---'));
+    for (const name of usedHelpers) {
+      out.push(ir.raw(HELPERS[name]));
+    }
+    out.push(ir.blank());
+  }
 
   if (globalVariables.length) {
     out.push(ir.comment('--- Global Variables ---'));
@@ -188,10 +209,9 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     out.push(ir.blank());
   }
 
-  const start = nodes.find((n) => n.data?.label === 'Get Active Comp');
-  if (start) {
+  if (chainIR) {
     out.push(ir.comment('--- Execution Chain ---'));
-    out.push(...walk(start.id));
+    out.push(...chainIR);
   } else {
     out.push(ir.comment("(No exec chain — add a 'Get Active Comp' node to begin.)"));
   }

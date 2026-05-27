@@ -226,6 +226,17 @@ export function resolveExpressionFor(node, ctx) {
     return `(${cond} ? ${tVal} : ${fVal})`;
   }
 
+  // Vector math: element-wise with scalar broadcasting. Delegates to a
+  // tiny runtime helper hoisted at the top of the script — keeps call
+  // sites concise even for chains of vector ops.
+  if (node.type === 'vecMath') {
+    ctx.useHelper?.('ebnVec');
+    const op = VEC_OPS[node.data?.op] || '+';
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'expr' });
+    return `ebnVec(${a}, ${b}, ${JSON.stringify(op)})`;
+  }
+
   // For-Each-Selected's `layer` output references the loop-local variable.
   // Wiring it outside the loop body is the user's responsibility for now.
   if (node.type === 'forEachSelected') {
@@ -268,4 +279,8 @@ export const MATH_OPS = {
 
 export const COMPARE_OPS = {
   eq: '==', neq: '!=', lt: '<', lte: '<=', gt: '>', gte: '>=',
+};
+
+export const VEC_OPS = {
+  add: '+', sub: '-', mul: '*', div: '/',
 };

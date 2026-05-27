@@ -148,6 +148,7 @@ Inside an emitter you have `(node, ctx)` and can call:
 - **`ctx.globals`** — the `globalVariables[]` array.
 - **`ctx.globalName(g)`** — sanitized JS identifier (`global_<name>`).
 - **`ctx.varName(node)`** — JS identifier for this node (uses `data.variableName` if set, otherwise auto).
+- **`ctx.useHelper(name)`** — request a runtime helper from `src/compiler/helpers.js` to be hoisted once at the top of the script. Emit a single call site in your expression; the helper itself is shared across all consumers.
 
 ---
 
@@ -217,6 +218,7 @@ Run with `npm test` (or `npm run test:watch`).
 | Integer / String | `integer`, `string` | hoisted automatically by the orchestrator |
 | Get Global / Set Global | `getGlobal`, `setGlobal` | `emitterFor` switch |
 | Math / Compare / Select | `math`, `compare`, `select` | `resolveExpressionFor` |
+| Vector Math | `vecMath` | `resolveExpressionFor` — calls `ctx.useHelper('ebnVec')`, emits `ebnVec(a, b, op)`. Helper is hoisted at script top exactly once when used. |
 | If | `if` | `emitterFor` switch (control-flow) |
 | For Each Selected Layer | `forEachSelected` | `emitterFor` switch (control-flow) |
 | Property Path | `propertyPath` | special-cased in Set Property's `resolvePropertyChain` |

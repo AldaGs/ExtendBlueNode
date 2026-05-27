@@ -559,6 +559,78 @@ describe('local vars, get property, vector2', () => {
     expect(out).not.toMatch(/Vector 2 Array \[id=v\]/);
   });
 
+  it('Vector Math emits ebnVec(a, b, op) and hoists the helper once', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const v = {
+      id: 'v', type: 'vecMath', position: { x: 0, y: 0 },
+      data: { op: 'mul', values: { a: '[10, 20]', b: '2' } },
+    };
+    const out = compileToExtendScript(
+      [a, b, c, v],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'v', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/Runtime Helpers/);
+    expect(out).toMatch(/function ebnVec/);
+    // Helper appears exactly once even with multiple vector ops.
+    expect((out.match(/function ebnVec/g) || []).length).toBe(1);
+    expect(out).toMatch(/setValue\(ebnVec\(\[10, 20\], 2, "\*"\)\)/);
+  });
+
+  it('scales Position by a scalar end-to-end (the user\'s graph)', () => {
+    const a = getActiveComp('a');
+    const f = { id: 'f', type: 'forEachSelected', position: { x: 0, y: 0 }, data: {} };
+    const pp = { id: 'pp', type: 'propertyPath', position: { x: 0, y: 0 }, data: { path: 'ADBE Transform Group/ADBE Position' } };
+    const g = getPropertyValue('g', 'ADBE Transform Group/ADBE Position');
+    const vm = {
+      id: 'vm', type: 'vecMath', position: { x: 0, y: 0 },
+      data: { op: 'mul', values: { a: '0', b: '2' } },
+    };
+    const setPos = {
+      id: 'setPos', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Set Property',
+        inputs: [
+          { id: 'exec_in',  type: 'exec' },
+          { id: 'layer',    type: 'expr' },
+          { id: 'property', type: 'text' },
+          { id: 'value',    type: 'number' },
+        ],
+        outputs: [{ id: 'exec_out' }],
+        values: {}, // no inline; everything is wired
+      },
+    };
+
+    const out = compileToExtendScript(
+      [a, f, pp, g, vm, setPos],
+      [
+        execEdge('e1', 'a', 'f'),
+        { id: 'eb', source: 'f', sourceHandle: 'exec_body', target: 'setPos', targetHandle: 'exec_in' },
+        // Layer: For-Each.layer → both Get Property Value AND Set Property
+        dataEdge('dl1', 'f', 'layer', 'g', 'layer'),
+        dataEdge('dl2', 'f', 'layer', 'setPos', 'layer'),
+        // Property path drives both reads and writes
+        dataEdge('dp1', 'pp', 'value', 'g', 'property'),
+        dataEdge('dp2', 'pp', 'value', 'setPos', 'property'),
+        // Read .value → multiply by 2 → write back
+        dataEdge('dv1', 'g', 'value', 'vm', 'a'),
+        dataEdge('dv2', 'vm', 'value', 'setPos', 'value'),
+      ],
+    );
+    expect(out).toMatch(/function ebnVec/);
+    // Inside the for-loop body: read loopLayer's Position, multiply by 2,
+    // set it back at the same Position path.
+    expect(out).toMatch(
+      /loopLayer\.property\("ADBE Transform Group"\)\.property\("ADBE Position"\)\.setValue\(ebnVec\(loopLayer\.property\("ADBE Transform Group"\)\.property\("ADBE Position"\)\.value, 2, "\*"\)\)/,
+    );
+    expect(out).not.toMatch(/Orphan/);
+  });
+
   it('Vector 2 Array emits [x, y] inline', () => {
     const a = getActiveComp('a');
     const b = selectLayer('b');

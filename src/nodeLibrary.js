@@ -277,6 +277,17 @@ export const NODE_LIBRARY = [
           data: { op: 'eq', values: { a: 0, b: 0 } },
         }),
       },
+      {
+        type: 'vecMath',
+        label: 'Vector Math',
+        keywords: ['vector', 'array', 'position', 'multiply', 'scale', 'element-wise', 'broadcast'],
+        factory: (pos) => ({
+          id: uid('vmath'),
+          type: 'vecMath',
+          position: pos,
+          data: { op: 'mul', values: { a: '0', b: '1' } },
+        }),
+      },
     ],
   },
   {
