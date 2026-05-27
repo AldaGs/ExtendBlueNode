@@ -401,6 +401,69 @@ export const NODE_LIBRARY = [
   },
 ];
 
+// Port shapes for specialized node types whose Handles are baked into
+// their React components instead of declared in factory data. Kept in
+// sync with the components in src/components/*Node.jsx.
+const PRIMITIVE_PORT_MAP = {
+  integer:         { inputs: [],                                outputs: ['value'] },
+  string:          { inputs: [],                                outputs: ['value'] },
+  math:            { inputs: ['a', 'b'],                        outputs: ['value'] },
+  compare:         { inputs: ['a', 'b'],                        outputs: ['value'] },
+  select:          { inputs: ['cond', 'if_true', 'if_false'],   outputs: ['value'] },
+  if:              { inputs: ['exec_in', 'cond'],               outputs: ['exec_then', 'exec_else'] },
+  vecMath:         { inputs: ['a', 'b'],                        outputs: ['value'] },
+  propertyPath:    { inputs: [],                                outputs: ['value'] },
+  splitVec:        { inputs: ['vec'],                           outputs: ['x', 'y'] },
+  forEachSelected: { inputs: ['exec_in'],                       outputs: ['exec_body', 'layer', 'exec_done'] },
+  reroute:         { inputs: ['in'],                            outputs: ['out'] },
+  getGlobal:       { inputs: [],                                outputs: ['value'] },
+  setGlobal:       { inputs: ['exec_in', 'value'],              outputs: ['exec_out'] },
+};
+
+// Renders a markdown-formatted catalog of every spawnable node, derived
+// at runtime from NODE_LIBRARY. Fed into the Copilot's system prompt so
+// the LLM always sees the exact, current vocabulary — labels, types,
+// and port IDs — and cannot invent nodes that don't exist.
+export function getNodeCatalogSummary() {
+  const lines = [];
+  for (const cat of NODE_LIBRARY) {
+    lines.push(`\n### ${cat.category}`);
+    for (const item of cat.items) {
+      // Run the factory once to extract a representative node template.
+      let template;
+      try {
+        template = item.factory({ x: 0, y: 0 });
+      } catch {
+        continue;
+      }
+      const data = template.data || {};
+      const reactType = template.type;
+
+      // ebnNode variants declare their ports in data; primitives don't.
+      let inputs, outputs;
+      if (reactType === 'ebnNode') {
+        inputs  = (data.inputs  || []).map((p) => p.id);
+        outputs = (data.outputs || []).map((p) => p.id);
+      } else {
+        const ports = PRIMITIVE_PORT_MAP[reactType] || { inputs: [], outputs: [] };
+        inputs  = ports.inputs;
+        outputs = ports.outputs;
+      }
+
+      // ebnNode lookup key is data.label; primitives are matched by React type.
+      const identity =
+        reactType === 'ebnNode'
+          ? `"${data.label}" (type: "ebnNode", data.label: "${data.label}")`
+          : `"${item.label}" (type: "${reactType}")`;
+
+      const inStr  = inputs.length  ? inputs.join(', ')  : '(none)';
+      const outStr = outputs.length ? outputs.join(', ') : '(none)';
+      lines.push(`- ${identity}\n    Inputs: ${inStr}\n    Outputs: ${outStr}`);
+    }
+  }
+  return lines.join('\n');
+}
+
 // Flattened list with category attached — handy for search ranking.
 export function flattenLibrary() {
   const out = [];

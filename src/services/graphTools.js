@@ -1,23 +1,74 @@
 // Tool definition and helpers for the LLM copilot.
 
+import { getNodeCatalogSummary } from '../nodeLibrary';
+
+// Few-shot example: a correct, complete propose_graph payload that wires
+// an Integer node into the Value port of a Set Property node. Embedded
+// in the tool description because small models follow examples far
+// better than abstract instructions.
+const FEW_SHOT_PAYLOAD = JSON.stringify({
+  nodes: [
+    {
+      id: 'n1',
+      type: 'integer',
+      position: { x: 100, y: 200 },
+      data: { label: 'Integer', value: 75 },
+    },
+    {
+      id: 'n2',
+      type: 'ebnNode',
+      position: { x: 600, y: 150 },
+      data: {
+        label: 'Set Property',
+        category: 'mutator',
+        themeColor: '#a8632a',
+        inputs: [
+          { id: 'exec_in',  label: 'Execution', type: 'exec' },
+          { id: 'layer',    label: 'Layer',     type: 'text' },
+          { id: 'property', label: 'Property',  type: 'text' },
+          { id: 'value',    label: 'Value',     type: 'number' },
+        ],
+        outputs: [{ id: 'exec_out', label: 'Execution' }],
+        values: { property: 'ADBE Transform Group/ADBE Opacity', value: 75 },
+      },
+    },
+  ],
+  edges: [
+    {
+      id: 'e1',
+      source: 'n1',
+      target: 'n2',
+      sourceHandle: 'value',
+      targetHandle: 'value',
+    },
+  ],
+  explanation: 'Sets layer opacity to 75 using a literal Integer value.',
+});
+
 export const PROPOSE_GRAPH_TOOL = {
   name: 'propose_graph',
   description:
-    'Add nodes and edges to the ExtendBlueNode canvas. Call this whenever the user asks you to create, build, or add any nodes or workflows.',
+    'Add nodes and edges to the ExtendBlueNode canvas. Call this whenever the user asks you to create, build, or add any nodes or workflows.\n\n' +
+    `Example valid payload: ${FEW_SHOT_PAYLOAD}\n\n` +
+    'Do NOT include nested nodes. Nodes and edges MUST be flat arrays.',
   parameters: {
     type: 'object',
     required: ['nodes', 'edges'],
     properties: {
       nodes: {
         type: 'array',
-        description: 'Nodes to add to the canvas',
+        description: 'Flat array of nodes to add. Never nest nodes inside other nodes.',
         items: {
           type: 'object',
           required: ['id', 'type', 'position', 'data'],
           properties: {
-            id: { type: 'string', description: 'Temporary ID used to wire edges, e.g. "n1", "n2"' },
+            id: {
+              type: 'string',
+              description: 'Temporary ID used for wiring edges in this payload (e.g. "n1", "n2"). Will be remapped on apply.',
+            },
             type: {
               type: 'string',
+              description: 'React Flow node type. Must be one of the values in the catalog.',
               enum: [
                 'ebnNode', 'integer', 'string', 'math', 'compare', 'select',
                 'if', 'reroute', 'forEachSelected', 'vecMath', 'propertyPath',
@@ -27,135 +78,100 @@ export const PROPOSE_GRAPH_TOOL = {
             position: {
               type: 'object',
               required: ['x', 'y'],
-              properties: { x: { type: 'number' }, y: { type: 'number' } },
+              properties: {
+                x: { type: 'number' },
+                y: { type: 'number' },
+              },
             },
-            data: { type: 'object', description: 'Node data payload — see system prompt for schema per type' },
+            data: {
+              type: 'object',
+              required: ['label'],
+              description:
+                'Node data payload. data.label is REQUIRED for every node and must match the exact label from the catalog. ' +
+                'For ebnNode, also include category, themeColor, inputs, outputs, and values. ' +
+                'For primitives (integer, string, math, etc.) the label can match the type-name (e.g. "Integer", "Math").',
+              properties: {
+                label: {
+                  type: 'string',
+                  description: 'REQUIRED. Must exactly match a node label from the catalog.',
+                },
+              },
+            },
           },
         },
       },
       edges: {
         type: 'array',
-        description: 'Edges connecting nodes',
+        description: 'Flat array of edges connecting nodes. Every edge MUST specify both sourceHandle and targetHandle.',
         items: {
           type: 'object',
-          required: ['id', 'source', 'target'],
+          required: ['id', 'source', 'target', 'sourceHandle', 'targetHandle'],
           properties: {
-            id: { type: 'string' },
-            source: { type: 'string' },
-            target: { type: 'string' },
-            sourceHandle: { type: 'string' },
-            targetHandle: { type: 'string' },
+            id: { type: 'string', description: 'Unique edge id, e.g. "e1".' },
+            source: { type: 'string', description: 'id of the source node from the nodes array.' },
+            target: { type: 'string', description: 'id of the target node from the nodes array.' },
+            sourceHandle: {
+              type: 'string',
+              description: 'Output port id on the source node. Must match a port in the catalog (e.g. "exec_out", "value", "layer", "comp").',
+            },
+            targetHandle: {
+              type: 'string',
+              description: 'Input port id on the target node. Must match a port in the catalog (e.g. "exec_in", "value", "layer", "property").',
+            },
           },
         },
       },
       explanation: {
         type: 'string',
-        description: 'One-sentence description of what this graph does, shown to the user',
+        description: 'One-sentence description of what this graph does, shown to the user.',
       },
     },
   },
 };
 
 export function buildSystemPrompt() {
-  return `You are the Copilot for ExtendBlueNode — a visual node editor that compiles graphs to Adobe After Effects ExtendScript. Help users build automation workflows by creating nodes.
+  const catalog = getNodeCatalogSummary();
+  return `You are EBN Copilot. You generate strict DAG JSON for a visual node canvas that compiles to Adobe After Effects ExtendScript.
+
+CRITICAL INSTRUCTION: You may ONLY use the exact node labels and port IDs listed below. Do NOT invent node types, labels, or ports that are not in this list. If a task cannot be expressed with these nodes, say so plainly — do not hallucinate new node types.
 
 ## Primary Rule
-Whenever the user asks you to create, build, or add nodes, ALWAYS call \`propose_graph\`. Never describe nodes in text without calling the function.
+Whenever the user asks you to create, build, or add nodes, ALWAYS call the \`propose_graph\` function. Never describe nodes in plain text without calling the function.
 
-## Node Type Reference
+## Node Catalog (the ONLY valid nodes)
+${catalog}
 
-### Execution Nodes (type: "ebnNode") — connected via exec handles
+## Node Data Schemas
 
-**Get Active Comp**
-\`\`\`json
-{ "label": "Get Active Comp", "category": "selector", "themeColor": "#4a8a3f",
-  "inputs": [{"id":"exec_in","label":"Execution","type":"exec"}],
-  "outputs": [{"id":"comp","label":"Comp"},{"id":"exec_out","label":"Execution"}] }
-\`\`\`
+For execution nodes (type: "ebnNode"), include the full data payload from the canonical schemas (category, themeColor, inputs[], outputs[], values). The label must exactly match one from the catalog above.
 
-**Select Layer by Name**
-\`\`\`json
-{ "label": "Select Layer by Name", "category": "selector", "themeColor": "#4a8a3f",
-  "inputs": [{"id":"exec_in","label":"Execution","type":"exec"},{"id":"comp","label":"Comp","type":"text"},{"id":"layer_name","label":"Layer Name","type":"text"}],
-  "outputs": [{"id":"layer","label":"Layer"},{"id":"exec_out","label":"Execution"}],
-  "values": {"layer_name":"My Layer"} }
-\`\`\`
-
-**Select Layer by Index**
-\`\`\`json
-{ "label": "Select Layer by Index", "category": "selector", "themeColor": "#4a8a3f",
-  "inputs": [{"id":"exec_in","label":"Execution","type":"exec"},{"id":"comp","label":"Comp","type":"text"},{"id":"layer_index","label":"Layer Index","type":"number"}],
-  "outputs": [{"id":"layer","label":"Layer"},{"id":"exec_out","label":"Execution"}],
-  "values": {"layer_index":1} }
-\`\`\`
-
-**Select Layer by ID**
-\`\`\`json
-{ "label": "Select Layer by ID", "category": "action", "themeColor": "#3b6fb8",
-  "inputs": [{"id":"exec_in","label":"Execution","type":"exec"},{"id":"comp","label":"Comp","type":"text"},{"id":"layer_id","label":"Layer ID","type":"number"}],
-  "outputs": [{"id":"layer","label":"Layer"},{"id":"exec_out","label":"Execution"}],
-  "values": {"layer_id":1} }
-\`\`\`
-
-**Set Property**
-\`\`\`json
-{ "label": "Set Property", "category": "mutator", "themeColor": "#a8632a",
-  "inputs": [{"id":"exec_in","label":"Execution","type":"exec"},{"id":"layer","label":"Layer","type":"text"},{"id":"property","label":"Property","type":"text"},{"id":"value","label":"Value","type":"number"}],
-  "outputs": [{"id":"exec_out","label":"Execution"}],
-  "values": {"property":"ADBE Transform Group/ADBE Opacity","value":100} }
-\`\`\`
-
-**Get Property Value** (data, no exec)
-\`\`\`json
-{ "label": "Get Property Value", "category": "data", "themeColor": "#3a6b54",
-  "inputs": [{"id":"layer","label":"Layer","type":"expr"},{"id":"property","label":"Property","type":"text"}],
-  "outputs": [{"id":"value","label":"Value"}],
-  "values": {"property":"ADBE Transform Group/ADBE Position"} }
-\`\`\`
-
-**Vector 2 Array** (data, no exec)
-\`\`\`json
-{ "label": "Vector 2 Array", "category": "data", "themeColor": "#9b59b6",
-  "inputs": [{"id":"x","label":"X","type":"number"},{"id":"y","label":"Y","type":"number"}],
-  "outputs": [{"id":"value","label":"[X, Y]"}],
-  "values": {"x":960,"y":540} }
-\`\`\`
-
-**Set Local Variable**
-\`\`\`json
-{ "label": "Set Local Variable", "category": "logic", "themeColor": "#a36b1f",
-  "variableName": "myVar",
-  "inputs": [{"id":"exec_in","label":"Execution","type":"exec"},{"id":"value","label":"Value","type":"expr"}],
-  "outputs": [{"id":"exec_out","label":"Execution"},{"id":"value","label":"Variable"}],
-  "values": {"value":"0"} }
-\`\`\`
-
-### Standalone Data Nodes
-
-**integer** — data: \`{"label":"Integer","value":0}\` — output handle: "value"
-**string** — data: \`{"label":"String","value":""}\` — output handle: "value"
-**math** — data: \`{"op":"add","values":{"a":0,"b":0}}\` — op: add|sub|mul|div|mod — inputs: a, b — output: value
-**compare** — data: \`{"op":"eq","values":{"a":0,"b":0}}\` — op: eq|neq|lt|lte|gt|gte — inputs: a, b — output: value
-**select** — data: \`{"values":{"cond":"true","if_true":1,"if_false":0}}\` — inputs: cond, if_true, if_false — output: value
-**if** — data: \`{"values":{"cond":"true"}}\` — inputs: exec_in, cond — outputs: exec_then, exec_else
-**vecMath** — data: \`{"op":"mul","values":{"a":"0","b":"1"}}\` — op: add|sub|mul|div — inputs: a, b — output: value
-**propertyPath** — data: \`{"preset":"opacity","path":"ADBE Transform Group/ADBE Opacity"}\` — output: path
-**splitVec** — data: \`{"values":{"vec":""}}\` — input: vec — outputs: x, y
-**forEachSelected** — data: \`{}\` — outputs: exec_body, layer, exec_done
+For primitive data nodes, the minimal data payload is:
+- integer:         \`{ "label": "Integer", "value": 0 }\`
+- string:          \`{ "label": "String", "value": "" }\`
+- math:            \`{ "label": "Math", "op": "add", "values": {"a": 0, "b": 0} }\`  (op: add|sub|mul|div|mod)
+- compare:         \`{ "label": "Compare", "op": "eq", "values": {"a": 0, "b": 0} }\` (op: eq|neq|lt|lte|gt|gte)
+- select:          \`{ "label": "Select", "values": {"cond": "true", "if_true": 1, "if_false": 0} }\`
+- if:              \`{ "label": "If", "values": {"cond": "true"} }\`
+- vecMath:         \`{ "label": "Vector Math", "op": "mul", "values": {"a": "0", "b": "1"} }\` (op: add|sub|mul|div)
+- propertyPath:    \`{ "label": "Property Path", "preset": "opacity", "path": "ADBE Transform Group/ADBE Opacity" }\`
+- splitVec:        \`{ "label": "Split Vector", "values": {"vec": ""} }\`
+- forEachSelected: \`{ "label": "For Each Selected Layer" }\`
+- reroute:         \`{ "label": "Reroute" }\`
+- getGlobal:       \`{ "label": "Get Global", "globalId": null }\`
+- setGlobal:       \`{ "label": "Set Global", "globalId": null, "values": {} }\`
 
 ## Common AE Property Paths
-- Opacity: "ADBE Transform Group/ADBE Opacity"
+- Opacity:  "ADBE Transform Group/ADBE Opacity"
 - Position: "ADBE Transform Group/ADBE Position"
-- Scale: "ADBE Transform Group/ADBE Scale"
+- Scale:    "ADBE Transform Group/ADBE Scale"
 - Rotation: "ADBE Transform Group/ADBE Rotate Z"
-- Anchor: "ADBE Transform Group/ADBE Anchor Point"
+- Anchor:   "ADBE Transform Group/ADBE Anchor Point"
 
 ## Layout & Wiring
-- Left-to-right layout: data nodes x: 50–300, selectors x: 300–600, mutators x: 600–900
-- Space nodes 130px vertically, start at y: 150
-- Exec chain: sourceHandle "exec_out" → targetHandle "exec_in"
-- Comp wire: source "comp" → target "comp"
-- Layer wire: source "layer" → target "layer"
+- Left-to-right layout: data nodes x: 50–300, selectors x: 300–600, mutators x: 600–900.
+- Space nodes 130px vertically, start at y: 150.
+- Exec chain: sourceHandle "exec_out" → targetHandle "exec_in".
+- Every edge MUST specify both sourceHandle and targetHandle.
 `;
 }
 
