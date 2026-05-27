@@ -56,36 +56,66 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
     inputRef.current?.focus();
   }, []);
 
-  // Close on Esc / outside click (either root popup OR floating submenu).
+  // Close-the-menu listeners. Esc + any outside pointer/right-click.
+  // Mount-once (deps: [onClose]) so they're never torn down by
+  // unrelated state churn (highlight, query, etc.). Capture phase so
+  // we run before React Flow's own canvas handlers.
   useEffect(() => {
+    const isInsideMenu = (target) =>
+      !!(rootRef.current?.contains(target) || subRef.current?.contains(target));
+
     const onKey = (e) => {
       if (e.key === 'Escape') {
         e.preventDefault();
+        e.stopPropagation();
         onClose();
-      } else if (e.key === 'ArrowDown') {
+      }
+    };
+    const onOutsideDown = (e) => {
+      if (isInsideMenu(e.target)) return;
+      onClose();
+    };
+    const onOutsideContext = (e) => {
+      // If a fresh right-click lands outside the menu, let the canvas
+      // handler open its own menu — but make sure THIS one closes
+      // first so we don't stack two popups.
+      if (isInsideMenu(e.target)) return;
+      onClose();
+    };
+
+    window.addEventListener('keydown', onKey, true);
+    window.addEventListener('pointerdown', onOutsideDown, true);
+    window.addEventListener('mousedown', onOutsideDown, true);
+    window.addEventListener('contextmenu', onOutsideContext, true);
+    return () => {
+      window.removeEventListener('keydown', onKey, true);
+      window.removeEventListener('pointerdown', onOutsideDown, true);
+      window.removeEventListener('mousedown', onOutsideDown, true);
+      window.removeEventListener('contextmenu', onOutsideContext, true);
+    };
+  }, [onClose]);
+
+  // Keyboard nav inside the menu — kept separate so it re-binds on
+  // highlight/list changes without disturbing the close listeners.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowDown') {
         e.preventDefault();
         setHighlight((h) => Math.min(h + 1, navList.length - 1));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         setHighlight((h) => Math.max(h - 1, 0));
       } else if (e.key === 'Enter') {
-        e.preventDefault();
         const pick = navList[highlight];
-        if (pick) onPick(pick);
+        if (pick) {
+          e.preventDefault();
+          onPick(pick);
+        }
       }
     };
-    const onDocDown = (e) => {
-      if (rootRef.current?.contains(e.target)) return;
-      if (subRef.current?.contains(e.target)) return;
-      onClose();
-    };
     window.addEventListener('keydown', onKey);
-    window.addEventListener('mousedown', onDocDown);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      window.removeEventListener('mousedown', onDocDown);
-    };
-  }, [onClose, onPick, navList, highlight]);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onPick, navList, highlight]);
 
   // Close the submenu if the user scrolls anywhere — the row's fixed
   // coords stop being correct otherwise.
