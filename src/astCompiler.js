@@ -105,6 +105,11 @@ export function compileToIR(nodes, edges, globalVariables = []) {
            (e.sourceHandle && e.sourceHandle.startsWith('exec_')),
   ).filter((e) => e.targetHandle === EXEC_IN);
 
+  const reached = new Set();
+  function markReached(node) {
+    if (node) reached.add(node.id);
+  }
+
   const ctx = {
     globals: globalVariables,
     varName: varNameFor,
@@ -112,6 +117,10 @@ export function compileToIR(nodes, edges, globalVariables = []) {
     resolveInput(node, port) {
       const upstream = resolveSourceNode(byId, edges, node.id, port.id);
       if (upstream) {
+        // Mark the upstream so it doesn't get reported as an orphan.
+        // The same applies transitively because resolveExpressionFor
+        // recurses through ctx.resolveInput.
+        markReached(upstream);
         const expr = resolveExpressionFor(upstream, ctx);
         if (expr != null) return expr;
       }
@@ -122,7 +131,12 @@ export function compileToIR(nodes, edges, globalVariables = []) {
       return literalFor(port.type, DEFAULTS[port.id]);
     },
     sourceOf(node, portId) {
-      return resolveSourceNode(byId, edges, node.id, portId);
+      const upstream = resolveSourceNode(byId, edges, node.id, portId);
+      // Emitters that introspect their upstream (Set Property reading
+      // PropertyPath, Get Property Value reading PropertyPath, …) also
+      // count as reaching that node.
+      markReached(upstream);
+      return upstream;
     },
     sanitizeVarName, // exposed for emitters that need raw identifier hygiene
     walkBranch(nodeId, handleId) {
@@ -134,8 +148,6 @@ export function compileToIR(nodes, edges, globalVariables = []) {
       return collected;
     },
   };
-
-  const reached = new Set();
 
   function walk(nodeId) {
     if (reached.has(nodeId)) return [];

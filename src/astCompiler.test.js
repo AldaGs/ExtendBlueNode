@@ -542,6 +542,23 @@ describe('local vars, get property, vector2', () => {
     expect(out).toMatch(/loopLayer\.property\("ADBE Transform Group"\)\.property\("ADBE Position"\)\.value/);
   });
 
+  it('data-side ebnNodes wired into the chain are NOT reported as orphans', () => {
+    const a = getActiveComp('a');
+    const c = setProperty('c');
+    const g = getPropertyValue('g', 'ADBE Transform Group/ADBE Position');
+    const v = vector2('v', 0, 540);
+    const out = compileToExtendScript(
+      [a, c, g, v],
+      [
+        execEdge('e1', 'a', 'c'),
+        dataEdge('d1', 'g', 'value', 'v', 'x'),
+        dataEdge('d2', 'v', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).not.toMatch(/Get Property Value \[id=g\]/);
+    expect(out).not.toMatch(/Vector 2 Array \[id=v\]/);
+  });
+
   it('Vector 2 Array emits [x, y] inline', () => {
     const a = getActiveComp('a');
     const b = selectLayer('b');
