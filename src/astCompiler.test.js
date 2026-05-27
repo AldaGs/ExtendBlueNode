@@ -255,6 +255,114 @@ describe('math / compare / if', () => {
   });
 });
 
+describe('select + selectors + for-each', () => {
+  function selectNode(id, values = {}) {
+    return {
+      id, type: 'select', position: { x: 0, y: 0 },
+      data: { values: { cond: 'true', if_true: 1, if_false: 0, ...values } },
+    };
+  }
+  function selectLayerByName(id, name) {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Select Layer by Name',
+        inputs: [
+          { id: 'exec_in',    type: 'exec' },
+          { id: 'layer_name', type: 'text' },
+        ],
+        outputs: [
+          { id: 'layer' },
+          { id: 'exec_out' },
+        ],
+        values: { layer_name: name },
+      },
+    };
+  }
+  function selectLayerByIndex(id, idx) {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Select Layer by Index',
+        inputs: [
+          { id: 'exec_in',     type: 'exec' },
+          { id: 'layer_index', type: 'number' },
+        ],
+        outputs: [
+          { id: 'layer' },
+          { id: 'exec_out' },
+        ],
+        values: { layer_index: idx },
+      },
+    };
+  }
+  function forEachSelected(id) {
+    return { id, type: 'forEachSelected', position: { x: 0, y: 0 }, data: {} };
+  }
+
+  it('Select inlines as a ternary expression', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const s = selectNode('s', { cond: 'true', if_true: 100, if_false: 0 });
+    const out = compileToExtendScript(
+      [a, b, c, s],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 's', 'value', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(\(true \? 100 : 0\)\)/);
+  });
+
+  it('Select Layer by Name emits activeComp.layer("name")', () => {
+    const a = getActiveComp('a');
+    const b = selectLayerByName('b', 'Title');
+    const out = compileToExtendScript([a, b], [execEdge('e', 'a', 'b')]);
+    expect(out).toMatch(/var targetLayer = activeComp\.layer\("Title"\)/);
+  });
+
+  it('Select Layer by Index emits activeComp.layer(<n>)', () => {
+    const a = getActiveComp('a');
+    const b = selectLayerByIndex('b', 3);
+    const out = compileToExtendScript([a, b], [execEdge('e', 'a', 'b')]);
+    expect(out).toMatch(/var targetLayer = activeComp\.layer\(3\)/);
+  });
+
+  it('For Each Selected emits a for-loop and exposes loopLayer', () => {
+    const a = getActiveComp('a');
+    const f = forEachSelected('f');
+    const inner = setProperty('inner');
+    const out = compileToExtendScript(
+      [a, f, inner],
+      [
+        execEdge('e1', 'a', 'f'),
+        // 'exec_body' is the inner branch
+        { id: 'eb', source: 'f', sourceHandle: 'exec_body', target: 'inner', targetHandle: 'exec_in' },
+        // Set Property's `layer` input wired to the loop's `layer` output
+        { id: 'dl', source: 'f', sourceHandle: 'layer', target: 'inner', targetHandle: 'layer' },
+      ],
+    );
+    expect(out).toMatch(/var loopLayers = activeComp\.selectedLayers;/);
+    expect(out).toMatch(/for \(var i = 0; i < loopLayers\.length; i\+\+\) \{/);
+    expect(out).toMatch(/var loopLayer = loopLayers\[i\];/);
+    // The inner Set Property references loopLayer (not the default targetLayer).
+    expect(out).toMatch(/loopLayer\.property\("ADBE Opacity"\)\.setValue\(50\)/);
+  });
+
+  it('Set Property falls back to targetLayer when nothing is wired', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const out = compileToExtendScript(
+      [a, b, c],
+      [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'c')],
+    );
+    expect(out).toMatch(/targetLayer\.property\("ADBE Opacity"\)\.setValue\(50\)/);
+  });
+});
+
 describe('compileToIR', () => {
   it('produces statements not strings', () => {
     const irOut = compileToIR([getActiveComp('a')], []);

@@ -20,6 +20,8 @@ import SetGlobalNode from './SetGlobalNode';
 import MathNode from './MathNode';
 import CompareNode from './CompareNode';
 import IfNode from './IfNode';
+import SelectNode from './SelectNode';
+import ForEachSelectedNode from './ForEachSelectedNode';
 import AddNodeMenu from './AddNodeMenu';
 import FlowEdge from './FlowEdge';
 import { findCompatibleHandle } from '../nodeLibrary';
@@ -116,6 +118,8 @@ function FlowCanvasInner({
       math: MathNode,
       compare: CompareNode,
       if: IfNode,
+      select: SelectNode,
+      forEachSelected: ForEachSelectedNode,
     }),
     [],
   );

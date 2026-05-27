@@ -109,3 +109,4 @@ To attach DevTools, open `http://localhost:8088` in any browser while AE has the
 
 - [`docs/STATUS.md`](docs/STATUS.md) — Latest state-of-the-project report for the PM.
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — Phased plan for what comes next.
+- [`docs/NODES.md`](docs/NODES.md) — How to add new nodes by hand (factory + emitter + optional component).

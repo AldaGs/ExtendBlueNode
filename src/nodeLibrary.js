@@ -55,6 +55,56 @@ export const NODE_LIBRARY = [
           },
         }),
       },
+      {
+        type: 'selectLayerByName',
+        label: 'Select Layer by Name',
+        keywords: ['layer', 'name'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Select Layer by Name',
+            category: 'selector',
+            themeColor: NODE_THEME.selector,
+            inputs: [
+              { id: 'exec_in',    label: 'Execution', type: 'exec' },
+              { id: 'comp',       label: 'Comp',      type: 'text' },
+              { id: 'layer_name', label: 'Layer Name', type: 'text', placeholder: 'My Layer' },
+            ],
+            outputs: [
+              { id: 'layer',    label: 'Layer' },
+              { id: 'exec_out', label: 'Execution' },
+            ],
+            values: { layer_name: '' },
+          },
+        }),
+      },
+      {
+        type: 'selectLayerByIndex',
+        label: 'Select Layer by Index',
+        keywords: ['layer', 'index', 'position'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Select Layer by Index',
+            category: 'selector',
+            themeColor: NODE_THEME.selector,
+            inputs: [
+              { id: 'exec_in',     label: 'Execution', type: 'exec' },
+              { id: 'comp',        label: 'Comp',      type: 'text' },
+              { id: 'layer_index', label: 'Layer Index', type: 'number' },
+            ],
+            outputs: [
+              { id: 'layer',    label: 'Layer' },
+              { id: 'exec_out', label: 'Execution' },
+            ],
+            values: { layer_index: 1 },
+          },
+        }),
+      },
     ],
   },
   {
@@ -181,6 +231,33 @@ export const NODE_LIBRARY = [
           type: 'if',
           position: pos,
           data: { values: { cond: 'true' } },
+        }),
+      },
+      {
+        type: 'select',
+        label: 'Select (a ? b : c)',
+        keywords: ['ternary', 'pick', 'choose', 'switch', 'value'],
+        factory: (pos) => ({
+          id: uid('sel'),
+          type: 'select',
+          position: pos,
+          data: { values: { cond: 'true', if_true: 1, if_false: 0 } },
+        }),
+      },
+    ],
+  },
+  {
+    category: 'Loops',
+    items: [
+      {
+        type: 'forEachSelected',
+        label: 'For Each Selected Layer',
+        keywords: ['loop', 'iterate', 'selection'],
+        factory: (pos) => ({
+          id: uid('feach'),
+          type: 'forEachSelected',
+          position: pos,
+          data: {},
         }),
       },
     ],

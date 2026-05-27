@@ -115,8 +115,11 @@ export function compileToIR(nodes, edges, globalVariables = []) {
         const expr = resolveExpressionFor(upstream, ctx);
         if (expr != null) return expr;
       }
-      const inline = node.data?.values?.[port.id] ?? DEFAULTS[port.id];
-      return literalFor(port.type, inline);
+      const inline = node.data?.values?.[port.id];
+      if (inline != null && inline !== '') return literalFor(port.type, inline);
+      // Per-port raw default (e.g. Set Property.layer => 'targetLayer').
+      if (port.default != null) return port.default;
+      return literalFor(port.type, DEFAULTS[port.id]);
     },
     walkBranch(nodeId, handleId) {
       const outs = execEdges.filter(

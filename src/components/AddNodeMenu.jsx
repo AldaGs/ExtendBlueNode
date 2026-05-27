@@ -120,24 +120,34 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
           )
         ) : (
           NODE_LIBRARY.map((cat) => (
-            <div className="ebn-addmenu__group" key={cat.category}>
-              <div className="ebn-addmenu__group-title">{cat.category}</div>
-              {cat.items.map((item) => {
-                const idx = categorizedFlat.findIndex(
-                  (x) => x.category === cat.category && x.type === item.type,
-                );
-                return (
+            <div className="ebn-addmenu__cat" key={cat.category}>
+              <button
+                type="button"
+                className="ebn-addmenu__cat-row"
+                // Categories are click-through on touch + hover-open on desktop
+                // (CSS handles the hover; click is provided for keyboard users).
+              >
+                <span className="ebn-addmenu__cat-name">{cat.category}</span>
+                <span className="ebn-addmenu__cat-count">{cat.items.length}</span>
+                <svg
+                  className="ebn-addmenu__cat-arrow"
+                  width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"
+                >
+                  <path d="M2.5 1.5l3 2.5-3 2.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                </svg>
+              </button>
+              <div className="ebn-addmenu__sub">
+                {cat.items.map((item) => (
                   <button
                     key={item.type}
                     type="button"
-                    className={`ebn-addmenu__item${idx === highlight ? ' ebn-addmenu__item--hot' : ''}`}
-                    onMouseEnter={() => setHighlight(idx)}
+                    className="ebn-addmenu__item"
                     onClick={() => onPick({ ...item, category: cat.category })}
                   >
                     <span className="ebn-addmenu__label">{item.label}</span>
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
           ))
         )}

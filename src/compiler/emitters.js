@@ -37,10 +37,32 @@ const EBN_NODE_EMITTERS = {
     ];
   },
 
+  'Select Layer by Name': (node, ctx) => {
+    const name = ctx.resolveInput(node, { id: 'layer_name', type: 'text' });
+    return [
+      ir.varDecl('targetLayer', `activeComp.layer(${name})`),
+      ir.throwIfNot('targetLayer', 'Layer not found.'),
+    ];
+  },
+
+  'Select Layer by Index': (node, ctx) => {
+    const idx = ctx.resolveInput(node, { id: 'layer_index', type: 'number' });
+    return [
+      ir.varDecl('targetLayer', `activeComp.layer(${idx})`),
+      ir.throwIfNot('targetLayer', 'Layer not found.'),
+    ];
+  },
+
   'Set Property': (node, ctx) => {
+    // Layer port: a wire (e.g. from a For-Each loop's `layer` output)
+    // takes precedence; otherwise we fall back to the most recently
+    // declared `targetLayer` so the common linear graph still works.
+    const layer = ctx.resolveInput(node, {
+      id: 'layer', type: 'expr', default: 'targetLayer',
+    });
     const prop  = ctx.resolveInput(node, { id: 'property', type: 'text' });
     const value = ctx.resolveInput(node, { id: 'value',    type: 'number' });
-    return [ir.raw(`targetLayer.property(${prop}).setValue(${value});`)];
+    return [ir.raw(`${layer}.property(${prop}).setValue(${value});`)];
   },
 
   // Legacy fixture from the original Phase 5 spec.
@@ -76,13 +98,25 @@ export function emitterFor(node) {
 
   if (node.type === 'if') {
     return (n, ctx) => {
-      // 'expr' port type means: use the inline string verbatim (so the
-      // user can write `myVar > 5`) and fall through unchanged when a
-      // Compare node is wired in.
       const cond = ctx.resolveInput(n, { id: 'cond', type: 'expr' });
       const thenBody = ctx.walkBranch(n.id, 'exec_then');
       const elseBody = ctx.walkBranch(n.id, 'exec_else');
       return [ir.ifElse(cond, thenBody, elseBody)];
+    };
+  }
+
+  if (node.type === 'forEachSelected') {
+    return (n, ctx) => {
+      const body = ctx.walkBranch(n.id, 'exec_body');
+      const done = ctx.walkBranch(n.id, 'exec_done');
+      return [
+        ir.varDecl('loopLayers', 'activeComp.selectedLayers'),
+        ir.forIn('var i = 0', 'i < loopLayers.length', 'i++', [
+          ir.varDecl('loopLayer', 'loopLayers[i]'),
+          ...body,
+        ]),
+        ...done,
+      ];
     };
   }
 
@@ -95,7 +129,7 @@ export function emitterFor(node) {
 
 // Nodes whose emitter takes ownership of their own downstream walking —
 // the orchestrator must NOT auto-recurse along their exec_out edges.
-export const SELF_BRANCHING_TYPES = new Set(['if']);
+export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
 
 /* ----------------------------- data-side expression resolution ----------------------------- */
 
@@ -126,6 +160,19 @@ export function resolveExpressionFor(node, ctx) {
     const a = ctx.resolveInput(node, { id: 'a', type: 'number' });
     const b = ctx.resolveInput(node, { id: 'b', type: 'number' });
     return `(${a} ${op} ${b})`;
+  }
+
+  if (node.type === 'select') {
+    const cond  = ctx.resolveInput(node, { id: 'cond',     type: 'expr' });
+    const tVal  = ctx.resolveInput(node, { id: 'if_true',  type: 'number' });
+    const fVal  = ctx.resolveInput(node, { id: 'if_false', type: 'number' });
+    return `(${cond} ? ${tVal} : ${fVal})`;
+  }
+
+  // For-Each-Selected's `layer` output references the loop-local variable.
+  // Wiring it outside the loop body is the user's responsibility for now.
+  if (node.type === 'forEachSelected') {
+    return 'loopLayer';
   }
 
   return null;
