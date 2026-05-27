@@ -219,3 +219,17 @@ Run with `npm test` (or `npm run test:watch`).
 | Math / Compare / Select | `math`, `compare`, `select` | `resolveExpressionFor` |
 | If | `if` | `emitterFor` switch (control-flow) |
 | For Each Selected Layer | `forEachSelected` | `emitterFor` switch (control-flow) |
+| Property Path | `propertyPath` | special-cased in Set Property's `resolvePropertyChain` |
+
+### Property paths
+
+After Effects properties nest, so `Set Property` accepts a `/`-separated path that the compiler expands into a chain of `.property()` calls:
+
+```
+ADBE Transform Group/ADBE Opacity
+  → layer.property("ADBE Transform Group").property("ADBE Opacity")
+```
+
+You can type the path inline on Set Property, wire a String node with the path as its value, or use the **Property Path** node (under *Data*) which exposes a presets dropdown for the common transform sub-properties plus a free-form path field.
+
+Limitation: match-names with a literal `/` in them aren't supported by the path-splitter yet. If you need one, wire the chain through a chain of separate nodes (planned for a future iteration of Property Path).

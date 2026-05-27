@@ -1,0 +1,31 @@
+.ebn-proppath__row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px 14px;
+}
+
+.ebn-proppath__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+.ebn-proppath__input {
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  color: #d4d4d4;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 10px;
+  padding: 3px 6px;
+  outline: none;
+  width: 220px;
+}
+
+.ebn-proppath__input:focus {
+  border-color: #2b7fff;
+  background: #232323;
+}

@@ -121,6 +121,9 @@ export function compileToIR(nodes, edges, globalVariables = []) {
       if (port.default != null) return port.default;
       return literalFor(port.type, DEFAULTS[port.id]);
     },
+    sourceOf(node, portId) {
+      return resolveSourceNode(byId, edges, node.id, portId);
+    },
     walkBranch(nodeId, handleId) {
       const outs = execEdges.filter(
         (e) => e.source === nodeId && e.sourceHandle === handleId,

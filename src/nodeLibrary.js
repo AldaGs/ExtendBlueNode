@@ -190,6 +190,20 @@ export const NODE_LIBRARY = [
           data: { label: 'String', value: '' },
         }),
       },
+      {
+        type: 'propertyPath',
+        label: 'Property Path',
+        keywords: ['property', 'transform', 'opacity', 'position', 'scale', 'rotation', 'matchname'],
+        factory: (pos) => ({
+          id: uid('prop'),
+          type: 'propertyPath',
+          position: pos,
+          data: {
+            preset: 'opacity',
+            path: 'ADBE Transform Group/ADBE Opacity',
+          },
+        }),
+      },
     ],
   },
   {

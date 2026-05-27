@@ -363,6 +363,75 @@ describe('select + selectors + for-each', () => {
   });
 });
 
+describe('property path chains', () => {
+  function propertyPath(id, path) {
+    return { id, type: 'propertyPath', position: { x: 0, y: 0 }, data: { path } };
+  }
+  function stringNode(id, value) {
+    return { id, type: 'string', position: { x: 0, y: 0 }, data: { value } };
+  }
+
+  it('expands a slash-separated inline value into chained .property() calls', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c', { property: 'ADBE Transform Group/ADBE Opacity' });
+    const out = compileToExtendScript(
+      [a, b, c],
+      [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'c')],
+    );
+    expect(out).toMatch(/targetLayer\.property\("ADBE Transform Group"\)\.property\("ADBE Opacity"\)\.setValue\(50\)/);
+  });
+
+  it('PropertyPath upstream drives the chain (preset path)', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const p = propertyPath('p', 'ADBE Transform Group/ADBE Position');
+    const out = compileToExtendScript(
+      [a, b, c, p],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'p', 'value', 'c', 'property'),
+      ],
+    );
+    expect(out).toMatch(/\.property\("ADBE Transform Group"\)\.property\("ADBE Position"\)\.setValue/);
+  });
+
+  it('a String upstream is treated the same way', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const s = stringNode('s', 'ADBE Effect Parade/Drop Shadow/ADBE Drop Shadow-0008');
+    const out = compileToExtendScript(
+      [a, b, c, s],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 's', 'value', 'c', 'property'),
+      ],
+    );
+    expect(out).toMatch(/\.property\("ADBE Effect Parade"\)\.property\("Drop Shadow"\)\.property\("ADBE Drop Shadow-0008"\)\.setValue/);
+  });
+
+  it('falls back to single .property() when the upstream is dynamic (e.g. Math)', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    // Math output isn't a static string — compiler emits a single dynamic property() call.
+    const m = { id: 'm', type: 'math', position: { x: 0, y: 0 }, data: { op: 'add', values: { a: 1, b: 2 } } };
+    const out = compileToExtendScript(
+      [a, b, c, m],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'm', 'value', 'c', 'property'),
+      ],
+    );
+    expect(out).toMatch(/\.property\(\(1 \+ 2\)\)\.setValue/);
+  });
+});
+
 describe('compileToIR', () => {
   it('produces statements not strings', () => {
     const irOut = compileToIR([getActiveComp('a')], []);

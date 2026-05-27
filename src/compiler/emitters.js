@@ -12,6 +12,40 @@
 
 import { ir } from './ir';
 
+/* ----------------------------- property paths ----------------------------- */
+
+// Turn 'ADBE Transform Group/ADBE Opacity' into
+// '.property("ADBE Transform Group").property("ADBE Opacity")'.
+export function chainPropertyPath(pathString) {
+  const segs = String(pathString)
+    .split('/')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (!segs.length) return '.property("ADBE Opacity")';
+  return segs.map((s) => `.property(${JSON.stringify(s)})`).join('');
+}
+
+// Decide how to render Set Property's chained .property() calls.
+// We prefer compile-time path expansion (so nested groups work) and
+// fall back to a single dynamic .property(<expr>) when the upstream
+// is a runtime-only expression we can't introspect.
+function resolvePropertyChain(node, ctx) {
+  const upstream = ctx.sourceOf?.(node, 'property');
+  if (upstream && upstream.type === 'propertyPath') {
+    return chainPropertyPath(upstream.data?.path || '');
+  }
+  if (upstream && upstream.type === 'string') {
+    return chainPropertyPath(upstream.data?.value || '');
+  }
+  if (!upstream) {
+    const inline = node.data?.values?.property;
+    return chainPropertyPath(inline ?? 'ADBE Opacity');
+  }
+  // Wired but not a statically-known string. Single dynamic call.
+  const expr = ctx.resolveInput(node, { id: 'property', type: 'text' });
+  return `.property(${expr})`;
+}
+
 /* ----------------------------- math / compare ----------------------------- */
 
 // Inline expression for a wired data input. The orchestrator inlines
@@ -60,9 +94,15 @@ const EBN_NODE_EMITTERS = {
     const layer = ctx.resolveInput(node, {
       id: 'layer', type: 'expr', default: 'targetLayer',
     });
-    const prop  = ctx.resolveInput(node, { id: 'property', type: 'text' });
-    const value = ctx.resolveInput(node, { id: 'value',    type: 'number' });
-    return [ir.raw(`${layer}.property(${prop}).setValue(${value});`)];
+
+    // Property port: AE properties are nested chains like
+    //   layer.property("ADBE Transform Group").property("ADBE Opacity")
+    // The user (or a PropertyPath / String upstream node) supplies a
+    // '/'-separated path which we expand into the chain.
+    const propChain = resolvePropertyChain(node, ctx);
+
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${layer}${propChain}.setValue(${value});`)];
   },
 
   // Legacy fixture from the original Phase 5 spec.
@@ -146,6 +186,13 @@ export function resolveExpressionFor(node, ctx) {
 
   if (node.type === 'integer' || node.type === 'string') {
     return ctx.varName(node);
+  }
+
+  // Property Path nodes, when wired into something other than Set
+  // Property's property port, act as a plain string literal of the
+  // current path. Set Property has its own special-case in resolvePropertyChain.
+  if (node.type === 'propertyPath') {
+    return JSON.stringify(String(node.data?.path ?? ''));
   }
 
   if (node.type === 'math') {
