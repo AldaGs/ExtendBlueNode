@@ -129,7 +129,8 @@ Paste existing ExtendScript, get the visual graph that would generate it — for
 - [x] **Blueprint mode** in the Copilot — a 📐 toggle reframes the panel: paste an ExtendScript program and a reverse-translation system prompt (`getBlueprintSystemPrompt`) asks the model to reconstruct the DAG JSON using only catalog labels, preserving exec order and data flow. Reuses the existing label/handle/edge validation + preview + apply pipeline.
 - [x] **Auto-layout** — `src/graph/blueprintLayout.js` `layoutGraphTopo`: longest-path layering places the exec chain left→right with data feeders in earlier columns and siblings stacked. No `dagre` dependency (offline-safe). Unit-tested.
 - [x] **Replace or append** — a "Replace canvas" checkbox swaps the current graph for the translation, or appends to it.
-- [ ] **Next**: true diff/merge against the current graph (highlight what changed before applying); a deterministic pre-parser to seed the LLM with statement structure for long programs.
+- [x] **Robust edge filter** (`src/graph/graphActions.js`) — the apply pipeline now rejects, with a per-reason report: duplicate edges, edges to missing nodes, nonexistent handles, **exec/data type mismatches** (an exec output sprayed into data inputs — the "fan"), and **competing wires into one input** (one-wire-per-input). Pure + unit-tested.
+- [ ] **Next**: true diff/merge against the current graph (highlight what changed before applying); a deterministic pre-parser to seed the LLM with statement structure for long programs; auto-chain orphan action nodes when the model omits the exec wiring.
 
 ## 8. Polish & distribution
 

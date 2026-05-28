@@ -52,7 +52,7 @@ Tri-pane UI shell, CEP manifest + AE preview pipeline, ComfyUI/Blender-style nod
 | Wave 1 | Demo polish | Globals "+ Get/+ Set" + Promote-to-Global; new selectors (All Selected Layers, Select Layers by Class); ScriptUI builder pane gains more controls, alignChildren / slider / preferredSize editors |
 | Wave 2 | Demo reliability | Line-map error traceback (failed inject highlights the offending node in red); per-branch variable scoping fix; `audit:nodes` false-positive cleanup (0 broken) |
 | Wave 3 | Node coverage depth | Keyframe ops (Add Keyframe at Time / Remove Keyframe / Read Value at Time), Set Expression node, and legacy ScriptUI string→tree import for the visual builder |
-| §7 | Reverse translation (Blueprints) | Copilot "Blueprint" mode: paste ExtendScript → reconstructed node graph via a reverse-translation prompt; topological left→right auto-layout (no dagre); replace-or-append the canvas |
+| §7 | Reverse translation (Blueprints) | Copilot "Blueprint" mode: paste ExtendScript → reconstructed node graph via a reverse-translation prompt; topological left→right auto-layout (no dagre); replace-or-append the canvas; robust edge filter (rejects exec/data mismatches, input fans, duplicates, bad handles) |
 
 Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
@@ -85,7 +85,7 @@ Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
 ## 6. Numbers
 
-- **Tests:** 76/76 green.
+- **Tests:** 82/82 green.
 - **Nodes:** 1,635 total (69 hand-authored + 1,566 auto-generated AE DOM); audit reports 0 broken.
 - **Bundle:** app shell 363 KB (107 KB gzipped), Monaco split into its own 4 MB chunk (loaded on first Code-view mount).
 - **Commits since last status report:** ScriptUI + JS-node + AE-DOM-generation + Copilot-backend waves, all with green-test gating.

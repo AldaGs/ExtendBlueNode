@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { flattenLibrary, getNodeCatalogSummary } from '../nodeLibrary';
 import { getScriptUIPromptSection } from '../graph/scriptUITree';
 import { layoutGraphTopo } from '../graph/blueprintLayout';
+import { filterConnectActions } from '../graph/graphActions';
 import { CLOUD_PROVIDERS, getStoredKey, setStoredKey, callCloud } from '../services/cloudLlmService';
 import './CopilotPanel.css'; // Let's create this file next
 
@@ -384,32 +385,17 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
         }
       }
 
-      // Edge validation pass — dedupe (source, target, sH, tH) tuples AND
-      // drop edges that reference handles that don't exist on the node.
-      const seenEdges = new Set();
-      let droppedDuplicate = 0;
-      let droppedBadHandle = 0;
-      let droppedMissingNode = 0;
-      for (const a of actions) {
-        if (a.action !== 'connect_nodes') continue;
-        const { sourceId, sourceHandle, targetId, targetHandle } = a.args || {};
-        const key = `${sourceId}::${sourceHandle}->${targetId}::${targetHandle}`;
-        if (seenEdges.has(key)) { droppedDuplicate++; continue; }
-        seenEdges.add(key);
-
-        const srcLabel = proposedNodeLabel.get(sourceId) || existingNodeLabel.get(sourceId);
-        const tgtLabel = proposedNodeLabel.get(targetId) || existingNodeLabel.get(targetId);
-        if (!srcLabel || !tgtLabel) { droppedMissingNode++; continue; }
-        const srcH = handlesForLabel(srcLabel);
-        const tgtH = handlesForLabel(tgtLabel);
-        // Allow unknown handles only if the node has no declared ports at all
-        // (e.g. reroute) — otherwise require an exact match.
-        const srcOk = srcH.outputs.size === 0 || srcH.outputs.has(sourceHandle);
-        const tgtOk = tgtH.inputs.size === 0 || tgtH.inputs.has(targetHandle);
-        if (!srcOk || !tgtOk) { droppedBadHandle++; continue; }
-
-        validActions.push(a);
-      }
+      // Edge validation pass (see graphActions.filterConnectActions): drops
+      // duplicates, edges to missing nodes, nonexistent handles, exec/data
+      // type mismatches (the "fan"), and competing wires into one input.
+      const labelOf = (id) => proposedNodeLabel.get(id) || existingNodeLabel.get(id) || null;
+      const { valid: validEdges, dropped } = filterConnectActions(actions, labelOf, handlesForLabel);
+      validActions.push(...validEdges);
+      const droppedDuplicate = dropped.duplicate;
+      const droppedBadHandle = dropped.badHandle;
+      const droppedMissingNode = dropped.missingNode;
+      const droppedTypeMismatch = dropped.typeMismatch;
+      const droppedInputTaken = dropped.inputTaken;
 
       let finalReply = reply || '(no reply)';
       if (unknown.length) {
@@ -418,9 +404,10 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
         ).join('\n');
         finalReply += `\n\n⚠ ${unknown.length} unknown node label(s) rejected:\n${lines}`;
       }
-      const edgeDrops = droppedDuplicate + droppedBadHandle + droppedMissingNode;
+      const edgeDrops = droppedDuplicate + droppedBadHandle + droppedMissingNode
+        + droppedTypeMismatch + droppedInputTaken;
       if (edgeDrops) {
-        finalReply += `\n\n⚠ ${edgeDrops} edge(s) rejected (${droppedDuplicate} duplicate, ${droppedBadHandle} bad handle, ${droppedMissingNode} missing node).`;
+        finalReply += `\n\n⚠ ${edgeDrops} edge(s) rejected (${droppedDuplicate} duplicate, ${droppedBadHandle} bad handle, ${droppedMissingNode} missing node, ${droppedTypeMismatch} exec/data mismatch, ${droppedInputTaken} input already wired).`;
       }
 
       setMessages(msgs => {
