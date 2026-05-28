@@ -290,6 +290,8 @@ const EBN_DATA_EMITTERS = {
   'Get Active Comp': () => 'activeComp',
   // The global `app` object — wire into any AE getter's `Application` input.
   'Get Application': () => 'app',
+  // Shorthand for the ubiquitous Get Application → project → items chain.
+  'Get Project Items': () => 'app.project.items',
   // Debug's data-side output is a pass-through of its wired `value` input,
   // so it can be inserted mid-chain on a data wire without breaking it.
   'Debug': (node, ctx) => ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' }),

@@ -90,6 +90,26 @@ const _BASE_NODE_LIBRARY = [
           },
         }),
       },
+      {
+        type: 'getProjectItems',
+        label: 'Get Project Items',
+        keywords: ['project', 'items', 'app', 'itemcollection', 'addComp'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Get Project Items',
+            category: 'data',
+            themeColor: NODE_THEME.selector,
+            inputs: [],
+            // Shorthand for Get Application → Application Get project →
+            // Project Get items. Wire this straight into addComp's
+            // "ItemCollection" input.
+            outputs: [{ id: 'value', label: 'items' }],
+          },
+        }),
+      },
     ],
   },
   {
