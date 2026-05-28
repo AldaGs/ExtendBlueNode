@@ -196,6 +196,8 @@ Rules:
 - Any AE getter whose input is "Application" must be wired from a "Get Application" node — there is no implicit global "app".
 - NEVER emit duplicate edges. Each (source, sourceHandle, target, targetHandle) tuple must appear at most once.
 - For an action node's data inputs (e.g. addComp's "name", "width"), wire each input EXACTLY ONCE. Do not connect the same value to multiple inputs unless explicitly asked to.
+- PREFER INLINE LITERALS over primitive nodes. When an input is a fixed number or string, put it directly in that node's "values" map keyed by the input handle id — do NOT create separate "Integer"/"String" nodes and wire them. Example: an addComp node should carry "values": { "name": "YouTube Video", "width": 1920, "height": 1080, "pixelAspect": 1, "duration": 30, "frameRate": 30 } and have NO wires into name/width/height/etc. Only use "Integer"/"String" nodes when the value must be reused by several nodes or computed by math.
+- Reuse derived values via wires, not duplication: e.g. a solid that "matches" the comp should take the same literal width/height/duration in its own "values" map (or be wired from the comp's outputs if such outputs exist).
 - Lay nodes left-to-right with generous spacing: x starts at 100 and increases by AT LEAST 320 per column; y rows are spaced by AT LEAST 220. Never reuse the exact same (x, y). Wrap to a new row after ~6 nodes. The app will re-grid for safety, but produce well-spaced coordinates anyway.
 - If the request cannot be fulfilled with the labels above, return {"reply": "<explanation>", "nodes": [], "edges": []}.
 - The JSON must be complete and parseable. Close every brace and bracket.
@@ -203,8 +205,9 @@ Rules:
 - NEVER include comments, "#" annotations, or explanations inside string values.
 - "reply" must be ONE short sentence. Not a tutorial.
 
-Example — request: "Spawn a node to get the active comp, and connect it to a new File node":
-{"reply":"Adding both nodes and wiring exec flow.","nodes":[{"id":"n1","label":"Get Active Comp","x":100,"y":100},{"id":"n2","label":"New File","x":360,"y":100}],"edges":[{"from":"n1","fromHandle":"exec_out","to":"n2","toHandle":"exec_in"}]}
+Example — request: "Make a 30s 1080p comp and add a solid that matches it":
+{"reply":"Creating comp and matching solid.","nodes":[{"id":"n1","label":"Start","x":100,"y":100},{"id":"n2","label":"ItemCollection addComp","x":420,"y":100,"values":{"name":"YouTube Video","width":1920,"height":1080,"pixelAspect":1,"duration":30,"frameRate":30}},{"id":"n3","label":"CompItem Get layers","x":740,"y":100},{"id":"n4","label":"LayerCollection addSolid","x":1060,"y":100,"values":{"color":"[1,0,0]","name":"BG","width":1920,"height":1080,"pixelAspect":1,"duration":30}}],"edges":[{"from":"n1","fromHandle":"exec_out","to":"n2","toHandle":"exec_in"},{"from":"n2","fromHandle":"exec_out","to":"n4","toHandle":"exec_in"},{"from":"n2","fromHandle":"result","to":"n3","toHandle":"target"},{"from":"n3","fromHandle":"value","to":"n4","toHandle":"target"}]}
+Note: literal sizes live in each node's "values" map (NO Integer/String nodes created); the comp's "result" goes through "CompItem Get layers" to reach addSolid's LayerCollection "target".
 
 Current Canvas State:
 Nodes: ${JSON.stringify(nodes.map(n => ({ id: n.id, label: n.data?.label })))}
