@@ -341,6 +341,15 @@ function FlowCanvasInner({
 
   const onNodeDragStop = useCallback(
     (_event, dropped) => {
+      // Insert-on-wire is a convenience for *fresh* nodes only. If the
+      // dropped node already participates in any edge, the user is just
+      // repositioning it — never hijack it into a wire. (This is the fix
+      // for "moving nodes around creates connections I didn't want".)
+      const alreadyWired = edges.some(
+        (e) => e.source === dropped.id || e.target === dropped.id,
+      );
+      if (alreadyWired) return;
+
       const c = nodeAnchors(dropped).center;
       const w = dropped.width ?? 40;
       const h = dropped.height ?? 30;
