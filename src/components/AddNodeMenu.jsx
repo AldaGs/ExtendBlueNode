@@ -26,12 +26,16 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
   const [query, setQuery] = useState('');
   const [highlight, setHighlight] = useState(0);
   const [openCat, setOpenCat] = useState(null); // category.name
+  const [openSubCat, setOpenSubCat] = useState(null); // subcategory.name
   const [subPos, setSubPos] = useState({ left: 0, top: 0 });
+  const [thirdPos, setThirdPos] = useState({ left: 0, top: 0 });
 
   const inputRef = useRef(null);
   const rootRef = useRef(null);
   const subRef = useRef(null);
+  const thirdRef = useRef(null);
   const rowRefs = useRef({}); // catName -> HTMLElement
+  const subRowRefs = useRef({}); // subCatName -> HTMLElement
   const closeTimerRef = useRef(null);
 
   const flat = useMemo(() => flattenLibrary(), []);
@@ -45,24 +49,16 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
       .map(({ it }) => it);
   }, [flat, query]);
 
-  const categorizedFlat = useMemo(
-    () => NODE_LIBRARY.flatMap((c) => c.items.map((i) => ({ ...i, category: c.category }))),
-    [],
-  );
-
-  const navList = filtered ?? categorizedFlat;
+  const navList = filtered ?? flat; // Fall back to flat when keyboard navigating
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Close-the-menu listeners. Esc + any outside pointer/right-click.
-  // Mount-once (deps: [onClose]) so they're never torn down by
-  // unrelated state churn (highlight, query, etc.). Capture phase so
-  // we run before React Flow's own canvas handlers.
+  // Close-the-menu listeners
   useEffect(() => {
     const isInsideMenu = (target) =>
-      !!(rootRef.current?.contains(target) || subRef.current?.contains(target));
+      !!(rootRef.current?.contains(target) || subRef.current?.contains(target) || thirdRef.current?.contains(target));
 
     const onKey = (e) => {
       if (e.key === 'Escape') {
@@ -76,9 +72,6 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
       onClose();
     };
     const onOutsideContext = (e) => {
-      // If a fresh right-click lands outside the menu, let the canvas
-      // handler open its own menu — but make sure THIS one closes
-      // first so we don't stack two popups.
       if (isInsideMenu(e.target)) return;
       onClose();
     };
@@ -95,8 +88,7 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
     };
   }, [onClose]);
 
-  // Keyboard nav inside the menu — kept separate so it re-binds on
-  // highlight/list changes without disturbing the close listeners.
+  // Keyboard nav inside the menu
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'ArrowDown') {
@@ -117,38 +109,48 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onPick, navList, highlight]);
 
-  // Close the submenu if the user scrolls anywhere — the row's fixed
-  // coords stop being correct otherwise.
+  // Close submenus on scroll
   useEffect(() => {
     if (!openCat) return;
     const onScroll = (e) => {
-      // Allow scrolling the submenu itself without closing it
       if (subRef.current && subRef.current.contains(e.target)) return;
+      if (thirdRef.current && thirdRef.current.contains(e.target)) return;
       setOpenCat(null);
+      setOpenSubCat(null);
     };
     window.addEventListener('scroll', onScroll, true);
     return () => window.removeEventListener('scroll', onScroll, true);
   }, [openCat]);
 
-  // Reposition the submenu whenever the active category changes; also
-  // scroll the active row into view if it would land off-screen.
+  // Submenu Positioning
   useLayoutEffect(() => {
     if (!openCat) return;
     const row = rowRefs.current[openCat];
     if (!row) return;
     row.scrollIntoView({ block: 'nearest' });
     const r = row.getBoundingClientRect();
-    // Anchor the submenu's top to the row's top, shifted up 4 px to
-    // overlap nicely. Horizontal: r.right + a hair so it abuts the row.
     let left = r.right + 2;
     let top = r.top - 4;
-    // Soft-flip horizontally if we'd run off the right edge of the
-    // viewport. (Vertical flip can wait until anyone hits it.)
     const subW = subRef.current?.offsetWidth ?? 200;
     const vw = window.innerWidth || document.documentElement.clientWidth;
     if (left + subW > vw - 4) left = Math.max(4, r.left - subW - 2);
     setSubPos({ left, top });
   }, [openCat]);
+
+  // Third Menu Positioning
+  useLayoutEffect(() => {
+    if (!openSubCat) return;
+    const row = subRowRefs.current[openSubCat];
+    if (!row) return;
+    row.scrollIntoView({ block: 'nearest' });
+    const r = row.getBoundingClientRect();
+    let left = r.right + 2;
+    let top = r.top - 4;
+    const thirdW = thirdRef.current?.offsetWidth ?? 200;
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    if (left + thirdW > vw - 4) left = Math.max(4, r.left - thirdW - 2);
+    setThirdPos({ left, top });
+  }, [openSubCat]);
 
   const keepOpen = () => {
     if (closeTimerRef.current) {
@@ -158,10 +160,12 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
   };
   const scheduleClose = () => {
     keepOpen();
-    closeTimerRef.current = setTimeout(() => setOpenCat(null), CLOSE_GRACE_MS);
+    closeTimerRef.current = setTimeout(() => {
+      setOpenCat(null);
+      setOpenSubCat(null);
+    }, CLOSE_GRACE_MS);
   };
 
-  // Item rendering for both filtered (flat search) and category view.
   const renderFlatItem = (item, i) => (
     <button
       key={`${item.category}/${item.type}`}
@@ -175,8 +179,8 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
     </button>
   );
 
-  const activeCat =
-    openCat && NODE_LIBRARY.find((c) => c.category === openCat);
+  const activeCat = openCat && NODE_LIBRARY.find((c) => c.category === openCat);
+  const activeSubCat = activeCat && activeCat.subcategories && openSubCat && activeCat.subcategories.find((s) => s.category === openSubCat);
 
   return (
     <>
@@ -199,6 +203,7 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
             setQuery(e.target.value);
             setHighlight(0);
             setOpenCat(null);
+            setOpenSubCat(null);
           }}
         />
 
@@ -212,22 +217,20 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
           ) : (
             NODE_LIBRARY.map((cat) => {
               const isOpen = openCat === cat.category;
+              const count = cat.items ? cat.items.length : (cat.subcategories ? cat.subcategories.length : 0);
               return (
                 <button
                   key={cat.category}
                   type="button"
                   ref={(el) => { rowRefs.current[cat.category] = el; }}
                   className={`ebn-addmenu__cat-row${isOpen ? ' ebn-addmenu__cat-row--open' : ''}`}
-                  onMouseEnter={() => { keepOpen(); setOpenCat(cat.category); }}
-                  onFocus={() => { keepOpen(); setOpenCat(cat.category); }}
+                  onMouseEnter={() => { keepOpen(); setOpenCat(cat.category); setOpenSubCat(null); }}
+                  onFocus={() => { keepOpen(); setOpenCat(cat.category); setOpenSubCat(null); }}
                   onClick={() => setOpenCat(isOpen ? null : cat.category)}
                 >
                   <span className="ebn-addmenu__cat-name">{cat.category}</span>
-                  <span className="ebn-addmenu__cat-count">{cat.items.length}</span>
-                  <svg
-                    className="ebn-addmenu__cat-arrow"
-                    width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"
-                  >
+                  <span className="ebn-addmenu__cat-count">{count}</span>
+                  <svg className="ebn-addmenu__cat-arrow" width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
                     <path d="M2.5 1.5l3 2.5-3 2.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                   </svg>
                 </button>
@@ -249,12 +252,57 @@ export default function AddNodeMenu({ screen, onPick, onClose, hint }) {
           onMouseEnter={keepOpen}
           onMouseLeave={scheduleClose}
         >
-          {activeCat.items.map((item) => (
+          {activeCat.items && activeCat.items.map((item) => (
             <button
               key={item.type}
               type="button"
               className="ebn-addmenu__item"
               onClick={() => onPick({ ...item, category: activeCat.category })}
+            >
+              <span className="ebn-addmenu__label">{item.label}</span>
+            </button>
+          ))}
+          {activeCat.subcategories && activeCat.subcategories.map((sub) => {
+            const isSubOpen = openSubCat === sub.category;
+            return (
+              <button
+                key={sub.category}
+                type="button"
+                ref={(el) => { subRowRefs.current[sub.category] = el; }}
+                className={`ebn-addmenu__cat-row${isSubOpen ? ' ebn-addmenu__cat-row--open' : ''}`}
+                onMouseEnter={() => { keepOpen(); setOpenSubCat(sub.category); }}
+                onFocus={() => { keepOpen(); setOpenSubCat(sub.category); }}
+                onClick={() => setOpenSubCat(isSubOpen ? null : sub.category)}
+              >
+                <span className="ebn-addmenu__cat-name">{sub.category}</span>
+                <span className="ebn-addmenu__cat-count">{sub.items ? sub.items.length : 0}</span>
+                <svg className="ebn-addmenu__cat-arrow" width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
+                  <path d="M2.5 1.5l3 2.5-3 2.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                </svg>
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      {activeSubCat && (
+        <div
+          ref={thirdRef}
+          className="ebn-addmenu__sub"
+          style={{
+            position: 'fixed',
+            left: thirdPos.left,
+            top: thirdPos.top,
+          }}
+          onMouseEnter={keepOpen}
+          onMouseLeave={scheduleClose}
+        >
+          {activeSubCat.items && activeSubCat.items.map((item) => (
+            <button
+              key={item.type}
+              type="button"
+              className="ebn-addmenu__item"
+              onClick={() => onPick({ ...item, category: `${activeCat.category} > ${activeSubCat.category}` })}
             >
               <span className="ebn-addmenu__label">{item.label}</span>
             </button>

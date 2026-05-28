@@ -11,6 +11,7 @@ import { ir, printIR } from './compiler/ir';
 import {
   emitterFor,
   SELF_BRANCHING_TYPES,
+  SELF_BRANCHING_LABELS,
   resolveExpressionFor,
 } from './compiler/emitters';
 import { HELPERS } from './compiler/helpers';
@@ -173,7 +174,10 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
     const emit = emitterFor(node);
     const own = emit ? emit(node, ctx) : [];
 
-    if (SELF_BRANCHING_TYPES.has(node.type)) {
+    if (
+      SELF_BRANCHING_TYPES.has(node.type) ||
+      SELF_BRANCHING_LABELS.has(node.data?.label)
+    ) {
       return own;
     }
 

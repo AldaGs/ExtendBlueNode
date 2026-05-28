@@ -204,7 +204,7 @@ function generateNodes() {
 
         nodeLibrary.push(`
   {
-    category: 'AE ${className}',
+    category: '${className}',
     items: [${items.join(',')}\n    ]
   }`);
     }

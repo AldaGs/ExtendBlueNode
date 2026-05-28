@@ -24,6 +24,7 @@ export const ir = {
   forIn:   (init, cond, step, body) => ({
     kind: 'forIn', init, cond, step, body,
   }),
+  whileLoop: (cond, body) => ({ kind: 'whileLoop', cond, body }),
   tryCatch: (body, catchBody, errVar = 'error') => ({
     kind: 'tryCatch', body, catchBody, errVar,
   }),
@@ -63,6 +64,12 @@ function printOne(s, depth) {
     }
     case 'forIn': {
       const head = `${indent(depth)}for (${s.init}; ${s.cond}; ${s.step}) {`;
+      return [head, printIR(s.body, depth + 1), `${indent(depth)}}`]
+        .filter((l) => l !== '')
+        .join('\n');
+    }
+    case 'whileLoop': {
+      const head = `${indent(depth)}while (${s.cond}) {`;
       return [head, printIR(s.body, depth + 1), `${indent(depth)}}`]
         .filter((l) => l !== '')
         .join('\n');

@@ -114,8 +114,57 @@ const EBN_NODE_EMITTERS = {
     return [ir.varDecl(name, expr)];
   },
 
+  'Array Push': (node, ctx) => {
+    const arr = ctx.resolveInput(node, { id: 'array', type: 'expr' });
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${arr}.push(${val});`)];
+  },
+
+  'Object Set Key': (node, ctx) => {
+    const obj = ctx.resolveInput(node, { id: 'object', type: 'expr' });
+    const key = ctx.resolveInput(node, { id: 'key', type: 'text' });
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${obj}[${key}] = ${val};`)];
+  },
+
   // Pure entry point — emits no code, just anchors the exec chain.
   'Start': () => [],
+
+  // --- JS control flow (self-branching; see SELF_BRANCHING_LABELS) ---
+  'For Loop': (node, ctx) => {
+    const start = ctx.resolveInput(node, { id: 'start', type: 'number', default: '0' });
+    const end   = ctx.resolveInput(node, { id: 'end',   type: 'number', default: '10' });
+    const step  = ctx.resolveInput(node, { id: 'step',  type: 'number', default: '1' });
+    const idx   = forLoopIndexVar(node, ctx);
+    const body  = ctx.walkBranch(node.id, 'exec_body');
+    const done  = ctx.walkBranch(node.id, 'exec_done');
+    return [
+      ir.forIn(`var ${idx} = ${start}`, `${idx} < ${end}`, `${idx} += ${step}`, body),
+      ...done,
+    ];
+  },
+  'While Loop': (node, ctx) => {
+    const cond = ctx.resolveInput(node, { id: 'cond', type: 'expr', default: 'true' });
+    const body = ctx.walkBranch(node.id, 'exec_body');
+    const done = ctx.walkBranch(node.id, 'exec_done');
+    return [ir.whileLoop(cond, body), ...done];
+  },
+  'Switch Statement': (node, ctx) => {
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
+    const cases = [1, 2, 3].map((i) => ({
+      val: ctx.resolveInput(node, { id: `case${i}_val`, type: 'expr', default: 'undefined' }),
+      body: ctx.walkBranch(node.id, `exec_case${i}`),
+    }));
+    const def  = ctx.walkBranch(node.id, 'exec_default');
+    const done = ctx.walkBranch(node.id, 'exec_done');
+    // Lower to an if / else-if chain (=== comparison) — robust in ES3 and
+    // sidesteps switch fall-through surprises.
+    let chain = def;
+    for (let i = cases.length - 1; i >= 0; i--) {
+      chain = [ir.ifElse(`${val} === ${cases[i].val}`, cases[i].body, chain)];
+    }
+    return [...chain, ...done];
+  },
 
   // Inspector: alerts the resolved value at runtime. Use anywhere in the
   // exec chain to see what a wire actually carries. `label` is an optional
@@ -191,9 +240,19 @@ export function emitterFor(node) {
 
 /* ----------------------------- control-flow flags ----------------------------- */
 
+// Stable per-node index variable for a "For Loop" node. Shared by the exec
+// emitter (loop header) and the data-side resolver (its `index` output).
+export function forLoopIndexVar(node, ctx) {
+  return `${ctx.varName(node)}_i`;
+}
+
 // Nodes whose emitter takes ownership of their own downstream walking —
 // the orchestrator must NOT auto-recurse along their exec_out edges.
+// Keyed by node.type for the dedicated node kinds…
 export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
+// …and by ebnNode label for the JS control-flow nodes (which are all
+// type 'ebnNode'). astCompiler checks both.
+export const SELF_BRANCHING_LABELS = new Set(['For Loop', 'While Loop', 'Switch Statement']);
 
 /* ----------------------------- data-side expression resolution ----------------------------- */
 
@@ -261,6 +320,13 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
   // Wiring it outside the loop body is the user's responsibility for now.
   if (node.type === 'forEachSelected') {
     return 'loopLayer';
+  }
+
+  // For loop output
+  if (node.type === 'forLoop') {
+    if (outputHandle === 'index') {
+      return ctx.varName(node) + '_i';
+    }
   }
 
   // Data-side ebnNode dispatch — keyed by label so these nodes can use
@@ -332,6 +398,71 @@ const EBN_DATA_EMITTERS = {
     const x = ctx.resolveInput(node, { id: 'x', type: 'number' });
     const y = ctx.resolveInput(node, { id: 'y', type: 'number' });
     return `[${x}, ${y}]`;
+  },
+  
+  // Array
+  'New Array': () => `[]`,
+  'Array Length': (node, ctx) => {
+    const arr = ctx.resolveInput(node, { id: 'array', type: 'expr', default: '[]' });
+    return `${arr}.length`;
+  },
+  'Array Get Element': (node, ctx) => {
+    const arr = ctx.resolveInput(node, { id: 'array', type: 'expr', default: '[]' });
+    const idx = ctx.resolveInput(node, { id: 'index', type: 'number', default: '0' });
+    return `${arr}[${idx}]`;
+  },
+  
+  // Math
+  'Math Function': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'number', default: '0' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'number', default: '0' });
+    const funcName = node.data?.values?.func || 'round';
+    // Math.min/max can take multiple args, others usually one.
+    if (['min', 'max'].includes(funcName)) return `Math.${funcName}(${a}, ${b})`;
+    return `Math.${funcName}(${a})`;
+  },
+  'Math Random': () => `Math.random()`,
+  // Ranged inclusive integer: Math.floor(Math.random()*(max-min+1))+min
+  'Random Integer': (node, ctx) => {
+    const min = ctx.resolveInput(node, { id: 'min', type: 'number', default: '0' });
+    const max = ctx.resolveInput(node, { id: 'max', type: 'number', default: '100' });
+    return `(Math.floor(Math.random() * ((${max}) - (${min}) + 1)) + (${min}))`;
+  },
+  // For Loop's `index` output references the loop's counter variable.
+  'For Loop': (node, ctx, outputHandle) =>
+    outputHandle === 'index' ? forLoopIndexVar(node, ctx) : null,
+  // Concatenate: string-join two inputs. Resolve as 'text' so inline
+  // literals get quoted while wired upstream expressions pass through raw
+  // (ExtendScript coerces numbers to strings under "+").
+  'Concatenate': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'text', default: '""' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'text', default: '""' });
+    return `(${a} + ${b})`;
+  },
+
+  // String
+  'String Split': (node, ctx) => {
+    const str = ctx.resolveInput(node, { id: 'string', type: 'text', default: '""' });
+    const sep = ctx.resolveInput(node, { id: 'separator', type: 'text', default: '","' });
+    return `${str}.split(${sep})`;
+  },
+  'String Replace': (node, ctx) => {
+    const str = ctx.resolveInput(node, { id: 'string', type: 'text', default: '""' });
+    const find = ctx.resolveInput(node, { id: 'find', type: 'text', default: '""' });
+    const replace = ctx.resolveInput(node, { id: 'replace', type: 'text', default: '""' });
+    return `${str}.replace(${find}, ${replace})`;
+  },
+  'String Length': (node, ctx) => {
+    const str = ctx.resolveInput(node, { id: 'string', type: 'text', default: '""' });
+    return `${str}.length`;
+  },
+
+  // Object
+  'New Object': () => `{}`,
+  'Object Get Key': (node, ctx) => {
+    const obj = ctx.resolveInput(node, { id: 'object', type: 'expr', default: '{}' });
+    const key = ctx.resolveInput(node, { id: 'key', type: 'text', default: '""' });
+    return `${obj}[${key}]`;
   },
   ...AE_DATA_EMITTERS,
 };

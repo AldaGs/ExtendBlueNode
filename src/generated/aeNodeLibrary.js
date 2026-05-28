@@ -8,7 +8,7 @@ function uid(prefix) {
 
 export const AE_NODE_LIBRARY = [
   {
-    category: 'AE Application',
+    category: 'Application',
     items: [
       {
         type: 'ae_Application_get_project',
@@ -964,7 +964,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Preferences',
+    category: 'Preferences',
     items: [
       {
         type: 'ae_Preferences_deletePref',
@@ -1284,7 +1284,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE AVItem',
+    category: 'AVItem',
     items: [
       {
         type: 'ae_AVItem_get_proxySource',
@@ -1977,7 +1977,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE AVLayer',
+    category: 'AVLayer',
     items: [
       {
         type: 'ae_AVLayer_get_source',
@@ -4426,7 +4426,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE CameraLayer',
+    category: 'CameraLayer',
     items: [
       {
         type: 'ae_CameraLayer_get_cameraOption',
@@ -5896,7 +5896,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Collection',
+    category: 'Collection',
     items: [
       {
         type: 'ae_Collection_get_length',
@@ -5923,7 +5923,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE CompItem',
+    category: 'CompItem',
     items: [
       {
         type: 'ae_CompItem_get_numLayers',
@@ -7485,7 +7485,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE FileSource',
+    category: 'FileSource',
     items: [
       {
         type: 'ae_FileSource_get_file',
@@ -7868,7 +7868,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE FolderItem',
+    category: 'FolderItem',
     items: [
       {
         type: 'ae_FolderItem_get_items',
@@ -8194,7 +8194,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE FootageItem',
+    category: 'FootageItem',
     items: [
       {
         type: 'ae_FootageItem_get_file',
@@ -9060,7 +9060,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE PlaceholderItem',
+    category: 'PlaceholderItem',
     items: [
       {
         type: 'ae_PlaceholderItem_get_file',
@@ -9926,7 +9926,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE FootageSource',
+    category: 'FootageSource',
     items: [
       {
         type: 'ae_FootageSource_get_file',
@@ -10264,7 +10264,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE ImportOptions',
+    category: 'ImportOptions',
     items: [
       {
         type: 'ae_ImportOptions_get_importAs',
@@ -10382,7 +10382,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Item',
+    category: 'Item',
     items: [
       {
         type: 'ae_Item_get_id',
@@ -10639,7 +10639,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE ItemCollection',
+    category: 'ItemCollection',
     items: [
       {
         type: 'ae_ItemCollection_get_length',
@@ -10721,7 +10721,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE KeyframeEase',
+    category: 'KeyframeEase',
     items: [
       {
         type: 'ae_KeyframeEase_get_speed',
@@ -10770,7 +10770,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Layer',
+    category: 'Layer',
     items: [
       {
         type: 'ae_Layer_get_index',
@@ -12218,7 +12218,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE LayerCollection',
+    category: 'LayerCollection',
     items: [
       {
         type: 'ae_LayerCollection_get_length',
@@ -12505,7 +12505,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE LightLayer',
+    category: 'LightLayer',
     items: [
       {
         type: 'ae_LightLayer_get_lightOption',
@@ -13997,7 +13997,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE MarkerValue',
+    category: 'MarkerValue',
     items: [
       {
         type: 'ae_MarkerValue_get_comment',
@@ -14248,7 +14248,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE MaskPropertyGroup',
+    category: 'MaskPropertyGroup',
     items: [
       {
         type: 'ae_MaskPropertyGroup_get_maskMode',
@@ -15043,7 +15043,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE OMCollection',
+    category: 'OMCollection',
     items: [
       {
         type: 'ae_OMCollection_get_length',
@@ -15070,7 +15070,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE OutputModule',
+    category: 'OutputModule',
     items: [
       {
         type: 'ae_OutputModule_get_name',
@@ -15355,7 +15355,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE PlaceholderSource',
+    category: 'PlaceholderSource',
     items: [
       {
         type: 'ae_PlaceholderSource_get_file',
@@ -15693,7 +15693,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Project',
+    category: 'Project',
     items: [
       {
         type: 'ae_Project_get_file',
@@ -16965,7 +16965,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Property',
+    category: 'Property',
     items: [
       {
         type: 'ae_Property_get_propertyValueType',
@@ -19031,7 +19031,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE PropertyBase',
+    category: 'PropertyBase',
     items: [
       {
         type: 'ae_PropertyBase_get_matchName',
@@ -19490,7 +19490,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE PropertyGroup',
+    category: 'PropertyGroup',
     items: [
       {
         type: 'ae_PropertyGroup_get_numProperties',
@@ -20021,7 +20021,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE RenderQueue',
+    category: 'RenderQueue',
     items: [
       {
         type: 'ae_RenderQueue_get_rendering',
@@ -20257,7 +20257,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE RenderQueueItem',
+    category: 'RenderQueueItem',
     items: [
       {
         type: 'ae_RenderQueueItem_get_numOutputModules',
@@ -20767,7 +20767,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE RQItemCollection',
+    category: 'RQItemCollection',
     items: [
       {
         type: 'ae_RQItemCollection_get_length',
@@ -20819,7 +20819,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Settings',
+    category: 'Settings',
     items: [
       {
         type: 'ae_Settings_saveSetting',
@@ -20905,7 +20905,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Shape',
+    category: 'Shape',
     items: [
       {
         type: 'ae_Shape_get_closed',
@@ -21152,7 +21152,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE ShapeLayer',
+    category: 'ShapeLayer',
     items: [
       {
         type: 'ae_ShapeLayer_get_source',
@@ -23601,7 +23601,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE SolidSource',
+    category: 'SolidSource',
     items: [
       {
         type: 'ae_SolidSource_get_color',
@@ -23961,7 +23961,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE System',
+    category: 'System',
     items: [
       {
         type: 'ae_System_get_userName',
@@ -24079,7 +24079,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE TextDocument',
+    category: 'TextDocument',
     items: [
       {
         type: 'ae_TextDocument_get_pointText',
@@ -24790,7 +24790,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE TextLayer',
+    category: 'TextLayer',
     items: [
       {
         type: 'ae_TextLayer_get_source',
@@ -27283,7 +27283,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE View',
+    category: 'View',
     items: [
       {
         type: 'ae_View_get_active',
@@ -27355,7 +27355,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE Viewer',
+    category: 'Viewer',
     items: [
       {
         type: 'ae_Viewer_get_type',
@@ -27582,7 +27582,7 @@ export const AE_NODE_LIBRARY = [
     ]
   },
   {
-    category: 'AE ViewOptions',
+    category: 'ViewOptions',
     items: [
       {
         type: 'ae_ViewOptions_get_channels',

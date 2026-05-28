@@ -9,6 +9,7 @@
 
 import { NODE_THEME } from './graph/initialGraph';
 import { AE_NODE_LIBRARY } from './generated/aeNodeLibrary';
+import { JS_NODE_LIBRARY } from './jsNodeLibrary';
 
 let counter = 0;
 function uid(prefix) {
@@ -550,14 +551,32 @@ const _BASE_NODE_LIBRARY = [
   },
 ];
 
-export const NODE_LIBRARY = [..._BASE_NODE_LIBRARY, ...AE_NODE_LIBRARY];
+export const NODE_LIBRARY = [
+  ..._BASE_NODE_LIBRARY,
+  ...JS_NODE_LIBRARY,
+  {
+    category: 'After Effects DOM',
+    subcategories: AE_NODE_LIBRARY
+  }
+];
 
 // Flattened list with category attached — handy for search ranking.
 export function flattenLibrary() {
   const out = [];
   for (const cat of NODE_LIBRARY) {
-    for (const item of cat.items) {
-      out.push({ ...item, category: cat.category });
+    if (cat.items) {
+      for (const item of cat.items) {
+        out.push({ ...item, category: cat.category });
+      }
+    }
+    if (cat.subcategories) {
+      for (const sub of cat.subcategories) {
+        if (sub.items) {
+          for (const item of sub.items) {
+            out.push({ ...item, category: `${cat.category} > ${sub.category}` });
+          }
+        }
+      }
     }
   }
   return out;

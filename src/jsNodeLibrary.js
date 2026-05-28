@@ -1,0 +1,410 @@
+import { NODE_THEME } from './graph/initialGraph';
+
+let counter = 0;
+function uid(prefix) {
+  counter += 1;
+  return `${prefix}_${Date.now().toString(36)}_${counter}`;
+}
+
+export const JS_NODE_LIBRARY = [
+  {
+    category: 'Javascript',
+    subcategories: [
+      {
+        category: 'Control Flow',
+        items: [
+          {
+            type: 'forLoop',
+            label: 'For Loop',
+            keywords: ['loop', 'for', 'repeat', 'iterate'],
+            factory: (pos) => ({
+              id: uid('for'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'For Loop',
+                category: 'logic',
+                themeColor: '#a36b1f',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'start', label: 'Start Index', type: 'number', placeholder: '0' },
+                  { id: 'end', label: 'End Index (Exclusive)', type: 'number', placeholder: '10' },
+                  { id: 'step', label: 'Step', type: 'number', placeholder: '1' },
+                ],
+                outputs: [
+                  { id: 'exec_body', label: 'Loop Body', type: 'exec' },
+                  { id: 'index', label: 'Index' },
+                  { id: 'exec_done', label: 'Completed', type: 'exec' },
+                ],
+                values: { start: 0, end: 10, step: 1 },
+              },
+            }),
+          },
+          {
+            type: 'whileLoop',
+            label: 'While Loop',
+            keywords: ['loop', 'while', 'repeat', 'condition'],
+            factory: (pos) => ({
+              id: uid('while'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'While Loop',
+                category: 'logic',
+                themeColor: '#a36b1f',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'cond', label: 'Condition', type: 'expr', placeholder: 'true' },
+                ],
+                outputs: [
+                  { id: 'exec_body', label: 'Loop Body', type: 'exec' },
+                  { id: 'exec_done', label: 'Completed', type: 'exec' },
+                ],
+                values: { cond: 'true' },
+              },
+            }),
+          },
+          {
+            type: 'switchCase',
+            label: 'Switch Statement',
+            keywords: ['switch', 'case', 'condition', 'logic'],
+            factory: (pos) => ({
+              id: uid('switch'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Switch Statement',
+                category: 'logic',
+                themeColor: '#a36b1f',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'value', label: 'Value to Match', type: 'expr' },
+                  { id: 'case1_val', label: 'Case 1 Value', type: 'expr' },
+                  { id: 'case2_val', label: 'Case 2 Value', type: 'expr' },
+                  { id: 'case3_val', label: 'Case 3 Value', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_case1', label: 'Case 1 Body', type: 'exec' },
+                  { id: 'exec_case2', label: 'Case 2 Body', type: 'exec' },
+                  { id: 'exec_case3', label: 'Case 3 Body', type: 'exec' },
+                  { id: 'exec_default', label: 'Default Body', type: 'exec' },
+                  { id: 'exec_done', label: 'Completed', type: 'exec' },
+                ],
+                values: {},
+              },
+            }),
+          },
+        ]
+      },
+      {
+        category: 'Array',
+        items: [
+          {
+            type: 'newArray',
+            label: 'New Array',
+            keywords: ['array', 'list', 'create', '[]'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'New Array',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [],
+                outputs: [{ id: 'array', label: 'Array' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'arrayPush',
+            label: 'Array Push',
+            keywords: ['array', 'push', 'add', 'append', 'insert'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Array Push',
+                category: 'action',
+                themeColor: '#2b5c7a',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'array', label: 'Array', type: 'expr' },
+                  { id: 'value', label: 'Value', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution' },
+                  { id: 'length', label: 'New Length' },
+                ],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'arrayLength',
+            label: 'Array Length',
+            keywords: ['array', 'length', 'count', 'size'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Array Length',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [{ id: 'array', label: 'Array', type: 'expr' }],
+                outputs: [{ id: 'length', label: 'Length' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'arrayGet',
+            label: 'Array Get Element',
+            keywords: ['array', 'get', 'index', 'read', 'element'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Array Get Element',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'array', label: 'Array', type: 'expr' },
+                  { id: 'index', label: 'Index', type: 'number', placeholder: '0' },
+                ],
+                outputs: [{ id: 'value', label: 'Value' }],
+                values: { index: 0 },
+              },
+            }),
+          },
+        ],
+      },
+      {
+        category: 'Math',
+        items: [
+          {
+            type: 'mathFunction',
+            label: 'Math Function',
+            keywords: ['math', 'floor', 'ceil', 'round', 'abs', 'min', 'max'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Math Function',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'a', label: 'A', type: 'number' },
+                  { id: 'b', label: 'B (Optional)', type: 'number' },
+                ],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: { func: 'round' }, // Will need a dropdown in the UI if possible, or just default to round
+              },
+            }),
+          },
+          {
+            type: 'mathRandom',
+            label: 'Math Random',
+            keywords: ['math', 'random', 'rng', 'number'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Math Random',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [],
+                outputs: [{ id: 'result', label: 'Result [0-1)' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'randomInteger',
+            label: 'Random Integer',
+            keywords: ['math', 'random', 'integer', 'int', 'range', 'rng'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Random Integer',
+                category: 'data',
+                themeColor: '#3a6b54',
+                // Inclusive [min, max].
+                inputs: [
+                  { id: 'min', label: 'Min', type: 'number', placeholder: '0' },
+                  { id: 'max', label: 'Max', type: 'number', placeholder: '100' },
+                ],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: { min: 0, max: 100 },
+              },
+            }),
+          },
+        ],
+      },
+      {
+        category: 'String',
+        items: [
+          {
+            type: 'stringSplit',
+            label: 'String Split',
+            keywords: ['string', 'split', 'tokenize', 'array'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'String Split',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'string', label: 'String', type: 'text' },
+                  { id: 'separator', label: 'Separator', type: 'text', placeholder: ',' },
+                ],
+                outputs: [{ id: 'array', label: 'Array' }],
+                values: { separator: ',' },
+              },
+            }),
+          },
+          {
+            type: 'stringReplace',
+            label: 'String Replace',
+            keywords: ['string', 'replace', 'find', 'swap'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'String Replace',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'string', label: 'String', type: 'text' },
+                  { id: 'find', label: 'Find', type: 'text' },
+                  { id: 'replace', label: 'Replace', type: 'text' },
+                ],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: { find: '', replace: '' },
+              },
+            }),
+          },
+          {
+            type: 'stringLength',
+            label: 'String Length',
+            keywords: ['string', 'length', 'count', 'size'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'String Length',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [{ id: 'string', label: 'String', type: 'text' }],
+                outputs: [{ id: 'length', label: 'Length' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'concatenate',
+            label: 'Concatenate',
+            keywords: ['string', 'concat', 'join', 'append', 'combine', 'name'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Concatenate',
+                category: 'data',
+                themeColor: '#3a6b54',
+                // Numbers auto-coerce to strings under "+", so this doubles
+                // as a "prefix + number" name builder.
+                inputs: [
+                  { id: 'a', label: 'A', type: 'text' },
+                  { id: 'b', label: 'B', type: 'text' },
+                ],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: { a: '', b: '' },
+              },
+            }),
+          },
+        ]
+      },
+      {
+        category: 'Object',
+        items: [
+          {
+            type: 'newObject',
+            label: 'New Object',
+            keywords: ['object', 'dict', 'map', 'create', '{}'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'New Object',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [],
+                outputs: [{ id: 'object', label: 'Object' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'objectGet',
+            label: 'Object Get Key',
+            keywords: ['object', 'get', 'key', 'read', 'property'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Object Get Key',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'object', label: 'Object', type: 'expr' },
+                  { id: 'key', label: 'Key (String)', type: 'text' },
+                ],
+                outputs: [{ id: 'value', label: 'Value' }],
+                values: { key: '' },
+              },
+            }),
+          },
+          {
+            type: 'objectSet',
+            label: 'Object Set Key',
+            keywords: ['object', 'set', 'key', 'write', 'property'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Object Set Key',
+                category: 'action',
+                themeColor: '#2b5c7a',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'object', label: 'Object', type: 'expr' },
+                  { id: 'key', label: 'Key (String)', type: 'text' },
+                  { id: 'value', label: 'Value', type: 'expr' },
+                ],
+                outputs: [{ id: 'exec_out', label: 'Execution' }],
+                values: { key: '' },
+              },
+            }),
+          },
+        ]
+      }
+    ]
+  }
+];
