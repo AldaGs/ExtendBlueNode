@@ -213,12 +213,13 @@ const EBN_NODE_EMITTERS = {
   'UI Event Listener': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'null' });
     const eventType = node.data?.values?.event_type || 'onClick';
-    const body = ctx.walkBranch(node.id, 'exec_callback');
-    
+    // exec_callback = code that runs when the event fires.
+    const callback = ctx.walkBranch(node.id, 'exec_callback');
+    // exec_out = the rest of the setup chain (attach more listeners / show).
+    const cont = ctx.walkBranch(node.id, 'exec_out');
     return [
-      ir.raw(`${target}.${eventType} = function() {`),
-      ...body,
-      ir.raw(`};`)
+      ir.funcAssign(`${target}.${eventType}`, [], callback),
+      ...cont,
     ];
   },
   'Show Window': (node, ctx) => {
@@ -384,7 +385,12 @@ export function forEachArrayItemVar(node, ctx) {
 export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
 // …and by ebnNode label for the JS control-flow nodes (which are all
 // type 'ebnNode'). astCompiler checks both.
-export const SELF_BRANCHING_LABELS = new Set(['For Loop', 'While Loop', 'Switch Statement', 'For Each (Array)']);
+export const SELF_BRANCHING_LABELS = new Set([
+  'For Loop', 'While Loop', 'Switch Statement', 'For Each (Array)',
+  // Walks exec_callback (handler body) itself and continues via exec_out, so
+  // the orchestrator must not auto-follow its outgoing exec edges.
+  'UI Event Listener',
+]);
 
 /* ----------------------------- data-side expression resolution ----------------------------- */
 

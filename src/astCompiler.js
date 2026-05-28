@@ -115,6 +115,7 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
   ).filter((e) => e.targetHandle === EXEC_IN);
 
   const reached = new Set();
+  const emitOrder = []; // labels in exec-emission order (for ordering checks)
   function markReached(node) {
     if (node) reached.add(node.id);
   }
@@ -170,6 +171,7 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
     reached.add(nodeId);
     const node = byId.get(nodeId);
     if (!node) return [];
+    if (node.data?.label) emitOrder.push(node.data.label);
 
     const emit = emitterFor(node);
     const own = emit ? emit(node, ctx) : [];
@@ -227,6 +229,17 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
 
   if (chainIR) {
     out.push(ir.comment('--- Execution Chain ---'));
+    // ScriptUI ordering check: a `Show Window` must run AFTER every
+    // `UI Event Listener` attaches, otherwise (for a modal dialog) .show()
+    // blocks before the handlers exist. Surface a non-fatal warning.
+    const firstShow = emitOrder.indexOf('Show Window');
+    const lastListener = emitOrder.lastIndexOf('UI Event Listener');
+    if (firstShow !== -1 && lastListener !== -1 && firstShow < lastListener) {
+      const msg =
+        "Warning: 'Show Window' runs before a 'UI Event Listener' — attach listeners before showing the window or their handlers may not fire.";
+      console.warn(msg);
+      out.push(ir.comment(msg));
+    }
     out.push(...chainIR);
   } else {
     out.push(ir.comment("(No exec chain — add a 'Start' or 'Get Active Comp' node to begin.)"));

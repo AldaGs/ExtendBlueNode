@@ -664,9 +664,11 @@ export const JS_NODE_LIBRARY = [
                 category: 'action',
                 themeColor: '#ff1493',
                 inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
                   { id: 'target', label: 'Target Element', type: 'expr' },
                 ],
                 outputs: [
+                  { id: 'exec_out', label: 'Execution' },
                   { id: 'exec_callback', label: 'On Event', type: 'exec' },
                 ],
                 values: {

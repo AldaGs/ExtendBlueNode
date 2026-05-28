@@ -25,6 +25,10 @@ export const ir = {
     kind: 'forIn', init, cond, step, body,
   }),
   whileLoop: (cond, body) => ({ kind: 'whileLoop', cond, body }),
+  // `target = function(params) { body };` — e.g. ScriptUI event callbacks.
+  funcAssign: (target, params, body) => ({
+    kind: 'funcAssign', target, params: params || [], body,
+  }),
   tryCatch: (body, catchBody, errVar = 'error') => ({
     kind: 'tryCatch', body, catchBody, errVar,
   }),
@@ -71,6 +75,12 @@ function printOne(s, depth) {
     case 'whileLoop': {
       const head = `${indent(depth)}while (${s.cond}) {`;
       return [head, printIR(s.body, depth + 1), `${indent(depth)}}`]
+        .filter((l) => l !== '')
+        .join('\n');
+    }
+    case 'funcAssign': {
+      const head = `${indent(depth)}${s.target} = function (${s.params.join(', ')}) {`;
+      return [head, printIR(s.body, depth + 1), `${indent(depth)}};`]
         .filter((l) => l !== '')
         .join('\n');
     }
