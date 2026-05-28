@@ -33,11 +33,24 @@ export const HELPERS = {
     '  }',
   ebnHexToRgb:
     'function ebnHexToRgb(h, scale, includeAlpha) {\n' +
+    '    function pad(arr) { while (arr.length < 3) arr.push(0); if (includeAlpha && arr.length < 4) arr.push(1); if (!includeAlpha) arr.length = 3; return arr; }\n' +
+    '    if (h instanceof Array) return pad(h.slice());\n' +
+    '    if (typeof h === "number") return pad([h]);\n' +
     '    if (typeof h !== "string") return includeAlpha ? [0, 0, 0, 1] : [0, 0, 0];\n' +
-    '    if (h.charAt(0) === "#") h = h.substring(1);\n' +
-    '    var r = parseInt(h.substring(0, 2), 16) / scale;\n' +
-    '    var g = parseInt(h.substring(2, 4), 16) / scale;\n' +
-    '    var b = parseInt(h.substring(4, 6), 16) / scale;\n' +
+    '    var s = h.replace(/^\\s+|\\s+$/g, "");\n' +
+    '    // Accept "[r,g,b]" or "r,g,b" numeric lists and pass them through\n' +
+    '    // verbatim (caller already chose the value range).\n' +
+    '    if (s.charAt(0) === "[" || s.indexOf(",") !== -1) {\n' +
+    '      var parts = s.replace(/[\\[\\]\\s]/g, "").split(",");\n' +
+    '      var nums = [];\n' +
+    '      for (var i = 0; i < parts.length; i++) { var v = parseFloat(parts[i]); nums.push(isNaN(v) ? 0 : v); }\n' +
+    '      return pad(nums);\n' +
+    '    }\n' +
+    '    if (s.charAt(0) === "#") s = s.substring(1);\n' +
+    '    if (!/^[0-9a-fA-F]{6}$/.test(s)) return includeAlpha ? [0, 0, 0, 1] : [0, 0, 0];\n' +
+    '    var r = parseInt(s.substring(0, 2), 16) / scale;\n' +
+    '    var g = parseInt(s.substring(2, 4), 16) / scale;\n' +
+    '    var b = parseInt(s.substring(4, 6), 16) / scale;\n' +
     '    return includeAlpha ? [r, g, b, 1] : [r, g, b];\n' +
     '  }',
 };
