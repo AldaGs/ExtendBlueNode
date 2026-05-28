@@ -845,6 +845,103 @@ describe('local vars, get property, vector2', () => {
   });
 });
 
+describe('keyframe & expression nodes', () => {
+  const gac = () => ({
+    id: 'a', type: 'ebnNode', position: { x: 0, y: 0 },
+    data: {
+      label: 'Get Active Comp',
+      inputs: [{ id: 'exec_in', type: 'exec' }],
+      outputs: [{ id: 'comp' }, { id: 'exec_out' }],
+    },
+  });
+  const sel = () => ({
+    id: 'b', type: 'ebnNode', position: { x: 0, y: 0 },
+    data: {
+      label: 'Select Layer by ID',
+      inputs: [{ id: 'exec_in', type: 'exec' }, { id: 'layer_id', type: 'number' }],
+      outputs: [{ id: 'layer' }, { id: 'exec_out' }],
+      values: { layer_id: 1 },
+    },
+  });
+  const execEdge = (id, s, t) => ({ id, source: s, sourceHandle: 'exec_out', target: t, targetHandle: 'exec_in' });
+  const dataEdge = (id, s, sh, t, th) => ({ id, source: s, sourceHandle: sh, target: t, targetHandle: th });
+  const mutator = (label, values, extraInputs = []) => ({
+    id: 'x', type: 'ebnNode', position: { x: 0, y: 0 },
+    data: {
+      label,
+      inputs: [
+        { id: 'exec_in', type: 'exec' },
+        { id: 'layer', type: 'text' },
+        { id: 'property', type: 'text' },
+        ...extraInputs,
+      ],
+      outputs: [{ id: 'exec_out' }],
+      values,
+    },
+  });
+
+  it('Set Expression assigns the property .expression', () => {
+    const x = mutator('Set Expression', { property: 'ADBE Opacity', expression: 'wiggle(2, 30)' },
+      [{ id: 'expression', type: 'text' }]);
+    const out = compileToExtendScript([gac(), sel(), x],
+      [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'x')]);
+    expect(out).toMatch(/targetLayer\.property\("ADBE Opacity"\)\.expression = "wiggle\(2, 30\)";/);
+  });
+
+  it('Add Keyframe at Time emits setValueAtTime', () => {
+    const x = mutator('Add Keyframe at Time', { property: 'ADBE Opacity', time: 1.5, value: 80 },
+      [{ id: 'time', type: 'number' }, { id: 'value', type: 'number' }]);
+    const out = compileToExtendScript([gac(), sel(), x],
+      [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'x')]);
+    expect(out).toMatch(/targetLayer\.property\("ADBE Opacity"\)\.setValueAtTime\(1\.5, 80\);/);
+  });
+
+  it('Remove Keyframe emits removeKey by index', () => {
+    const x = mutator('Remove Keyframe', { property: 'ADBE Opacity', index: 2 },
+      [{ id: 'index', type: 'number' }]);
+    const out = compileToExtendScript([gac(), sel(), x],
+      [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'x')]);
+    expect(out).toMatch(/targetLayer\.property\("ADBE Opacity"\)\.removeKey\(2\);/);
+  });
+
+  it('Read Value at Time resolves to valueAtTime and feeds a consumer', () => {
+    const setProp = {
+      id: 'c', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Set Property',
+        inputs: [
+          { id: 'exec_in', type: 'exec' },
+          { id: 'layer', type: 'text' },
+          { id: 'property', type: 'text' },
+          { id: 'value', type: 'number' },
+        ],
+        outputs: [{ id: 'exec_out' }],
+        values: { property: 'ADBE Opacity', value: 0 },
+      },
+    };
+    const r = {
+      id: 'r', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Read Value at Time',
+        inputs: [
+          { id: 'layer', type: 'expr' },
+          { id: 'property', type: 'text' },
+          { id: 'time', type: 'number' },
+        ],
+        outputs: [{ id: 'value' }],
+        values: { property: 'ADBE Opacity', time: 2 },
+      },
+    };
+    const out = compileToExtendScript([gac(), sel(), setProp, r],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'r', 'value', 'c', 'value'),
+      ]);
+    expect(out).toMatch(/setValue\(targetLayer\.property\("ADBE Opacity"\)\.valueAtTime\(2, false\)\)/);
+  });
+});
+
 describe('compileToIR', () => {
   it('produces statements not strings', () => {
     const irOut = compileToIR([getActiveComp('a')], []);

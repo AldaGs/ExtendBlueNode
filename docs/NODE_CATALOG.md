@@ -1,7 +1,7 @@
 # EBN Node Catalog (auto-generated)
 
 > Regenerate with `npx vite-node scripts/audit-nodes.mjs --catalog`.
-> 1631 nodes total, 0 broken. Hand-authored: 65; auto-generated After Effects DOM: 1566 (see scripts/generate-ae-nodes.mjs).
+> 1635 nodes total, 0 broken. Hand-authored: 69; auto-generated After Effects DOM: 1566 (see scripts/generate-ae-nodes.mjs).
 
 ## Actions
 
@@ -19,6 +19,7 @@
 | New File | data | ✅ | path | file |
 | New Folder | data | ✅ | path | folder |
 | Property Path | misc | ✅ | — | — |
+| Read Value at Time | data | ✅ | layer, property, time | value |
 | Split Vector | misc | ✅ | — | — |
 | String | misc | ✅ | — | — |
 | Vector 2 Array | data | ✅ | x, y | value |
@@ -141,6 +142,9 @@
 
 | Node | Role | Status | Inputs | Outputs |
 |---|---|---|---|---|
+| Add Keyframe at Time | exec | ✅ | exec_in, layer, property, time, value | exec_out |
+| Remove Keyframe | exec | ✅ | exec_in, layer, property, index | exec_out |
+| Set Expression | exec | ✅ | exec_in, layer, property, expression | exec_out |
 | Set Property | exec | ✅ | exec_in, layer, property, value | exec_out |
 
 ## Selectors

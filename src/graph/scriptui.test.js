@@ -5,6 +5,7 @@ import {
   serializeTreeToResourceString,
   scriptUITreeNames,
   rootTypeToMode,
+  parseResourceStringToTree,
   SAMPLE_SCRIPTUI_TREE,
 } from './scriptUITree';
 
@@ -202,5 +203,47 @@ describe('scriptui tree model', () => {
     // Palette root => dockable-panel guard, with no ui_mode value present.
     const pal = compileToExtendScript([start('s'), treeBuilder('b', 'Palette')], [eExec('e', 's', 'b')]);
     expect(pal).toMatch(/\(this instanceof Panel\) \? this : new Window\(/);
+  });
+});
+
+describe('parseResourceStringToTree (legacy import)', () => {
+  it('parses root type, props, and nested named elements', () => {
+    const tree = parseResourceStringToTree(
+      'palette { text: "My Panel", orientation: "column", grp: Group { st: StaticText { text: "Hello" }, btn: Button { text: "OK" } } }',
+    );
+    expect(tree.type).toBe('Palette');
+    expect(tree.props.text).toBe('My Panel');
+    expect(tree.props.orientation).toBe('column');
+    // grp is an unnamed-pin container with two named children.
+    expect(tree.children).toHaveLength(1);
+    const grp = tree.children[0];
+    expect(grp.type).toBe('Group');
+    expect(grp.name).toBe('grp');
+    expect(scriptUITreeNames(tree)).toEqual(['grp', 'st', 'btn']);
+    expect(grp.children[1].props.text).toBe('OK');
+  });
+
+  it('round-trips through the serializer (author names + types preserved)', () => {
+    const original = serializeTreeToResourceString(SAMPLE_SCRIPTUI_TREE);
+    const reparsed = parseResourceStringToTree(original);
+    expect(reparsed.type).toBe(SAMPLE_SCRIPTUI_TREE.type);
+    // Author-supplied names survive the round-trip (synthetic names the
+    // serializer adds for unnamed containers also reappear, which is fine).
+    const names = scriptUITreeNames(reparsed);
+    for (const n of scriptUITreeNames(SAMPLE_SCRIPTUI_TREE)) {
+      expect(names).toContain(n);
+    }
+  });
+
+  it('parses array props like alignChildren', () => {
+    const tree = parseResourceStringToTree('window { alignChildren: ["fill", "top"], margins: 16 }');
+    expect(tree.type).toBe('Window');
+    expect(tree.props.alignChildren).toEqual(['fill', 'top']);
+    expect(tree.props.margins).toBe(16);
+  });
+
+  it('returns null for empty/garbage input', () => {
+    expect(parseResourceStringToTree('')).toBeNull();
+    expect(parseResourceStringToTree('not a resource string')).toBeNull();
   });
 });

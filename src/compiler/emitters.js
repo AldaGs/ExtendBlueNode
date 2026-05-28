@@ -124,6 +124,32 @@ const EBN_NODE_EMITTERS = {
     return [ir.raw(`${layer}${propChain}.setValue(${value});`)];
   },
 
+  // Same layer/property resolution as Set Property, but writes the property's
+  // `.expression` string instead of a static value.
+  'Set Expression': (node, ctx) => {
+    const layer = ctx.resolveInput(node, { id: 'layer', type: 'expr', default: 'targetLayer' });
+    const propChain = resolvePropertyChain(node, ctx);
+    const expr = ctx.resolveInput(node, { id: 'expression', type: 'text', default: '""' });
+    return [ir.raw(`${layer}${propChain}.expression = ${expr};`)];
+  },
+
+  // Set a keyframe value at a given time on the resolved property.
+  'Add Keyframe at Time': (node, ctx) => {
+    const layer = ctx.resolveInput(node, { id: 'layer', type: 'expr', default: 'targetLayer' });
+    const propChain = resolvePropertyChain(node, ctx);
+    const time = ctx.resolveInput(node, { id: 'time', type: 'number' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${layer}${propChain}.setValueAtTime(${time}, ${value});`)];
+  },
+
+  // Remove a keyframe by its 1-based key index on the resolved property.
+  'Remove Keyframe': (node, ctx) => {
+    const layer = ctx.resolveInput(node, { id: 'layer', type: 'expr', default: 'targetLayer' });
+    const propChain = resolvePropertyChain(node, ctx);
+    const index = ctx.resolveInput(node, { id: 'index', type: 'number' });
+    return [ir.raw(`${layer}${propChain}.removeKey(${index});`)];
+  },
+
   'Set Local Variable': (node, ctx) => {
     // The identifier lives in data.variableName (edited via the
     // Properties panel) so it shows up wherever the IR talks about
@@ -650,6 +676,16 @@ const EBN_DATA_EMITTERS = {
     });
     const propChain = resolvePropertyChain(node, ctx);
     return `${layer}${propChain}.value`;
+  },
+
+  // Samples the property's animated value at a given time (no expressions).
+  'Read Value at Time': (node, ctx) => {
+    const layer = ctx.resolveInput(node, {
+      id: 'layer', type: 'expr', default: 'targetLayer',
+    });
+    const propChain = resolvePropertyChain(node, ctx);
+    const time = ctx.resolveInput(node, { id: 'time', type: 'number' });
+    return `${layer}${propChain}.valueAtTime(${time}, false)`;
   },
 
   'Vector 2 Array': (node, ctx) => {

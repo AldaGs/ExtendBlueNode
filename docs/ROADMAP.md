@@ -49,8 +49,8 @@ Shipped (`84528b9` + `1c51da3` + `c8065f8`):
 
 Queued for §4 wave 3:
 - [x] **More AE selectors** — All Selected Layers (`<comp>.selectedLayers`, pairs with For Each (Array)) and Select Layers by Class (whitelisted `AVLayer` / `TextLayer` / `ShapeLayer` / `CameraLayer` / `LightLayer`, filtered via the hoisted `ebnLayersByClass` helper). Class picker in the Properties panel.
-- [ ] **Keyframe ops** — Add Keyframe at Time, Remove Keyframe, Read Value at Time.
-- [ ] **Expression authoring** — a Math/Expression node that writes into `.expression` instead of `.setValue`.
+- [x] **Keyframe ops (Wave 3)** — Add Keyframe at Time (`setValueAtTime`), Remove Keyframe (`removeKey` by index), Read Value at Time (`valueAtTime`, data-side). All reuse Set Property's layer/property-chain resolution.
+- [x] **Expression authoring (Wave 3)** — Set Expression node writes the resolved property's `.expression` string instead of `.setValue`.
 - [x] **Line-map for error traceback (Wave 2)** — the IR printer is line-oriented and tags every line with its originating `nodeId` (`printIRWithMap`); `compileWithLineMap` returns `{ code, lineMap }`. On a failed inject, `App` maps the host's `err.line` to a node and flags it with a pulsing red outline on the canvas (cleared on the next edit).
 
 ## 4b. JavaScript general-purpose nodes — ✅ shipped (`da1640c` + `8367247`)
@@ -90,7 +90,8 @@ Declarative ScriptUI authoring, both by hand and via the visual builder. Full ho
 - [x] **Chainable event listeners** — fixes the orphan-callback bug; emits an ordering warning if a modal dialog is shown before listeners attach.
 - [x] **Palette-first default** — new builders default to a non-modal `Palette` root so the After Effects UI stays usable while the panel is open (`Window` / `Dialog` still available).
 - [x] **Builder pane polish (Wave 1)** — added control types (RadioButton, Slider, Progressbar, DropDownList), an alignChildren `[horizontal, vertical]` widget, Slider/Progressbar value + min/max editors, and a preferredSize (w × h) editor. Event Type select already covers onClick / onChange / onChanging.
-- [ ] **Next**: string→tree one-time import for legacy nodes; per-control item editors for DropDownList/ListBox; more event types as needed.
+- [x] **String→tree import (Wave 3)** — `parseResourceStringToTree` (recursive-descent inverse of the serializer) lets a legacy `scriptUI_string`-only node be imported into the visual builder via an "Import legacy layout" button.
+- [ ] **Next**: per-control item editors for DropDownList/ListBox; more event types as needed.
 
 ## 6. Copilot integration — partially ✅ shipped
 
@@ -143,4 +144,4 @@ Blender-style "collapse a selection into one reusable node".
 - For **product depth**: §6 → §7. The LLM angle plus reverse-translation is the moat against plain CEP authoring tools. The §3 IR refactor lowered the agent's integration cost significantly.
 - For **partnership conversations**: cut a signed ZXP from §8 first so prospects can install it without enabling dev mode. Then layer the Copilot demo on top.
 
-Current single-dev recommendation: **Waves 1 + 2 are shipped** — demo polish (§5 Globals cross-link, more selectors, ScriptUI builder polish) and demo reliability (line-map error traceback, per-branch scoping, audit cleanup). Next per the agreed plan: **Wave 3 — node coverage depth** (keyframe ops, expression-authoring node, ScriptUI string→tree import), then **§6 Copilot tool-use** and **§7 Blueprints** for the moat.
+Current single-dev recommendation: **Waves 1–3 are shipped** — demo polish (§5 Globals cross-link, more selectors, ScriptUI builder polish), demo reliability (line-map error traceback, per-branch scoping, audit cleanup), and node-coverage depth (keyframe ops, Set Expression, ScriptUI string→tree import). Next per the agreed plan: **§6 Copilot tool-use** (let the model read the graph/IR and propose previewable diffs), then **§7 Blueprints** for the reverse-translation moat.

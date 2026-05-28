@@ -240,6 +240,106 @@ export const SAMPLE_SCRIPTUI_TREE = {
 };
 
 /**
+ * One-time import: parse a legacy ExtendScript resource string into a
+ * structured tree so the visual builder can edit a node that only carries the
+ * old `scriptUI_string`. This is the inverse of serializeTreeToResourceString.
+ *
+ * The parser is a small recursive-descent reader over the resource grammar:
+ *   <root> { <prop|element>, ... }
+ * where a prop is `key: value` (string / number / bool / array / bareword) and
+ * an element is `name: Type { ... }` (Type starts uppercase, followed by `{`).
+ * Returns null for empty/unparseable input so the caller can fall back.
+ *
+ * @param {string} str
+ * @returns {ScriptUIElement|null}
+ */
+export function parseResourceStringToTree(str) {
+  if (!str || typeof str !== 'string') return null;
+  const s = str;
+  let i = 0;
+
+  const ws = () => { while (i < s.length && /\s/.test(s[i])) i += 1; };
+  const readIdent = () => {
+    ws();
+    const start = i;
+    while (i < s.length && /[\w$]/.test(s[i])) i += 1;
+    return s.slice(start, i);
+  };
+  const readString = (q) => {
+    i += 1; // opening quote
+    let buf = '';
+    while (i < s.length && s[i] !== q) {
+      if (s[i] === '\\') { buf += s[i + 1]; i += 2; } else { buf += s[i]; i += 1; }
+    }
+    i += 1; // closing quote
+    return buf;
+  };
+  const readValue = () => {
+    ws();
+    const ch = s[i];
+    if (ch === '"' || ch === "'") return readString(ch);
+    if (ch === '[') {
+      i += 1;
+      const arr = [];
+      ws();
+      while (i < s.length && s[i] !== ']') {
+        arr.push(readValue());
+        ws();
+        if (s[i] === ',') i += 1;
+        ws();
+      }
+      i += 1; // ']'
+      return arr;
+    }
+    const start = i;
+    while (i < s.length && !/[,}\]]/.test(s[i])) i += 1;
+    const tok = s.slice(start, i).trim();
+    if (tok === 'true') return true;
+    if (tok === 'false') return false;
+    const n = Number(tok);
+    if (tok !== '' && !Number.isNaN(n)) return n;
+    return tok;
+  };
+
+  const parseBody = (el) => {
+    ws();
+    while (i < s.length && s[i] !== '}') {
+      const name = readIdent();
+      ws();
+      if (s[i] !== ':') break; // malformed — bail gracefully
+      i += 1; // ':'
+      ws();
+      const save = i;
+      const maybeType = readIdent();
+      ws();
+      if (maybeType && /^[A-Z]/.test(maybeType) && s[i] === '{') {
+        i += 1; // '{'
+        const child = { id: newElementId(maybeType), type: maybeType, name, props: {}, children: [] };
+        parseBody(child);
+        el.children.push(child);
+      } else {
+        i = save; // not an element — read the prop value
+        el.props[name] = readValue();
+      }
+      ws();
+      if (s[i] === ',') i += 1;
+      ws();
+    }
+    if (s[i] === '}') i += 1; // closing '}'
+  };
+
+  ws();
+  const kw = readIdent().toLowerCase();
+  const rootType = kw === 'palette' ? 'Palette' : kw === 'dialog' ? 'Dialog' : 'Window';
+  ws();
+  if (s[i] !== '{') return null;
+  i += 1;
+  const root = { id: newElementId(rootType), type: rootType, name: '', props: {}, children: [] };
+  parseBody(root);
+  return root;
+}
+
+/**
  * Canonical ScriptUI guidance for the Copilot system prompt. Lives here, next
  * to the schema and serializer, so the LLM's instructions can never drift from
  * the actual data model. Consumed by CopilotPanel's getSystemPrompt().

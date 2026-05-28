@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { newElementId, ROOT_TYPES } from '../graph/scriptUITree';
+import { newElementId, ROOT_TYPES, parseResourceStringToTree } from '../graph/scriptUITree';
 import './PropertiesPanel.css'; // reuse ebn-props__* form primitives
 import './ScriptUIBuilderPane.css';
 
@@ -296,6 +296,30 @@ export default function ScriptUIBuilderPane({ selectedNode, setNodes }) {
   const onDragEndRow = useCallback(() => { setDragId(null); setDragOverId(null); }, []);
 
   /* ------------------------------ empty states --------------------------- */
+
+  // A migrated node may carry only the legacy resource string. Offer a
+  // one-time import that parses it into an editable tree.
+  const legacyString = selectedNode?.data?.values?.scriptUI_string;
+  const importLegacy = useCallback(() => {
+    const parsed = parseResourceStringToTree(legacyString);
+    if (parsed) commitTree(parsed);
+  }, [legacyString, commitTree]);
+
+  if (isBuilder && !tree && legacyString) {
+    return (
+      <div className="ebn-sui ebn-sui--empty">
+        <p>This node still uses the legacy resource string.</p>
+        <button
+          type="button"
+          className="ebn-props__btn ebn-btn-primary"
+          style={{ padding: '8px 12px', marginTop: '8px' }}
+          onClick={importLegacy}
+        >
+          Import legacy layout into the builder
+        </button>
+      </div>
+    );
+  }
 
   if (!isBuilder || !tree) {
     return (
