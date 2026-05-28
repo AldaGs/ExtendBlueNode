@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { Handle, Position, useReactFlow } from 'reactflow';
+import { usePromoteToGlobal } from './usePromoteToGlobal';
 import './PrimitiveNode.css';
 
 const THEME = '#7a3fa0'; // muted data-purple
@@ -7,6 +8,11 @@ const THEME = '#7a3fa0'; // muted data-purple
 export default function StringNode({ id, data, selected }) {
   const { setNodes } = useReactFlow();
   const value = data?.value ?? '';
+  const { onContextMenu, overlay } = usePromoteToGlobal({
+    nodeId: id,
+    varType: 'String',
+    value,
+  });
 
   const onChange = useCallback(
     (e) => {
@@ -21,7 +27,11 @@ export default function StringNode({ id, data, selected }) {
   );
 
   return (
-    <div className={`ebn-prim${selected ? ' ebn-prim--selected' : ''}`}>
+    <div
+      className={`ebn-prim${selected ? ' ebn-prim--selected' : ''}`}
+      onContextMenu={onContextMenu}
+    >
+      {overlay}
       <div className="ebn-prim__header" style={{ background: THEME }}>
         {data?.label ?? 'String'}
       </div>

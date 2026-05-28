@@ -48,24 +48,56 @@ Shipped (`84528b9` + `1c51da3` + `c8065f8`):
 - [x] **Set Property** rewritten — honors a wired `layer` input (e.g. from For-Each), falls back to `targetLayer` when nothing is wired, and chains nested property paths.
 
 Queued for §4 wave 3:
-- [ ] **Globals UX cross-link (§5 below)** — "Add Get / Add Set" buttons on each Globals row.
-- [ ] **More selectors** — All Selected Layers (returns an array, pairs with a separate For-Each), Layer by Class (`AVLayer`, `TextLayer`).
+- [x] **More AE selectors** — All Selected Layers (`<comp>.selectedLayers`, pairs with For Each (Array)) and Select Layers by Class (whitelisted `AVLayer` / `TextLayer` / `ShapeLayer` / `CameraLayer` / `LightLayer`, filtered via the hoisted `ebnLayersByClass` helper). Class picker in the Properties panel.
 - [ ] **Keyframe ops** — Add Keyframe at Time, Remove Keyframe, Read Value at Time.
 - [ ] **Expression authoring** — a Math/Expression node that writes into `.expression` instead of `.setValue`.
-- [ ] **Math extensions** — Clamp, Lerp, Min/Max, Modulo wraparound. Already easy with the IR; just emitters + UI.
 - [ ] **Line-map for error traceback** — IR printer tracks `lineNo → nodeId`; AE error parser highlights the offending node in red on the canvas.
 
-## 5. Globals UX cross-link — next
+## 4b. JavaScript general-purpose nodes — ✅ shipped (`da1640c` + `8367247`)
 
-Already discussed. Small but high-impact.
+A full tier of language-level nodes landed, well beyond the original §4 scope. All carry emitters and appear in the audit (`npm run audit:nodes`).
 
-- [ ] **Add to canvas** buttons on each row in the Globals panel — spawn a `Get Global` (left button) or `Set Global` (right button) at a sensible viewport position, pre-bound by `globalId`.
-- [ ] Live rename — globals already store `id` (immutable) and `name` (renamable); existing `Get/Set Global` nodes already track by id, so we just need to surface the live name in the node dropdowns. (Already works in practice — verify and document.)
-- [ ] **Promote to global** action on Integer / String nodes via the node context menu. Right-click on a primitive → "Promote to Global myFoo"; converts the inline value into a new global and rewires every wired downstream consumer to a `Get Global myFoo`.
+- [x] **Array** — New Array, Array Push, Array Get Element, Array Length.
+- [x] **Object** — New Object, Object Builder, Object Get/Set Key.
+- [x] **String** — Concatenate, String Length, String Replace, String Split.
+- [x] **Logic** — And / Or / Not / Boolean, Parse Number, To String.
+- [x] **Math (JS)** — Math Function, Math Random, Random Integer.
+- [x] **Control flow (JS)** — For Loop, For Each (Array), While Loop, Switch Statement.
+- [x] **User-defined functions** — Define Function (hoisted) / Call Function / Return. (`audit:nodes` flags Define Function as "no exec emitter" — false positive; it is hoisted in `astCompiler.js`, not part of the exec chain, and is test-covered.)
+- [x] **File I/O** — Load JSON / Save JSON, New File / New Folder.
+- [x] **Misc** — Debug, Set Local Variable, Color Picker, Vector Math, Split Vector, Vector 2 Array.
 
-## 6. Copilot integration — next major phase
+## 4c. Auto-generated After Effects DOM nodes — ✅ shipped (`d9d52d1`)
 
-- [ ] **Runtime selector**: bundle a local Ollama client targeting `http://localhost:11434` by default; fall back to a hosted endpoint when the user provides an API key.
+- [x] **`scripts/generate-ae-nodes.mjs`** emits ~1,566 nodes covering the AE scripting DOM (property-tree walk, writable-property setters, collection methods), bringing the library to **1,629 nodes total** (63 hand-authored + 1,566 generated).
+- [x] **`scripts/audit-nodes.mjs`** (`npm run audit:nodes` / `catalog:nodes`) spawns every node via its factory, verifies a matching emitter, and regenerates `docs/NODE_CATALOG.md`. Current state: 1,628 OK, 1 audit false-positive (Define Function, see §4b).
+
+## 5. Globals UX cross-link — ✅ shipped (Wave 1)
+
+Small but high-impact.
+
+- [x] **Add to canvas** buttons on each row in the Globals panel — "+ Get" / "+ Set" chips spawn a pre-bound `Get/Set Global` node (staggered placement). `App.onSpawnGlobalRef`.
+- [x] Live rename — globals store `id` (immutable) + `name` (renamable); `Get/Set Global` track by id and surface the live name in their dropdowns.
+- [x] **Promote to Global** — right-click an Integer / String node → "Promote to Global". Creates a uniquely-named global from the inline value and converts the node in place to a `Get Global` bound to it. Both nodes expose the same `value` output handle, so downstream edges survive the swap (`usePromoteToGlobal`).
+
+## 5b. ScriptUI panels & dialogs — ✅ shipped (`da1640c` → `8367247`)
+
+Declarative ScriptUI authoring, both by hand and via the visual builder. Full how-to in [`NODES.md`](./NODES.md#scriptui-panels--dialogs).
+
+- [x] **Four nodes** (Javascript › ScriptUI): ScriptUI Builder, UI Event Listener, Show Window, Custom UI Code.
+- [x] **Structured tree model** (`src/graph/scriptUITree.js`) replaces the legacy free-text resource string as the source of truth; serializer turns it back into a valid ExtendScript resource string at compile time. Legacy string remains a fallback for un-migrated nodes.
+- [x] **Visual ScriptUI Builder pane** — edit the element tree directly; live **`ui_<name>`** output-pin sync (one pin per named element) shared with the compiler via `src/graph/scriptui.js`.
+- [x] **Chainable event listeners** — fixes the orphan-callback bug; emits an ordering warning if a modal dialog is shown before listeners attach.
+- [x] **Palette-first default** — new builders default to a non-modal `Palette` root so the After Effects UI stays usable while the panel is open (`Window` / `Dialog` still available).
+- [x] **Builder pane polish (Wave 1)** — added control types (RadioButton, Slider, Progressbar, DropDownList), an alignChildren `[horizontal, vertical]` widget, Slider/Progressbar value + min/max editors, and a preferredSize (w × h) editor. Event Type select already covers onClick / onChange / onChanging.
+- [ ] **Next**: string→tree one-time import for legacy nodes; per-control item editors for DropDownList/ListBox; more event types as needed.
+
+## 6. Copilot integration — partially ✅ shipped
+
+The chat shell is now wired to real backends and generates graphs from prompts.
+
+- [x] **Runtime selector** — `src/services/ollamaService.js` (local, `http://localhost:11434`) and `src/services/cloudLlmService.js` (Claude / OpenAI / Gemini via user-supplied API key).
+- [x] **Graph generation** — `CopilotPanel` builds a system prompt from the live node catalog (`getNodeCatalogSummary`) plus a ScriptUI authoring section (`getScriptUIPromptSection`), and emits strict DAG JSON that is applied to the canvas.
 - [ ] **Tools the model can call** (LLM tool-use):
   - `read_graph()` → current DAG JSON.
   - `read_ir()` → compiled IR (post-§3 this is cheap).
@@ -111,4 +143,4 @@ Blender-style "collapse a selection into one reusable node".
 - For **product depth**: §6 → §7. The LLM angle plus reverse-translation is the moat against plain CEP authoring tools. The §3 IR refactor lowered the agent's integration cost significantly.
 - For **partnership conversations**: cut a signed ZXP from §8 first so prospects can install it without enabling dev mode. Then layer the Copilot demo on top.
 
-Current single-dev recommendation: **§5 next (~half day), then §6 starts** — the IR makes it the right moment to bring the agent in.
+Current single-dev recommendation: **Wave 1 demo-polish is shipped** (§5 Globals cross-link, more selectors, ScriptUI builder polish). Next per the agreed plan: **Wave 2 — demo reliability** (line-map error traceback so a failed inject highlights the offending node, per-branch variable scoping, audit false-positive cleanup), then **§6 tool-use** and **§7 Blueprints** for the moat.

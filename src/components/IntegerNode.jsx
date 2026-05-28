@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { Handle, Position, useReactFlow } from 'reactflow';
+import { usePromoteToGlobal } from './usePromoteToGlobal';
 import './PrimitiveNode.css';
 
 const THEME = '#5b7eb3'; // muted data-blue
@@ -7,6 +8,11 @@ const THEME = '#5b7eb3'; // muted data-blue
 export default function IntegerNode({ id, data, selected }) {
   const { setNodes } = useReactFlow();
   const value = data?.value ?? 0;
+  const { onContextMenu, overlay } = usePromoteToGlobal({
+    nodeId: id,
+    varType: 'Integer',
+    value,
+  });
 
   const onChange = useCallback(
     (e) => {
@@ -22,7 +28,11 @@ export default function IntegerNode({ id, data, selected }) {
   );
 
   return (
-    <div className={`ebn-prim${selected ? ' ebn-prim--selected' : ''}`}>
+    <div
+      className={`ebn-prim${selected ? ' ebn-prim--selected' : ''}`}
+      onContextMenu={onContextMenu}
+    >
+      {overlay}
       <div className="ebn-prim__header" style={{ background: THEME }}>
         {data?.label ?? 'Integer'}
       </div>

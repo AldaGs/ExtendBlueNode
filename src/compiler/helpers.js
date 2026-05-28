@@ -53,4 +53,14 @@ export const HELPERS = {
     '    var b = parseInt(s.substring(4, 6), 16) / scale;\n' +
     '    return includeAlpha ? [r, g, b, 1] : [r, g, b];\n' +
     '  }',
+  ebnLayersByClass:
+    'function ebnLayersByClass(comp, klass) {\n' +
+    '    var out = [];\n' +
+    '    if (!comp || !comp.numLayers) return out;\n' +
+    '    for (var i = 1; i <= comp.numLayers; i++) {\n' +
+    '      var ly = comp.layer(i);\n' +
+    '      if (ly instanceof klass) out.push(ly);\n' +
+    '    }\n' +
+    '    return out;\n' +
+    '  }',
 };

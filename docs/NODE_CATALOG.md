@@ -1,7 +1,7 @@
 # EBN Node Catalog (auto-generated)
 
 > Regenerate with `npx vite-node scripts/audit-nodes.mjs --catalog`.
-> 1261 nodes total, 0 broken. Hand-authored: 59; auto-generated After Effects DOM: 1202 (see scripts/generate-ae-nodes.mjs).
+> 1631 nodes total, 1 broken. Hand-authored: 65; auto-generated After Effects DOM: 1566 (see scripts/generate-ae-nodes.mjs).
 
 ## Actions
 
@@ -53,9 +53,13 @@
 
 | Node | Role | Status | Inputs | Outputs |
 |---|---|---|---|---|
+| Call Function | exec+data | ✅ | exec_in, arg1, arg2, arg3, arg4 | exec_out, result |
+| Define Function | exec+data | ❌ | functionName, params | exec_body, param1, param2, param3, param4 |
 | For Each (Array) | exec+data | ✅ | exec_in, array | exec_body, item, index, exec_done |
 | For Loop | exec+data | ✅ | exec_in, start, end, step | exec_body, index, exec_done |
+| Return | exec | ✅ | exec_in, value | — |
 | Switch Statement | exec | ✅ | exec_in, value, case1_val, case2_val, case3_val | exec_case1, exec_case2, exec_case3, exec_default, exec_done |
+| Walk Property Tree | exec+data | ✅ | exec_in, root | exec_body, property, exec_done |
 | While Loop | exec | ✅ | exec_in, cond | exec_body, exec_done |
 
 ## Javascript > File I/O
@@ -100,7 +104,7 @@
 | Custom UI Code | exec | ✅ | exec_in | exec_out |
 | ScriptUI Builder | exec+data | ✅ | exec_in | exec_out, window_obj |
 | Show Window | exec | ✅ | exec_in, window_obj | exec_out |
-| UI Event Listener | exec | ✅ | target | exec_callback |
+| UI Event Listener | exec | ✅ | exec_in, target | exec_out, exec_callback |
 
 ## Javascript > String
 
@@ -143,7 +147,9 @@
 
 | Node | Role | Status | Inputs | Outputs |
 |---|---|---|---|---|
+| All Selected Layers | data | ✅ | comp | layers |
 | Get Active Comp | exec+data | ✅ | exec_in | comp, exec_out |
 | Select Layer by Index | exec+data | ✅ | exec_in, comp, layer_index | layer, exec_out |
 | Select Layer by Name | exec+data | ✅ | exec_in, comp, layer_name | layer, exec_out |
+| Select Layers by Class | data | ✅ | comp | layers |
 

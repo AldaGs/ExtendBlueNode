@@ -186,6 +186,49 @@ const _BASE_NODE_LIBRARY = [
           },
         }),
       },
+      {
+        type: 'allSelectedLayers',
+        label: 'All Selected Layers',
+        keywords: ['layer', 'selected', 'selection', 'array', 'all'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'All Selected Layers',
+            category: 'selector',
+            themeColor: NODE_THEME.selector,
+            inputs: [
+              { id: 'comp', label: 'Comp', type: 'expr', default: 'activeComp' },
+            ],
+            outputs: [
+              { id: 'layers', label: 'Layers' },
+            ],
+          },
+        }),
+      },
+      {
+        type: 'selectLayersByClass',
+        label: 'Select Layers by Class',
+        keywords: ['layer', 'class', 'type', 'avlayer', 'textlayer', 'shape', 'camera', 'light'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Select Layers by Class',
+            category: 'selector',
+            themeColor: NODE_THEME.selector,
+            inputs: [
+              { id: 'comp', label: 'Comp', type: 'expr', default: 'activeComp' },
+            ],
+            outputs: [
+              { id: 'layers', label: 'Layers' },
+            ],
+            values: { layer_class: 'AVLayer' },
+          },
+        }),
+      },
     ],
   },
   {

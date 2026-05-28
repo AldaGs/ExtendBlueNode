@@ -330,6 +330,78 @@ describe('select + selectors + for-each', () => {
     expect(out).toMatch(/var targetLayer = activeComp\.layer\(3\)/);
   });
 
+  function allSelectedLayers(id) {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'All Selected Layers',
+        inputs: [{ id: 'comp', label: 'Comp', type: 'expr', default: 'activeComp' }],
+        outputs: [{ id: 'layers', label: 'Layers' }],
+      },
+    };
+  }
+  function selectLayersByClass(id, klass) {
+    return {
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Select Layers by Class',
+        inputs: [{ id: 'comp', label: 'Comp', type: 'expr', default: 'activeComp' }],
+        outputs: [{ id: 'layers', label: 'Layers' }],
+        values: { layer_class: klass },
+      },
+    };
+  }
+
+  it('All Selected Layers resolves to <comp>.selectedLayers', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const sel = allSelectedLayers('sel');
+    const out = compileToExtendScript(
+      [a, b, c, sel],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'sel', 'layers', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/setValue\(activeComp\.selectedLayers\)/);
+  });
+
+  it('Select Layers by Class hoists ebnLayersByClass and filters by whitelisted class', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const sel = selectLayersByClass('sel', 'TextLayer');
+    const out = compileToExtendScript(
+      [a, b, c, sel],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'sel', 'layers', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/function ebnLayersByClass\(comp, klass\)/);
+    expect(out).toMatch(/ebnLayersByClass\(activeComp, TextLayer\)/);
+  });
+
+  it('Select Layers by Class rejects a non-whitelisted class, falling back to AVLayer', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b');
+    const c = setProperty('c');
+    const sel = selectLayersByClass('sel', 'app.system.callSystem');
+    const out = compileToExtendScript(
+      [a, b, c, sel],
+      [
+        execEdge('e1', 'a', 'b'),
+        execEdge('e2', 'b', 'c'),
+        dataEdge('d1', 'sel', 'layers', 'c', 'value'),
+      ],
+    );
+    expect(out).toMatch(/ebnLayersByClass\(activeComp, AVLayer\)/);
+    expect(out).not.toMatch(/callSystem/);
+  });
+
   it('For Each Selected emits a for-loop and exposes loopLayer', () => {
     const a = getActiveComp('a');
     const f = forEachSelected('f');

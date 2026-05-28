@@ -4,16 +4,26 @@ import './PropertiesPanel.css'; // reuse ebn-props__* form primitives
 import './ScriptUIBuilderPane.css';
 
 // Types the palette can add, and which of them can hold children.
-const PALETTE_TYPES = ['Group', 'Panel', 'Button', 'StaticText', 'EditText', 'Checkbox'];
+const PALETTE_TYPES = [
+  'Group', 'Panel', 'Button', 'StaticText', 'EditText', 'Checkbox',
+  'RadioButton', 'Slider', 'Progressbar', 'DropDownList',
+];
 const CONTAINER_TYPES = new Set(['Window', 'Palette', 'Dialog', 'Group', 'Panel']);
 
 const ORIENTATIONS = ['row', 'column', 'stack'];
+// alignChildren is a [horizontal, vertical] pair in ScriptUI.
+const ALIGN_H = ['left', 'center', 'right', 'fill'];
+const ALIGN_V = ['top', 'center', 'bottom', 'fill'];
 
 function defaultPropsFor(type) {
   if (CONTAINER_TYPES.has(type)) return { orientation: 'column' };
   if (type === 'StaticText') return { text: 'Label' };
-  if (type === 'Checkbox') return { text: 'Option' };
+  if (type === 'Checkbox' || type === 'RadioButton') return { text: 'Option' };
   if (type === 'EditText') return { text: '' };
+  if (type === 'Slider' || type === 'Progressbar') {
+    return { minvalue: 0, maxvalue: 100, value: type === 'Slider' ? 50 : 0 };
+  }
+  if (type === 'DropDownList') return {};
   return { text: type }; // Button etc.
 }
 
@@ -400,6 +410,29 @@ export default function ScriptUIBuilderPane({ selectedNode, setNodes }) {
                     </select>
                   </label>
                   <label className="ebn-props__field">
+                    <span className="ebn-props__label">Align Children</span>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      <select
+                        className="ebn-props__input"
+                        value={selected.props?.alignChildren?.[0] ?? 'fill'}
+                        onChange={(e) =>
+                          patchProp(selected.id, 'alignChildren',
+                            [e.target.value, selected.props?.alignChildren?.[1] ?? 'top'])}
+                      >
+                        {ALIGN_H.map((a) => <option key={a} value={a}>{a}</option>)}
+                      </select>
+                      <select
+                        className="ebn-props__input"
+                        value={selected.props?.alignChildren?.[1] ?? 'top'}
+                        onChange={(e) =>
+                          patchProp(selected.id, 'alignChildren',
+                            [selected.props?.alignChildren?.[0] ?? 'fill', e.target.value])}
+                      >
+                        {ALIGN_V.map((a) => <option key={a} value={a}>{a}</option>)}
+                      </select>
+                    </div>
+                  </label>
+                  <label className="ebn-props__field">
                     <span className="ebn-props__label">Margins</span>
                     <input
                       className="ebn-props__input"
@@ -424,6 +457,65 @@ export default function ScriptUIBuilderPane({ selectedNode, setNodes }) {
                     />
                   </label>
                 </>
+              )}
+
+              {(selected.type === 'Slider' || selected.type === 'Progressbar') && (
+                <>
+                  <label className="ebn-props__field">
+                    <span className="ebn-props__label">Value</span>
+                    <input
+                      className="ebn-props__input"
+                      type="number"
+                      value={selected.props?.value ?? 0}
+                      onChange={(e) => patchProp(selected.id, 'value', Number(e.target.value))}
+                    />
+                  </label>
+                  <label className="ebn-props__field">
+                    <span className="ebn-props__label">Min / Max</span>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      <input
+                        className="ebn-props__input"
+                        type="number"
+                        value={selected.props?.minvalue ?? 0}
+                        onChange={(e) => patchProp(selected.id, 'minvalue', Number(e.target.value))}
+                      />
+                      <input
+                        className="ebn-props__input"
+                        type="number"
+                        value={selected.props?.maxvalue ?? 100}
+                        onChange={(e) => patchProp(selected.id, 'maxvalue', Number(e.target.value))}
+                      />
+                    </div>
+                  </label>
+                </>
+              )}
+
+              {!isRootSelected && (
+                <label className="ebn-props__field">
+                  <span className="ebn-props__label">Preferred Size (w × h, −1 = auto)</span>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <input
+                      className="ebn-props__input"
+                      type="number"
+                      value={selected.props?.preferredSize?.[0] ?? ''}
+                      placeholder="auto"
+                      onChange={(e) =>
+                        patchProp(selected.id, 'preferredSize',
+                          [e.target.value === '' ? -1 : Number(e.target.value),
+                           selected.props?.preferredSize?.[1] ?? -1])}
+                    />
+                    <input
+                      className="ebn-props__input"
+                      type="number"
+                      value={selected.props?.preferredSize?.[1] ?? ''}
+                      placeholder="auto"
+                      onChange={(e) =>
+                        patchProp(selected.id, 'preferredSize',
+                          [selected.props?.preferredSize?.[0] ?? -1,
+                           e.target.value === '' ? -1 : Number(e.target.value)])}
+                    />
+                  </div>
+                </label>
               )}
             </>
           )}

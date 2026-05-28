@@ -1,9 +1,9 @@
 # Extend Blue Node — Status Report
 
 **Prepared for:** Project Management
-**Date:** 2026-05-26 (updated)
-**Build at time of writing:** `main @ dde4b59`
-**Latest milestone:** Full end-to-end injection from panel to After Effects validated. Compiler refactored to an IR pass; first wave of expression / control-flow / loop / selector nodes shipped.
+**Date:** 2026-05-28 (updated)
+**Build at time of writing:** `main @ 8367247`
+**Latest milestone:** Node library scaled to **1,629 nodes** (63 hand-authored + 1,566 auto-generated from the AE scripting DOM). A full tier of JavaScript general-purpose nodes, the ScriptUI panel/dialog suite (with a visual builder), and a working LLM Copilot (cloud + local) all landed on top of the IR compiler.
 
 ---
 
@@ -11,9 +11,9 @@
 
 EBN's loop is **closed**. A user can wire visual nodes on a Blender-style canvas, the equivalent ExtendScript is regenerated in Monaco on every change, and a single **Compile & Inject** button now sends that script to After Effects through CEP. The first real inject from the panel into AE has been executed and confirmed working by the project owner.
 
-In the last sprint, the compiler was refactored from string templates into a proper IR pipeline, unlocking math / compare / if / for-each-selected / select-ternary / property-path nodes without growing tech debt. The test suite (23 cases, all green) now guards the surface area. The right-click "Add Node" menu was rebuilt as a Blender-style cascade with viewport-aware submenu positioning. Layout, graph, and globals state are autosaved to localStorage and exportable as `.ebn` project files.
+Since the last report the surface area expanded dramatically. The node library grew from ~20 hand-authored nodes to **1,629** — a `generate-ae-nodes.mjs` script emits 1,566 nodes covering the After Effects scripting DOM, and a full tier of hand-authored JavaScript nodes (Array / Object / String / Logic / Math / control-flow loops + switch / user-defined functions / File I/O) was added. The **ScriptUI** suite shipped with a visual builder (structured tree model, live output-pin sync, palette-first non-modal default). The **Copilot** is now wired to real backends — local Ollama and cloud (Claude / OpenAI / Gemini) — and generates canvas graphs from prompts. The test suite is now **59 cases, all green**, and an audit script (`npm run audit:nodes`) verifies every node has a matching emitter.
 
-What's still stubbed: **Copilot** (local LLM) and **reverse translation** ("paste ExtendScript, get a graph"). Both are scaffolded but not wired to a backend.
+What's still open: Copilot **tool-use** (read graph/IR, propose diffs with preview) and **reverse translation** ("paste ExtendScript, get a graph"), which remains scaffolded only.
 
 ## 2. What's shipped
 
@@ -41,6 +41,16 @@ Tri-pane UI shell, CEP manifest + AE preview pipeline, ComfyUI/Blender-style nod
 | — | Add Node cascade | Categories → side submenu (Blender-style), search field falls back to flat ranked results, viewport-fixed submenu escapes scroll containers, Esc / outside-click / right-click-elsewhere all dismiss reliably |
 | — | Docs | `docs/NODES.md` — full guide for adding nodes by hand (factory + emitter + optional component + port types + IR vocabulary + test template). Linked from README |
 
+### Since last report (this sprint)
+| Area | Title | Outcome |
+| --- | --- | --- |
+| Node scale | Auto-generated AE DOM | `scripts/generate-ae-nodes.mjs` emits 1,566 nodes (property-tree walk, writable-property setters, collection methods). `audit:nodes` / `catalog:nodes` verify emitters and regenerate `docs/NODE_CATALOG.md`. Library now 1,629 nodes total |
+| JS nodes | General-purpose tier | Array, Object, String, Logic, Math, control-flow (For Loop / For Each / While / Switch), user-defined functions (Define / Call / Return), File I/O (Load/Save JSON, New File/Folder), Debug, Set Local Variable, Color Picker, Vector Math |
+| ScriptUI | Panels & dialogs | Four nodes (Builder / Event Listener / Show Window / Custom UI Code), structured-tree model + serializer, visual builder pane with live `ui_<name>` pin sync, chainable listeners with ordering warning, palette-first non-modal default |
+| Copilot | LLM backends | Local Ollama + cloud (Claude / OpenAI / Gemini) services; system prompt built from live node catalog + ScriptUI authoring section; emits DAG JSON applied to the canvas |
+| Tests | Suite growth | 23 → 62 cases, all green; new control-flow, ScriptUI, and selector coverage |
+| Wave 1 | Demo polish | Globals "+ Get/+ Set" + Promote-to-Global; new selectors (All Selected Layers, Select Layers by Class); ScriptUI builder pane gains more controls, alignChildren / slider / preferredSize editors |
+
 Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
 ## 3. Demo path (working today)
@@ -60,7 +70,8 @@ Repository: <https://github.com/AldaGs/ExtendBlueNode>
 | Low | Two-branch graphs reuse `targetLayer` across siblings | Each `Select Layer` reassigns `targetLayer`; the immediately-following `Set Property` uses the right value, but the var name isn't per-branch unique. Cleanest fix lands with the typed-variable extension to the IR (planned alongside scope-aware emitters) |
 | Low | Match-names containing literal `/` can't be expressed inline | Workaround: use a String node with the raw name, or call multiple consecutive Set Properties. Documented in `docs/NODES.md`. A per-segment Property Path UI is queued |
 | Low | Build bundle ~4 MB un-gzipped (Monaco) | Already split into its own chunk so the app shell loads first (107 KB gzipped). Code-splitting Monaco language workers further is queued (see §0 of the roadmap) |
-| Low | Copilot view is a chat shell only | Local LLM backend is the next major phase (§6) |
+| Low | Copilot generates graphs but can't yet read/patch them | Backends are live (Ollama + cloud); LLM tool-use (read graph/IR, propose diffs with preview) is the next §6 increment |
+| Low | `audit:nodes` reports Define Function as broken | False positive — Define Function is hoisted in `astCompiler.js`, not part of the exec chain, and is test-covered. Audit heuristic could be taught to skip hoisted node kinds |
 
 ## 5. Risks & mitigations
 
@@ -71,13 +82,13 @@ Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
 ## 6. Numbers
 
-- **Tests:** 23/23 green.
+- **Tests:** 62/62 green.
+- **Nodes:** 1,631 total (65 hand-authored + 1,566 auto-generated AE DOM); 1,630 with verified emitters, 1 audit false-positive (Define Function, hoisted).
 - **Bundle:** app shell 363 KB (107 KB gzipped), Monaco split into its own 4 MB chunk (loaded on first Code-view mount).
-- **Lines of code (rough):** compiler core ~280 lines, IR + emitters ~250, layout system ~110, persistence ~120. Stays small.
-- **Commits since last status report:** 11 phase-level commits, all with green-test gating.
+- **Commits since last status report:** ScriptUI + JS-node + AE-DOM-generation + Copilot-backend waves, all with green-test gating.
 
 ## 7. Recommendation
 
-The two-week investment recommended in the prior report (§0 → §2 → §1) is **done**. Recommended next investment: **finish §4 (loops + selectors are landed; queue an "Add to canvas" cross-link from the Globals panel + a couple more selector variants), then start §6 (Copilot)** — the LLM angle is the most quotable differentiator at this point and the IR refactor makes the agent's job a lot easier (it can read/emit IR directly instead of round-tripping through text).
+The earlier investments (§0–§4) plus the large node-coverage, ScriptUI, and Copilot-backend waves are **done**. EBN now has the defensible end-to-end pitch in hand: artists author visually OR by prompt, the script runs on a real comp, and the graph is portable as a `.ebn` file.
 
-If we land the Copilot in the next sprint, EBN has a defensible pitch end-to-end: artists author visually OR by prompt, the script runs on a real comp, and the graph is portable as a `.ebn` file.
+Recommended next investment: **Copilot tool-use** — let the model read the current graph/IR and propose diffs the user previews before applying (the IR makes this cheap), then **reverse translation** (§7, "paste ExtendScript → graph"), which is the strongest moat against plain CEP authoring tools. Smaller wins available anytime: the Globals "Add to canvas" cross-link (§5) and a couple more AE selector variants.

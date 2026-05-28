@@ -49,6 +49,15 @@ function resolvePropertyChain(node, ctx) {
   return `.property(${expr})`;
 }
 
+/* ----------------------------- layer classes ----------------------------- */
+
+// Whitelist the ExtendScript layer class names so a node value can never
+// inject arbitrary code into the generated `instanceof <klass>` check.
+const LAYER_CLASSES = ['AVLayer', 'TextLayer', 'ShapeLayer', 'CameraLayer', 'LightLayer'];
+function sanitizeLayerClass(value) {
+  return LAYER_CLASSES.indexOf(value) !== -1 ? value : 'AVLayer';
+}
+
 /* ----------------------------- math / compare ----------------------------- */
 
 // Inline expression for a wired data input. The orchestrator inlines
@@ -592,6 +601,19 @@ const EBN_DATA_EMITTERS = {
   'Select Layer by Name': () => 'targetLayer',
   'Select Layer by Index': () => 'targetLayer',
   'Set Local Variable': (node, ctx) => ctx.varName(node),
+
+  // Array of the comp's currently selected layers — pairs with For Each (Array).
+  'All Selected Layers': (node, ctx) => {
+    const comp = ctx.resolveInput(node, { id: 'comp', type: 'expr', default: 'activeComp' });
+    return `${comp}.selectedLayers`;
+  },
+  // Array of the comp's layers filtered by ScriptUI/AE layer class.
+  'Select Layers by Class': (node, ctx) => {
+    ctx.useHelper?.('ebnLayersByClass');
+    const comp = ctx.resolveInput(node, { id: 'comp', type: 'expr', default: 'activeComp' });
+    const klass = sanitizeLayerClass(node.data?.values?.layer_class);
+    return `ebnLayersByClass(${comp}, ${klass})`;
+  },
 
   'New File': (node, ctx) => {
     const pathStr = ctx.resolveInput(node, { id: 'path', type: 'text' });

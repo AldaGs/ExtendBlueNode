@@ -104,6 +104,7 @@ export default function PropertiesPanel({
   const isScriptUIBuilder = nodeLabel === 'ScriptUI Builder';
   const isCustomCode = nodeLabel === 'Custom UI Code';
   const isUIEventListener = nodeLabel === 'UI Event Listener';
+  const isLayersByClass = nodeLabel === 'Select Layers by Class';
 
   const scriptUIString = selectedNode?.data?.values?.scriptUI_string;
 
@@ -176,6 +177,23 @@ export default function PropertiesPanel({
             <option value="onClick">onClick</option>
             <option value="onChange">onChange</option>
             <option value="onChanging">onChanging</option>
+          </select>
+        </label>
+      )}
+
+      {isLayersByClass && (
+        <label className="ebn-props__field" style={{ marginTop: '12px' }}>
+          <span className="ebn-props__label">Layer Class</span>
+          <select
+            className="ebn-props__input"
+            value={selectedNode.data.values?.layer_class || 'AVLayer'}
+            onChange={(e) => patchValues('layer_class', e.target.value)}
+          >
+            <option value="AVLayer">AVLayer</option>
+            <option value="TextLayer">TextLayer</option>
+            <option value="ShapeLayer">ShapeLayer</option>
+            <option value="CameraLayer">CameraLayer</option>
+            <option value="LightLayer">LightLayer</option>
           </select>
         </label>
       )}
