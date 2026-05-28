@@ -117,6 +117,17 @@ const EBN_NODE_EMITTERS = {
   // Pure entry point — emits no code, just anchors the exec chain.
   'Start': () => [],
 
+  // Inspector: alerts the resolved value at runtime. Use anywhere in the
+  // exec chain to see what a wire actually carries. `label` is an optional
+  // tag prepended to the alert so multiple Debug nodes are distinguishable.
+  'Debug': (node, ctx) => {
+    const valExpr = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
+    const tag = String(node.data?.values?.label || node.id || 'Debug');
+    // Build a single alert call. ExtendScript coerces objects via toString();
+    // wrap in a try so a bad expr doesn't kill the whole chain.
+    return [ir.raw(`try { alert(${JSON.stringify('DEBUG[' + tag + ']: ')} + String(${valExpr})); } catch (e) { alert(${JSON.stringify('DEBUG[' + tag + '] error: ')} + e.message); }`)];
+  },
+
   // Legacy fixture from the original Phase 5 spec.
   'Set Opacity to 50%': () => [
     ir.raw('targetLayer.property("ADBE Opacity").setValue(50);'),
@@ -269,6 +280,9 @@ const EBN_DATA_EMITTERS = {
   'Get Active Comp': () => 'activeComp',
   // The global `app` object — wire into any AE getter's `Application` input.
   'Get Application': () => 'app',
+  // Debug's data-side output is a pass-through of its wired `value` input,
+  // so it can be inserted mid-chain on a data wire without breaking it.
+  'Debug': (node, ctx) => ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' }),
   'Select Layer by ID': () => 'targetLayer',
   'Select Layer by Name': () => 'targetLayer',
   'Select Layer by Index': () => 'targetLayer',

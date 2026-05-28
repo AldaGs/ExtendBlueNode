@@ -49,6 +49,31 @@ const _BASE_NODE_LIBRARY = [
         }),
       },
       {
+        type: 'debug',
+        label: 'Debug',
+        keywords: ['log', 'inspect', 'print', 'alert', 'console'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Debug',
+            category: 'flow',
+            themeColor: NODE_THEME.action,
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'value',   label: 'Value',     type: 'expr'  },
+              { id: 'label',   label: 'Label',     type: 'text', placeholder: 'tag (optional)' },
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' },
+              { id: 'value',    label: 'Value' },
+            ],
+            values: { label: '' },
+          },
+        }),
+      },
+      {
         type: 'getApplication',
         label: 'Get Application',
         keywords: ['app', 'application', 'global'],
