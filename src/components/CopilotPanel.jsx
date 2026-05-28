@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { flattenLibrary, getNodeCatalogSummary } from '../nodeLibrary';
+import { getScriptUIPromptSection } from '../graph/scriptUITree';
 import { CLOUD_PROVIDERS, getStoredKey, setStoredKey, callCloud } from '../services/cloudLlmService';
 import './CopilotPanel.css'; // Let's create this file next
 
@@ -210,6 +211,10 @@ Rules:
 Example — request: "Make a 30s 1080p comp and add a solid that matches it":
 {"reply":"Creating comp and matching solid.","nodes":[{"id":"n1","label":"Start","x":100,"y":100},{"id":"n2","label":"ItemCollection addComp","x":420,"y":100,"values":{"name":"YouTube Video","width":1920,"height":1080,"pixelAspect":1,"duration":30,"frameRate":30}},{"id":"n3","label":"CompItem Get layers","x":740,"y":100},{"id":"n4","label":"LayerCollection addSolid","x":1060,"y":100,"values":{"color":"[1,0,0]","name":"BG","width":1920,"height":1080,"pixelAspect":1,"duration":30}}],"edges":[{"from":"n1","fromHandle":"exec_out","to":"n2","toHandle":"exec_in"},{"from":"n2","fromHandle":"exec_out","to":"n4","toHandle":"exec_in"},{"from":"n2","fromHandle":"result","to":"n3","toHandle":"target"},{"from":"n3","fromHandle":"value","to":"n4","toHandle":"target"}]}
 Note: literal sizes live in each node's "values" map (NO Integer/String nodes created); the comp's "result" goes through "CompItem Get layers" to reach addSolid's LayerCollection "target".
+
+=================================================================
+${getScriptUIPromptSection()}
+=================================================================
 
 Current Canvas State:
 Nodes: ${JSON.stringify(nodes.map(n => ({ id: n.id, label: n.data?.label })))}

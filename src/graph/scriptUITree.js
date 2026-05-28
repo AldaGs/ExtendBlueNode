@@ -58,8 +58,13 @@
  * @property {ScriptUIElement[]} children     Nested elements.
  */
 
-/** Root container types allowed at the top of the tree. */
-export const ROOT_TYPES = ['Window', 'Palette', 'Dialog'];
+/**
+ * Root container types allowed at the top of the tree. Palette is first so it
+ * is the default: a palette resource passed to `new Window(...)` is non-modal,
+ * keeping the After Effects UI usable while the panel is open. Window/Dialog
+ * remain for cases that genuinely need a floating or modal-blocking window.
+ */
+export const ROOT_TYPES = ['Palette', 'Window', 'Dialog'];
 
 /** Map a root container type to the legacy ui_mode the emitter used to read. */
 export function rootTypeToMode(rootType) {
@@ -171,15 +176,15 @@ export function serializeTreeToResourceString(root) {
 
 /**
  * Build an empty default tree for a freshly created ScriptUI Builder node:
- * a Window with a "title" StaticText, mirroring the old default string.
+ * a non-modal Palette with a single Submit button.
  * @returns {ScriptUIElement}
  */
 export function createDefaultScriptUITree() {
   return {
-    id: newElementId('window'),
-    type: 'Window',
+    id: newElementId('palette'),
+    type: 'Palette',
     name: '',
-    props: { text: 'My Dialog', orientation: 'column', alignChildren: ['fill', 'top'] },
+    props: { text: 'My Panel', orientation: 'column', alignChildren: ['fill', 'top'] },
     children: [
       {
         id: newElementId('button'),
@@ -233,3 +238,39 @@ export const SAMPLE_SCRIPTUI_TREE = {
     },
   ],
 };
+
+/**
+ * Canonical ScriptUI guidance for the Copilot system prompt. Lives here, next
+ * to the schema and serializer, so the LLM's instructions can never drift from
+ * the actual data model. Consumed by CopilotPanel's getSystemPrompt().
+ */
+export function getScriptUIPromptSection() {
+  return `SCRIPTUI (building UI panels):
+To author a panel, emit a "ScriptUI Builder" node and put a "scriptUITree" object in its "values" map. The tree describes the UI declaratively.
+
+scriptUITree element shape (root and every nested element are the same shape):
+  { "type": <ScriptUI type>, "name": <pin name or "">, "props": { ... }, "children": [ ... ] }
+- The ROOT "type" should be "Palette" (non-modal — keeps After Effects usable while open). Use "Window" or "Dialog" only when a floating or modal-blocking window is explicitly required.
+- "type" of children is any ScriptUI control/container: "Group", "Panel", "Button", "StaticText", "EditText", "Checkbox", "Slider", "DropDownList", etc.
+- "name" is the identifier exposed as a dynamic "ui_<name>" OUTPUT PIN on the Builder. Give a name ONLY to elements you need to wire (e.g. buttons that fire events). Use "" for the root and purely structural Groups.
+- "props" are ScriptUI properties: { "text": "OK", "orientation": "column", "alignChildren": ["fill","top"], "margins": 16, "spacing": 10 }.
+
+DYNAMIC PINS: each named element produces a "ui_<name>" output pin. Example: a child {"type":"Button","name":"btn_go",...} creates pin "ui_btn_go" on the Builder.
+
+WIRING ORDER (mandatory): Builder → UI Event Listener(s) → Show Window, chained via exec_out→exec_in in that order. Listeners must attach BEFORE Show Window.
+- Wire a Builder "ui_<name>" pin into a "UI Event Listener" node's "target" input.
+- The listener's "exec_callback" branch is what runs when the event fires; its "exec_out" continues the setup chain to the next listener or to Show Window.
+- Wire the Builder's "window_obj" output into "Show Window"'s "window_obj" input.
+
+Example — a palette with one button that runs an action when clicked:
+{"reply":"Building a panel with a button.","nodes":[
+  {"id":"u1","label":"ScriptUI Builder","x":100,"y":100,"values":{"scriptUITree":{"type":"Palette","name":"","props":{"text":"My Panel","orientation":"column","alignChildren":["fill","top"],"margins":16},"children":[{"type":"Button","name":"btn_go","props":{"text":"Run"},"children":[]}]}}},
+  {"id":"u2","label":"UI Event Listener","x":420,"y":100,"values":{"event_type":"onClick"}},
+  {"id":"u3","label":"Show Window","x":740,"y":100}
+],"edges":[
+  {"from":"u1","fromHandle":"exec_out","to":"u2","toHandle":"exec_in"},
+  {"from":"u2","fromHandle":"exec_out","to":"u3","toHandle":"exec_in"},
+  {"from":"u1","fromHandle":"ui_btn_go","to":"u2","toHandle":"target"},
+  {"from":"u1","fromHandle":"window_obj","to":"u3","toHandle":"window_obj"}
+]}`;
+}
