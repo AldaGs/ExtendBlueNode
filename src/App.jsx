@@ -6,6 +6,7 @@ import CodeEditor from './components/CodeEditor';
 import PropertiesPanel from './components/PropertiesPanel';
 import GlobalVariablesPanel from './components/GlobalVariablesPanel';
 import CopilotPanel from './components/CopilotPanel';
+import ScriptUIEditor from './components/ScriptUIEditor';
 import ViewLeaf from './components/ViewLeaf';
 import ProjectMenu from './components/ProjectMenu';
 import { GlobalsProvider } from './state/GlobalsContext';
@@ -263,6 +264,23 @@ export default function App() {
             selectedNode={liveSelected}
             setNodes={setNodes}
             onValidityChange={setPropsValid}
+            onRequestScriptUIEditor={() => {
+              setLayout(t => {
+                let foundId = null;
+                function findLeaf(node) {
+                  if (node.type === 'leaf' && node.viewId !== 'canvas') foundId = node.id;
+                  else if (node.type === 'split') {
+                    findLeaf(node.children[0]);
+                    if (!foundId) findLeaf(node.children[1]);
+                  }
+                }
+                findLeaf(t);
+                if (foundId) {
+                  return setLeafView(t, foundId, 'scriptUIEditor');
+                }
+                return t;
+              });
+            }}
           />
         ),
       },
@@ -285,6 +303,15 @@ export default function App() {
             setNodes={setNodes}
             setEdges={setEdges}
             globalVariables={globalVariables}
+          />
+        ),
+      },
+      scriptUIEditor: {
+        title: 'ScriptUI Editor',
+        render: () => (
+          <ScriptUIEditor
+            selectedNode={liveSelected}
+            setNodes={setNodes}
           />
         ),
       },

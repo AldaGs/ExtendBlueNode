@@ -130,6 +130,104 @@ const EBN_NODE_EMITTERS = {
   // Pure entry point — emits no code, just anchors the exec chain.
   'Start': () => [],
 
+  'Save JSON': (node, ctx) => {
+    const payload = ctx.resolveInput(node, { id: 'payload', type: 'expr', default: '{}' });
+    const dirMode = node.data?.values?.directory_mode || 'Auto';
+    const stmts = [];
+    if (dirMode === 'Auto') {
+      const fileName = ctx.resolveInput(node, { id: 'file_name', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('_ebn_userData', 'Folder.userData.fsName'),
+        ir.varDecl('_ebn_safeFolder', 'new Folder(_ebn_userData + "/EBN_Saves")'),
+        ir.raw('if (!_ebn_safeFolder.exists) { _ebn_safeFolder.create(); }'),
+        ir.varDecl('targetFile', `new File(_ebn_safeFolder.fsName + "/" + ${fileName})`)
+      );
+    } else {
+      const fullPath = ctx.resolveInput(node, { id: 'full_path', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('targetFile', `new File(${fullPath})`)
+      );
+    }
+    stmts.push(
+      ir.raw('targetFile.open("w");'),
+      ir.raw(`targetFile.write(JSON.stringify(${payload}, undefined, 4));`),
+      ir.raw('targetFile.close();')
+    );
+    return stmts;
+  },
+
+  'Load JSON': (node, ctx) => {
+    const dirMode = node.data?.values?.directory_mode || 'Auto';
+    const stmts = [];
+    if (dirMode === 'Auto') {
+      const fileName = ctx.resolveInput(node, { id: 'file_name', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('_ebn_userData', 'Folder.userData.fsName'),
+        ir.varDecl('_ebn_safeFolder', 'new Folder(_ebn_userData + "/EBN_Saves")'),
+        ir.raw('if (!_ebn_safeFolder.exists) { _ebn_safeFolder.create(); }'),
+        ir.varDecl('targetFile', `new File(_ebn_safeFolder.fsName + "/" + ${fileName})`)
+      );
+    } else {
+      const fullPath = ctx.resolveInput(node, { id: 'full_path', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('targetFile', `new File(${fullPath})`)
+      );
+    }
+    const outVar = ctx.varName(node);
+    stmts.push(
+      ir.varDecl(outVar, 'null'),
+      ir.raw('if (targetFile.exists) {'),
+      ir.raw('    targetFile.open("r");'),
+      ir.raw('    var rawData = targetFile.read();'),
+      ir.raw('    targetFile.close();'),
+      ir.raw('    try {'),
+      ir.raw(`        ${outVar} = JSON.parse(rawData);`),
+      ir.raw('    } catch(e) {'),
+      ir.raw(`        ${outVar} = {}; // Fallback on corrupt JSON`),
+      ir.raw('    }'),
+      ir.raw('} else {'),
+      ir.raw(`    ${outVar} = {}; // Fallback on missing file`),
+      ir.raw('}')
+    );
+    return stmts;
+  },
+
+  // --- ScriptUI ---
+  'ScriptUI Builder': (node, ctx) => {
+    const stringLiteral = JSON.stringify(node.data?.values?.scriptUI_string || '');
+    const stringVar = ctx.varName(node) + '_String';
+    const winVar = ctx.varName(node) + '_Window';
+    
+    return [
+      ir.varDecl(stringVar, stringLiteral),
+      ir.varDecl(winVar, `new Window(${stringVar})`)
+    ];
+  },
+  'UI Event Listener': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'null' });
+    const eventType = node.data?.values?.event_type || 'onClick';
+    const body = ctx.walkBranch(node.id, 'exec_callback');
+    
+    return [
+      ir.raw(`${target}.${eventType} = function() {`),
+      ...body,
+      ir.raw(`};`)
+    ];
+  },
+  'Show Window': (node, ctx) => {
+    const winObj = ctx.resolveInput(node, { id: 'window_obj', type: 'expr', default: 'null' });
+    return [
+      ir.raw(`if (${winObj}) ${winObj}.show();`)
+    ];
+  },
+  'Custom UI Code': (node, ctx) => {
+    const customCode = node.data?.values?.scriptUI_string || '';
+    return [
+      ir.raw(`// --- Custom UI Code Block ---`),
+      ir.raw(customCode)
+    ];
+  },
+
   // --- JS control flow (self-branching; see SELF_BRANCHING_LABELS) ---
   'For Loop': (node, ctx) => {
     const start = ctx.resolveInput(node, { id: 'start', type: 'number', default: '0' });
@@ -458,6 +556,23 @@ const EBN_DATA_EMITTERS = {
   },
 
   // Object
+  'ScriptUI Builder': (node, ctx, outputHandle) => {
+    const winVar = ctx.varName(node) + '_Window';
+    if (outputHandle === 'window_obj') return winVar;
+    if (outputHandle && outputHandle.startsWith('ui_')) {
+      return `${winVar}.${outputHandle.slice(3)}`;
+    }
+    return null;
+  },
+  'Object Builder': (node, ctx) => {
+    const inputs = node.data?.inputs || [];
+    const props = inputs.map(inp => {
+      const keyStr = JSON.stringify(inp.label || inp.id);
+      const valExpr = ctx.resolveInput(node, { id: inp.id, type: 'expr', default: 'null' });
+      return `${keyStr}: ${valExpr}`;
+    });
+    return `{ ${props.join(', ')} }`;
+  },
   'New Object': () => `{}`,
   'Object Get Key': (node, ctx) => {
     const obj = ctx.resolveInput(node, { id: 'object', type: 'expr', default: '{}' });

@@ -12,6 +12,14 @@ src/
 
 The simplest path is below — copy-paste, rename, ship.
 
+> **Node inventory & coverage:** see [`NODE_CATALOG.md`](./NODE_CATALOG.md) for the full
+> list of nodes (label, role, inputs/outputs, emitter status). It is auto-generated —
+> after adding or changing a node, run `npm run catalog:nodes` to refresh it, or
+> `npm run audit:nodes` to just check for any node missing an emitter. The audit
+> spawns every node via its factory and verifies the compiler has a matching
+> exec/data emitter, so a "BROKEN" line means the node compiles to an
+> "unknown label" warning.
+
 ---
 
 ## 1. Adding a node that needs no custom UI

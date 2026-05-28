@@ -342,6 +342,25 @@ export const JS_NODE_LIBRARY = [
         category: 'Object',
         items: [
           {
+            type: 'objectBuilder',
+            label: 'Object Builder',
+            keywords: ['object', 'build', 'create', 'json', 'data'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Object Builder',
+                category: 'data',
+                themeColor: '#3a6b54',
+                // Start with an empty object (no inputs). Users add them via Properties Panel.
+                inputs: [],
+                outputs: [{ id: 'object', label: 'Object' }],
+                values: {},
+              },
+            }),
+          },
+          {
             type: 'newObject',
             label: 'New Object',
             keywords: ['object', 'dict', 'map', 'create', '{}'],
@@ -400,6 +419,160 @@ export const JS_NODE_LIBRARY = [
                 ],
                 outputs: [{ id: 'exec_out', label: 'Execution' }],
                 values: { key: '' },
+              },
+            }),
+          },
+        ]
+      },
+      {
+        category: 'File I/O',
+        items: [
+          {
+            type: 'saveJson',
+            label: 'Save JSON',
+            keywords: ['file', 'save', 'json', 'write', 'export'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Save JSON',
+                category: 'action',
+                themeColor: '#2b5c7a',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'payload', label: 'Payload', type: 'expr' },
+                  { id: 'file_name', label: 'File Name', type: 'text', placeholder: 'settings.json' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution' },
+                ],
+                values: { directory_mode: 'Auto' },
+              },
+            }),
+          },
+          {
+            type: 'loadJson',
+            label: 'Load JSON',
+            keywords: ['file', 'load', 'json', 'read', 'import'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Load JSON',
+                category: 'action',
+                themeColor: '#2b5c7a',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'file_name', label: 'File Name', type: 'text', placeholder: 'settings.json' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution' },
+                  { id: 'payload', label: 'Payload' },
+                ],
+                values: { directory_mode: 'Auto' },
+              },
+            }),
+          },
+        ]
+      },
+      {
+        category: 'ScriptUI',
+        items: [
+          {
+            type: 'scriptUIBuilder',
+            label: 'ScriptUI Builder',
+            keywords: ['scriptui', 'ui', 'window', 'panel', 'dialog', 'layout', 'resource', 'string'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'ScriptUI Builder',
+                category: 'action',
+                themeColor: '#ff1493', // Deep Pink
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution' },
+                  { id: 'window_obj', label: 'Window Object' },
+                ],
+                values: {
+                  scriptUI_string: 'dialog { text: "My Dialog", btn_submit: Button { text: "Submit" } }'
+                },
+              },
+            }),
+          },
+          {
+            type: 'uiEventListener',
+            label: 'UI Event Listener',
+            keywords: ['scriptui', 'ui', 'event', 'listen', 'click', 'change'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'UI Event Listener',
+                category: 'action',
+                themeColor: '#ff1493',
+                inputs: [
+                  { id: 'target', label: 'Target Element', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_callback', label: 'On Event', type: 'exec' },
+                ],
+                values: {
+                  event_type: 'onClick'
+                },
+              },
+            }),
+          },
+          {
+            type: 'showWindow',
+            label: 'Show Window',
+            keywords: ['scriptui', 'ui', 'show', 'display', 'dialog'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Show Window',
+                category: 'action',
+                themeColor: '#ff1493',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'window_obj', label: 'Window Object', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution' },
+                ],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'customUICode',
+            label: 'Custom UI Code',
+            keywords: ['scriptui', 'ui', 'custom', 'code', 'javascript', 'js'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Custom UI Code',
+                category: 'action',
+                themeColor: '#ff1493',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution' },
+                ],
+                values: {
+                  scriptUI_string: '// Write custom UI ExtendScript logic here\n'
+                },
               },
             }),
           },
