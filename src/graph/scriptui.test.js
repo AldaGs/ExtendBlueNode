@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { parseScriptUIElements, scriptUIBuilderOutputs } from './scriptui';
+import { parseScriptUIElements, scriptUIBuilderOutputs, scriptUIElementNames } from './scriptui';
 import { compileToExtendScript } from '../astCompiler';
+import {
+  serializeTreeToResourceString,
+  scriptUITreeNames,
+  rootTypeToMode,
+  SAMPLE_SCRIPTUI_TREE,
+} from './scriptUITree';
 
 const exec = { type: 'exec' };
 const builder = (id, mode) => ({
@@ -31,9 +37,60 @@ describe('scriptui resource parsing', () => {
     expect(parseScriptUIElements(null)).toEqual([]);
   });
 
-  it('builds builder outputs with the two fixed pins first', () => {
+  it('builds builder outputs with the two fixed pins first (legacy string)', () => {
     const outs = scriptUIBuilderOutputs('dialog { ok: Button {} }');
     expect(outs.map((o) => o.id)).toEqual(['exec_out', 'window_obj', 'ui_ok']);
+  });
+
+  it('builds builder outputs from a values object (tree-first)', () => {
+    const outs = scriptUIBuilderOutputs({ scriptUITree: SAMPLE_SCRIPTUI_TREE });
+    expect(outs.map((o) => o.id)).toEqual([
+      'exec_out', 'window_obj', 'ui_st_heading', 'ui_btn_ok',
+    ]);
+  });
+
+  it('falls back to the legacy string when no tree is present', () => {
+    const outs = scriptUIBuilderOutputs({ scriptUI_string: 'dialog { ok: Button {} }' });
+    expect(outs.map((o) => o.id)).toEqual(['exec_out', 'window_obj', 'ui_ok']);
+  });
+});
+
+describe('scriptui tree model', () => {
+  it('walks the tree for ordered named elements, skipping the root', () => {
+    expect(scriptUITreeNames(SAMPLE_SCRIPTUI_TREE)).toEqual(['st_heading', 'btn_ok']);
+    expect(scriptUIElementNames({ scriptUITree: SAMPLE_SCRIPTUI_TREE }))
+      .toEqual(['st_heading', 'btn_ok']);
+  });
+
+  it('serializes a tree into a valid resource string', () => {
+    const rs = serializeTreeToResourceString(SAMPLE_SCRIPTUI_TREE);
+    // Root keyword is lowercase; named elements keep `name: Type {` form.
+    expect(rs.startsWith('window {')).toBe(true);
+    expect(rs).toContain('st_heading: StaticText {');
+    expect(rs).toContain('btn_ok: Button {');
+    expect(rs).toContain('text: "Choose an option:"');
+    expect(rs).toContain('alignChildren: ["fill", "top"]');
+    expect(rs).toContain('margins: 16');
+    // The unnamed Group gets a synthetic name so the string is valid, but
+    // pins come from the tree (scriptUITreeNames), never from re-parsing.
+    expect(rs).toContain('_group1: Group {');
+  });
+
+  it('synthesizes names for unnamed nested elements so the string stays valid', () => {
+    const tree = {
+      id: 'r', type: 'Window', name: '', props: {},
+      children: [{ id: 'g', type: 'Group', name: '', props: {}, children: [] }],
+    };
+    const rs = serializeTreeToResourceString(tree);
+    expect(rs).toMatch(/_group1: Group \{\}/);
+    // Synthetic names are NOT exposed as pins.
+    expect(scriptUITreeNames(tree)).toEqual([]);
+  });
+
+  it('maps root type to legacy window/panel mode', () => {
+    expect(rootTypeToMode('Window')).toBe('window');
+    expect(rootTypeToMode('Dialog')).toBe('window');
+    expect(rootTypeToMode('Palette')).toBe('panel');
   });
 
   it('UI Event Listener attaches an indented callback and continues the chain', () => {
@@ -119,5 +176,31 @@ describe('scriptui resource parsing', () => {
 
     const panel = compileToExtendScript([start('s'), builder('b', 'panel')], [eExec('e', 's', 'b')]);
     expect(panel).toMatch(/\(this instanceof Panel\) \? this : new Window\(/);
+  });
+
+  it('compiles a tree-backed builder: serializes the tree and derives mode from root type', () => {
+    const treeBuilder = (id, rootType) => ({
+      id, type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'ScriptUI Builder',
+        inputs: [{ id: 'exec_in', label: 'Execution', ...exec }],
+        outputs: [{ id: 'exec_out', label: 'Execution' }, { id: 'window_obj', label: 'Window Object' }],
+        values: {
+          scriptUITree: {
+            id: 'r', type: rootType, name: '', props: { text: 'Hi' },
+            children: [{ id: 'b1', type: 'Button', name: 'ok', props: { text: 'Go' }, children: [] }],
+          },
+        },
+      },
+    });
+
+    const win = compileToExtendScript([start('s'), treeBuilder('b', 'Window')], [eExec('e', 's', 'b')]);
+    expect(win).toMatch(/= new Window\(/);
+    expect(win).toContain('ok: Button {');     // serialized from the tree
+    expect(win).toContain('text: \\"Go\\"');   // (escaped inside the JS string literal)
+
+    // Palette root => dockable-panel guard, with no ui_mode value present.
+    const pal = compileToExtendScript([start('s'), treeBuilder('b', 'Palette')], [eExec('e', 's', 'b')]);
+    expect(pal).toMatch(/\(this instanceof Panel\) \? this : new Window\(/);
   });
 });

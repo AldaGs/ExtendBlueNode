@@ -1,4 +1,5 @@
 import { NODE_THEME } from './graph/initialGraph';
+import { createDefaultScriptUITree } from './graph/scriptUITree';
 
 let counter = 0;
 function uid(prefix) {
@@ -645,8 +646,9 @@ export const JS_NODE_LIBRARY = [
                   { id: 'window_obj', label: 'Window Object' },
                 ],
                 values: {
-                  scriptUI_string: 'dialog { text: "My Dialog", btn_submit: Button { text: "Submit" } }',
-                  ui_mode: 'window', // 'window' (floating) | 'panel' (dockable)
+                  // Tree is the source of truth; root type owns window/panel
+                  // mode, so ui_mode is no longer stored.
+                  scriptUITree: createDefaultScriptUITree(),
                 },
               },
             }),

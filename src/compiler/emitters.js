@@ -10,6 +10,10 @@
 //   globals: GlobalVariable[]
 import { ir } from './ir';
 import { AE_NODE_EMITTERS, AE_DATA_EMITTERS } from '../generated/aeEmitters';
+import {
+  serializeTreeToResourceString,
+  rootTypeToMode,
+} from '../graph/scriptUITree';
 
 /* ----------------------------- property paths ----------------------------- */
 
@@ -194,10 +198,19 @@ const EBN_NODE_EMITTERS = {
 
   // --- ScriptUI ---
   'ScriptUI Builder': (node, ctx) => {
-    const stringLiteral = JSON.stringify(node.data?.values?.scriptUI_string || '');
+    // Tree-first: serialize the structured model when present; fall back to
+    // the legacy resource string for un-migrated nodes.
+    const tree = node.data?.values?.scriptUITree;
+    const resource = tree
+      ? serializeTreeToResourceString(tree)
+      : (node.data?.values?.scriptUI_string || '');
+    const stringLiteral = JSON.stringify(resource);
     const stringVar = ctx.varName(node) + '_String';
     const winVar = ctx.varName(node) + '_Window';
-    const mode = node.data?.values?.ui_mode || 'window';
+    // Window type is owned by the tree root; legacy nodes use ui_mode.
+    const mode = tree
+      ? rootTypeToMode(tree.type)
+      : (node.data?.values?.ui_mode || 'window');
     // Panel mode: when AE runs this script as a dockable panel it binds the
     // Panel to `this`; reuse it, otherwise fall back to a floating window so
     // the same graph still runs from the ScriptUI launcher / ESTK.

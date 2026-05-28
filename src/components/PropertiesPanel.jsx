@@ -158,29 +158,11 @@ export default function PropertiesPanel({
             type="button"
             className="ebn-props__btn ebn-btn-primary"
             style={{ width: '100%', padding: '8px' }}
-            onClick={onRequestScriptUIEditor}
+            onClick={() => onRequestScriptUIEditor(isScriptUIBuilder ? 'uiLayout' : 'scriptUIEditor')}
           >
             Edit UI Layout
           </button>
         </div>
-      )}
-
-      {isScriptUIBuilder && (
-        <label className="ebn-props__field" style={{ marginTop: '12px' }}>
-          <span className="ebn-props__label">UI Mode</span>
-          <select
-            className="ebn-props__input"
-            value={selectedNode.data.values?.ui_mode || 'window'}
-            onChange={(e) => patchValues('ui_mode', e.target.value)}
-          >
-            <option value="window">Floating Window</option>
-            <option value="panel">Dockable Panel</option>
-          </select>
-          <span className="ebn-props__hint">
-            Panel reuses the docked AE panel (<code>this</code>) when available,
-            else opens a window. Use a <code>palette</code> resource for panels.
-          </span>
-        </label>
       )}
 
       {isUIEventListener && (

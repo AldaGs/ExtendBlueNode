@@ -7,6 +7,12 @@
 //
 // Both the PropertiesPanel (pin sync) and the compiler's data-side resolver
 // must agree on which names exist — so the extraction lives here, once.
+//
+// The structured tree model (scriptUITree.js) is now the primary source of
+// truth; the regex string parser below is the legacy fallback for nodes that
+// have not been migrated to a tree. See scriptUIBuilderOutputs.
+
+import { scriptUITreeNames } from './scriptUITree';
 
 // Matches `name: Type {` where Type starts uppercase (ScriptUI control or
 // container). This is intentionally broad: it catches Slider, Progressbar,
@@ -38,15 +44,33 @@ export function parseScriptUIElements(resourceString) {
 }
 
 /**
- * Build the full output-pin list for a ScriptUI Builder node from its
- * resource string: the two fixed pins plus one `ui_<name>` per element.
+ * Resolve the ordered element names for a ScriptUI Builder node, tree-first:
+ *   1. If `values.scriptUITree` exists, walk it.
+ *   2. Else fall back to parsing the legacy `values.scriptUI_string`.
+ *
+ * Accepts the node's `values` object. For backward compatibility a bare
+ * resource string is still accepted and treated as the legacy path.
  */
-export function scriptUIBuilderOutputs(resourceString) {
+export function scriptUIElementNames(values) {
+  if (typeof values === 'string') return parseScriptUIElements(values);
+  if (values && typeof values === 'object') {
+    if (values.scriptUITree) return scriptUITreeNames(values.scriptUITree);
+    return parseScriptUIElements(values.scriptUI_string);
+  }
+  return [];
+}
+
+/**
+ * Build the full output-pin list for a ScriptUI Builder node: the two fixed
+ * pins plus one `ui_<name>` per named element. Pass the node's `values`
+ * object (tree-first), or — for legacy callers — a raw resource string.
+ */
+export function scriptUIBuilderOutputs(values) {
   const outs = [
     { id: 'exec_out', label: 'Execution' },
     { id: 'window_obj', label: 'Window Object' },
   ];
-  for (const name of parseScriptUIElements(resourceString)) {
+  for (const name of scriptUIElementNames(values)) {
     outs.push({ id: `ui_${name}`, label: name });
   }
   return outs;
