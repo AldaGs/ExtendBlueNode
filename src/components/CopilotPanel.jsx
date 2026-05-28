@@ -424,27 +424,54 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
     setMessages(msgs => msgs.map((m, i) => i === msgIndex ? { ...m, pendingActions: null, content: '> Actions applied.' } : m));
   };
 
+  const onTextareaKeyDown = (e) => {
+    // Enter submits; Shift+Enter inserts a newline.
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onSubmit(e);
+    }
+  };
+
+  // Auto-grow the textarea up to a max height, then scroll.
+  const autoSize = (el) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  };
+
   return (
     <div className="ebn-copilot">
-      <div className="ebn-copilot__history">
-        {messages.map((m, i) => (
-          <div key={i} className={`ebn-copilot__msg ebn-copilot__msg--${m.role}`}>
-            {m.role === 'user' && <strong>You: </strong>}
-            {m.role === 'assistant' && <strong>Copilot: </strong>}
-            <div className="ebn-copilot__content">
-              {m.content}
-            </div>
-            {m.pendingActions && (
-              <button 
-                className="ebn-btn-primary"
-                onClick={() => applyActions(m.pendingActions, i)}
-              >
-                Apply {m.pendingActions.length} Action(s)
-              </button>
-            )}
-          </div>
-        ))}
-        <div ref={bottomRef} />
+      <div className="ebn-copilot__toolbar">
+        <select
+          className="ebn-copilot__select"
+          value={provider}
+          onChange={(e) => {
+            const p = e.target.value;
+            setProvider(p);
+            setModel(PROVIDERS[p].models[0]);
+          }}
+          disabled={isGenerating}
+          title="LLM provider"
+        >
+          {Object.entries(PROVIDERS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+        </select>
+        <select
+          className="ebn-copilot__select"
+          value={model}
+          onChange={(e) => setModel(e.target.value)}
+          disabled={isGenerating}
+          title="Model"
+        >
+          {PROVIDERS[provider].models.map(m => <option key={m} value={m}>{m}</option>)}
+        </select>
+        {PROVIDERS[provider].isCloud && (
+          <button
+            type="button"
+            className="ebn-copilot__keybtn"
+            onClick={() => setShowKeyEditor(s => !s)}
+            title="Set API key"
+          >🔑</button>
+        )}
       </div>
       {showKeyEditor && PROVIDERS[provider].isCloud && (
         <div className="ebn-copilot__keyrow">
@@ -462,39 +489,33 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
           <button type="button" onClick={() => setShowKeyEditor(false)}>Done</button>
         </div>
       )}
+      <div className="ebn-copilot__history">
+        {messages.map((m, i) => (
+          <div key={i} className={`ebn-copilot__msg ebn-copilot__msg--${m.role}`}>
+            {m.role === 'user' && <strong>You: </strong>}
+            {m.role === 'assistant' && <strong>Copilot: </strong>}
+            <div className="ebn-copilot__content">
+              {m.content}
+            </div>
+            {m.pendingActions && (
+              <button
+                className="ebn-btn-primary"
+                onClick={() => applyActions(m.pendingActions, i)}
+              >
+                Apply {m.pendingActions.length} Action(s)
+              </button>
+            )}
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
       <form className="ebn-copilot__input" onSubmit={onSubmit}>
-        <select
-          value={provider}
-          onChange={(e) => {
-            const p = e.target.value;
-            setProvider(p);
-            setModel(PROVIDERS[p].models[0]);
-          }}
-          disabled={isGenerating}
-          title="LLM provider"
-        >
-          {Object.entries(PROVIDERS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
-        </select>
-        <select
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
-          disabled={isGenerating}
-          title="Model"
-        >
-          {PROVIDERS[provider].models.map(m => <option key={m} value={m}>{m}</option>)}
-        </select>
-        {PROVIDERS[provider].isCloud && (
-          <button
-            type="button"
-            onClick={() => setShowKeyEditor(s => !s)}
-            title="Set API key"
-          >🔑</button>
-        )}
-        <input
-          type="text"
-          placeholder={isGenerating ? "Thinking..." : "Ask the copilot..."}
+        <textarea
+          rows={1}
+          placeholder={isGenerating ? "Thinking..." : "Ask the copilot…  (Enter to send, Shift+Enter for newline)"}
           value={chatInput}
-          onChange={(e) => setChatInput(e.target.value)}
+          onChange={(e) => { setChatInput(e.target.value); autoSize(e.target); }}
+          onKeyDown={onTextareaKeyDown}
           disabled={isGenerating}
         />
         <button type="submit" disabled={isGenerating}>Send</button>

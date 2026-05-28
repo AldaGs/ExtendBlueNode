@@ -8,6 +8,47 @@
   font-size: 13px;
 }
 
+.ebn-copilot__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid var(--ebn-border);
+  background: var(--ebn-bg-header);
+}
+
+.ebn-copilot__select {
+  flex: 1;
+  min-width: 0;
+  background: var(--ebn-bg-input);
+  color: var(--ebn-fg-primary);
+  border: 1px solid var(--ebn-border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.ebn-copilot__select:focus {
+  border-color: var(--ebn-accent);
+}
+
+.ebn-copilot__keybtn {
+  flex: 0 0 auto;
+  background: var(--ebn-bg-input);
+  border: 1px solid var(--ebn-border);
+  border-radius: 8px;
+  padding: 5px 9px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.ebn-copilot__keybtn:hover {
+  border-color: var(--ebn-accent);
+}
+
 .ebn-copilot__history {
   flex: 1;
   overflow-y: auto;
@@ -18,8 +59,8 @@
 }
 
 .ebn-copilot__msg {
-  padding: 8px;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
   line-height: 1.4;
   word-wrap: break-word;
 }
@@ -46,34 +87,41 @@
 
 .ebn-copilot__input {
   display: flex;
+  align-items: flex-end;
   border-top: 1px solid var(--ebn-border);
   padding: 8px;
+  gap: 8px;
   background: var(--ebn-bg-header);
 }
 
-.ebn-copilot__input input {
+.ebn-copilot__input textarea {
   flex: 1;
   background: var(--ebn-bg-input);
   border: 1px solid var(--ebn-border);
   color: var(--ebn-fg-primary);
-  padding: 6px 8px;
-  border-radius: 4px;
+  padding: 8px 10px;
+  border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
+  line-height: 1.4;
   outline: none;
+  resize: none;
+  overflow-y: auto;
+  min-height: 20px;
+  max-height: 200px;
 }
 
-.ebn-copilot__input input:focus {
+.ebn-copilot__input textarea:focus {
   border-color: var(--ebn-accent);
 }
 
 .ebn-copilot__input button {
-  margin-left: 8px;
+  flex: 0 0 auto;
   background: var(--ebn-accent);
   color: #fff;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 10px;
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
@@ -90,6 +138,7 @@
 
 .ebn-copilot__msg button {
   margin-top: 8px;
+  border-radius: 8px;
 }
 
 .ebn-copilot__keyrow {
@@ -104,8 +153,16 @@
   background: var(--ebn-bg-input, #1c1c1c);
   color: var(--ebn-fg-primary);
   border: 1px solid var(--ebn-border, #2a2a2a);
-  border-radius: 3px;
-  padding: 4px 6px;
+  border-radius: 8px;
+  padding: 5px 8px;
   font-family: var(--ebn-font-mono);
   font-size: 12px;
+}
+.ebn-copilot__keyrow button {
+  border-radius: 8px;
+  border: 1px solid var(--ebn-border, #2a2a2a);
+  background: var(--ebn-bg-input, #1c1c1c);
+  color: var(--ebn-fg-primary);
+  padding: 5px 10px;
+  cursor: pointer;
 }
