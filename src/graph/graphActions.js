@@ -57,3 +57,87 @@ export function filterConnectActions(actions, labelOf, handlesForLabel) {
 }
 
 export const _isExecHandle = isExecHandle; // exported for tests
+
+// Resolve the exec input / output handle id for a label (prefer the canonical
+// exec_in / exec_out, else any handle starting with "exec").
+function execInOf(handles) {
+  if (handles.inputs.has('exec_in')) return 'exec_in';
+  for (const h of handles.inputs) if (isExecHandle(h)) return h;
+  return null;
+}
+function execOutOf(handles) {
+  if (handles.outputs.has('exec_out')) return 'exec_out';
+  for (const h of handles.outputs) if (isExecHandle(h)) return h;
+  return null;
+}
+
+/**
+ * Recover a runnable exec chain when the model proposed action nodes but did
+ * not wire them (the "all orphans" case). Chains action nodes (those with BOTH
+ * an exec input and an exec output) in their proposed ORDER, filling only gaps
+ * — it never adds a second exec_out to a node that already continues, nor a
+ * second exec_in to a node already triggered, so model-supplied wiring wins.
+ *
+ * If nothing can act as a root (no node with an exec output but no exec input,
+ * and no Start / Get Active Comp), injects a Start node to anchor the walk.
+ *
+ * @param {{id:string,label:string}[]} orderedNodes  valid proposed nodes, in order
+ * @param {object[]} modelConnects                   the model's connect_nodes actions
+ * @param {(label:string)=>{inputs:Set<string>,outputs:Set<string>}} handlesForLabel
+ * @param {{injectStart?:boolean, startId?:string}} [opts]
+ * @returns {{ startNode: object|null, chainEdges: object[] }}
+ */
+export function autoChainActions(orderedNodes, modelConnects, handlesForLabel, opts = {}) {
+  const hOf = (label) => handlesForLabel(label);
+  const execIn = (label) => execInOf(hOf(label));
+  const execOut = (label) => execOutOf(hOf(label));
+
+  // Existing exec connectivity from the model's edges.
+  const hasIn = new Set();
+  const hasOut = new Set();
+  for (const a of modelConnects) {
+    if (a.action !== 'connect_nodes') continue;
+    const { sourceId, sourceHandle, targetId, targetHandle } = a.args || {};
+    if (isExecHandle(targetHandle)) hasIn.add(targetId);
+    if (isExecHandle(sourceHandle)) hasOut.add(sourceId);
+  }
+
+  const actionNodes = orderedNodes.filter((n) => execIn(n.label) && execOut(n.label));
+  if (!actionNodes.length) return { startNode: null, chainEdges: [] };
+
+  const labels = new Set(orderedNodes.map((n) => n.label));
+  const hasRoot =
+    orderedNodes.some((n) => execOut(n.label) && !execIn(n.label)) ||
+    labels.has('Start') ||
+    labels.has('Get Active Comp');
+
+  let startNode = null;
+  if (!hasRoot && opts.injectStart !== false) {
+    startNode = {
+      action: 'propose_node',
+      args: { id: opts.startId || `bp_start_${Date.now().toString(36)}`, label: 'Start' },
+    };
+  }
+
+  const seq = startNode
+    ? [{ id: startNode.args.id, label: 'Start' }, ...actionNodes]
+    : actionNodes;
+
+  const chainEdges = [];
+  for (let i = 1; i < seq.length; i++) {
+    const prev = seq[i - 1];
+    const cur = seq[i];
+    if (hasOut.has(prev.id) || hasIn.has(cur.id)) continue; // don't clobber model wiring
+    const so = execOut(prev.label);
+    const ti = execIn(cur.label);
+    if (!so || !ti) continue;
+    chainEdges.push({
+      action: 'connect_nodes',
+      args: { sourceId: prev.id, sourceHandle: so, targetId: cur.id, targetHandle: ti },
+    });
+    hasOut.add(prev.id);
+    hasIn.add(cur.id);
+  }
+
+  return { startNode, chainEdges };
+}

@@ -130,7 +130,8 @@ Paste existing ExtendScript, get the visual graph that would generate it — for
 - [x] **Auto-layout** — `src/graph/blueprintLayout.js` `layoutGraphTopo`: longest-path layering places the exec chain left→right with data feeders in earlier columns and siblings stacked. No `dagre` dependency (offline-safe). Unit-tested.
 - [x] **Replace or append** — a "Replace canvas" checkbox swaps the current graph for the translation, or appends to it.
 - [x] **Robust edge filter** (`src/graph/graphActions.js`) — the apply pipeline now rejects, with a per-reason report: duplicate edges, edges to missing nodes, nonexistent handles, **exec/data type mismatches** (an exec output sprayed into data inputs — the "fan"), and **competing wires into one input** (one-wire-per-input). Pure + unit-tested.
-- [ ] **Next**: true diff/merge against the current graph (highlight what changed before applying); a deterministic pre-parser to seed the LLM with statement structure for long programs; auto-chain orphan action nodes when the model omits the exec wiring.
+- [x] **Auto-chain recovery** (`autoChainActions`) — when the model proposes action nodes but leaves them unwired (the "all orphans" compile), the pipeline chains them in proposed order and injects a `Start` anchor if there's no root, so a blueprint actually runs. Gap-filling only — never clobbers model-supplied wiring. Reported in the reply. Pure + unit-tested.
+- [ ] **Next**: true diff/merge against the current graph (highlight what changed before applying); a deterministic pre-parser to seed the LLM with statement structure for long programs.
 
 ## 8. Polish & distribution
 

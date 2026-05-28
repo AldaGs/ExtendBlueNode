@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { filterConnectActions } from './graphActions';
+import { filterConnectActions, autoChainActions } from './graphActions';
 
 // Minimal fake library: two node labels with known handles.
 const HANDLES = {
@@ -75,5 +75,64 @@ describe('filterConnectActions', () => {
       [conn('r', 'out', 'b', 'arg1')], labelOf, handlesForLabel,
     );
     expect(valid).toHaveLength(1);
+  });
+});
+
+describe('autoChainActions', () => {
+  const H = {
+    Start: { inputs: new Set(), outputs: new Set(['exec_out']) },
+    'Get Active Comp': { inputs: new Set(['exec_in']), outputs: new Set(['exec_out', 'comp']) },
+    'Set Property': { inputs: new Set(['exec_in', 'layer', 'value']), outputs: new Set(['exec_out']) },
+    'Read Value at Time': { inputs: new Set(['layer', 'time']), outputs: new Set(['value']) },
+  };
+  const hfl = (l) => H[l] || { inputs: new Set(), outputs: new Set() };
+  const n = (id, label) => ({ id, label });
+  const conn = (s, sh, t, th) => ({ action: 'connect_nodes', args: { sourceId: s, sourceHandle: sh, targetId: t, targetHandle: th } });
+
+  it('injects a Start and chains unwired action nodes in order', () => {
+    const ordered = [n('a', 'Set Property'), n('b', 'Set Property')];
+    const { startNode, chainEdges } = autoChainActions(ordered, [], hfl, { startId: 's0' });
+    expect(startNode.args.label).toBe('Start');
+    // Start -> a -> b
+    expect(chainEdges).toHaveLength(2);
+    expect(chainEdges[0].args).toMatchObject({ sourceId: 's0', sourceHandle: 'exec_out', targetId: 'a', targetHandle: 'exec_in' });
+    expect(chainEdges[1].args).toMatchObject({ sourceId: 'a', targetId: 'b' });
+  });
+
+  it('does not inject Start when a root already exists (Get Active Comp)', () => {
+    const ordered = [n('g', 'Get Active Comp'), n('a', 'Set Property')];
+    const { startNode, chainEdges } = autoChainActions(ordered, [], hfl);
+    expect(startNode).toBeNull();
+    expect(chainEdges).toHaveLength(1);
+    expect(chainEdges[0].args).toMatchObject({ sourceId: 'g', targetId: 'a' });
+  });
+
+  it('fills only gaps — never clobbers a model-supplied exec edge', () => {
+    const ordered = [n('g', 'Get Active Comp'), n('a', 'Set Property'), n('b', 'Set Property')];
+    // Model already wired g -> b. So g is "out", b is "in"; only a is loose.
+    const model = [conn('g', 'exec_out', 'b', 'exec_in')];
+    const { chainEdges } = autoChainActions(ordered, model, hfl);
+    // g already continues (to b) and b already triggered, so no g->a or a->b
+    // would clobber; the only safe edge is none here (a stays loose rather than
+    // creating a second exec_out on g or second exec_in on b).
+    for (const e of chainEdges) {
+      expect(e.args.sourceId).not.toBe('g'); // g already has an exec_out
+      expect(e.args.targetId).not.toBe('b'); // b already has an exec_in
+    }
+  });
+
+  it('ignores data-only nodes (no exec handles)', () => {
+    const ordered = [n('r', 'Read Value at Time'), n('a', 'Set Property')];
+    const { startNode, chainEdges } = autoChainActions(ordered, [], hfl, { startId: 's0' });
+    // Only 'a' is an action node; Start injected and chained to a, r untouched.
+    expect(startNode.args.label).toBe('Start');
+    expect(chainEdges).toHaveLength(1);
+    expect(chainEdges[0].args).toMatchObject({ sourceId: 's0', targetId: 'a' });
+  });
+
+  it('returns nothing when there are no action nodes', () => {
+    const { startNode, chainEdges } = autoChainActions([n('r', 'Read Value at Time')], [], hfl);
+    expect(startNode).toBeNull();
+    expect(chainEdges).toHaveLength(0);
   });
 });

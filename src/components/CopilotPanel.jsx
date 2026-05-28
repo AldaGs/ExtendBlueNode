@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { flattenLibrary, getNodeCatalogSummary } from '../nodeLibrary';
 import { getScriptUIPromptSection } from '../graph/scriptUITree';
 import { layoutGraphTopo } from '../graph/blueprintLayout';
-import { filterConnectActions } from '../graph/graphActions';
+import { filterConnectActions, autoChainActions } from '../graph/graphActions';
 import { CLOUD_PROVIDERS, getStoredKey, setStoredKey, callCloud } from '../services/cloudLlmService';
 import './CopilotPanel.css'; // Let's create this file next
 
@@ -385,11 +385,30 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
         }
       }
 
+      // Blueprint recovery: if the model proposed action nodes but left them
+      // unwired, deterministically chain them in proposed order (and anchor a
+      // Start if there's no root) so the result actually runs instead of
+      // compiling to all-orphans. Gap-filling only — never clobbers model edges.
+      let extraEdges = [];
+      let autoChainedCount = 0;
+      let startInjected = false;
+      if (blueprintMode) {
+        const ordered = [...proposedNodeLabel.entries()].map(([id, label]) => ({ id, label }));
+        const { startNode, chainEdges } = autoChainActions(ordered, actions, handlesForLabel);
+        if (startNode) {
+          validActions.push(startNode);
+          proposedNodeLabel.set(startNode.args.id, 'Start');
+          startInjected = true;
+        }
+        extraEdges = chainEdges;
+        autoChainedCount = chainEdges.length;
+      }
+
       // Edge validation pass (see graphActions.filterConnectActions): drops
       // duplicates, edges to missing nodes, nonexistent handles, exec/data
       // type mismatches (the "fan"), and competing wires into one input.
       const labelOf = (id) => proposedNodeLabel.get(id) || existingNodeLabel.get(id) || null;
-      const { valid: validEdges, dropped } = filterConnectActions(actions, labelOf, handlesForLabel);
+      const { valid: validEdges, dropped } = filterConnectActions([...actions, ...extraEdges], labelOf, handlesForLabel);
       validActions.push(...validEdges);
       const droppedDuplicate = dropped.duplicate;
       const droppedBadHandle = dropped.badHandle;
@@ -408,6 +427,12 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
         + droppedTypeMismatch + droppedInputTaken;
       if (edgeDrops) {
         finalReply += `\n\n⚠ ${edgeDrops} edge(s) rejected (${droppedDuplicate} duplicate, ${droppedBadHandle} bad handle, ${droppedMissingNode} missing node, ${droppedTypeMismatch} exec/data mismatch, ${droppedInputTaken} input already wired).`;
+      }
+      if (autoChainedCount || startInjected) {
+        const bits = [];
+        if (startInjected) bits.push('added a Start anchor');
+        if (autoChainedCount) bits.push(`chained ${autoChainedCount} unwired action node(s)`);
+        finalReply += `\n\n🔗 Auto-recovered exec flow: ${bits.join(' and ')}.`;
       }
 
       setMessages(msgs => {
