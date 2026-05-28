@@ -8,6 +8,8 @@
 //   factory(flowPos) -> a React Flow node payload, ready for setNodes
 
 import { NODE_THEME } from './graph/initialGraph';
+import { AE_NODE_LIBRARY } from './generated/aeNodeLibrary';
+import { JS_NODE_LIBRARY } from './jsNodeLibrary';
 
 let counter = 0;
 function uid(prefix) {
@@ -15,7 +17,7 @@ function uid(prefix) {
   return `${prefix}_${Date.now().toString(36)}_${counter}`;
 }
 
-export const NODE_LIBRARY = [
+const _BASE_NODE_LIBRARY = [
   {
     category: 'Flow',
     items: [
@@ -28,6 +30,85 @@ export const NODE_LIBRARY = [
           type: 'reroute',
           position: { x: pos.x - 6, y: pos.y - 6 },
           data: {},
+        }),
+      },
+      {
+        type: 'start',
+        label: 'Start',
+        keywords: ['entry', 'begin', 'on run', 'main'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Start',
+            category: 'flow',
+            themeColor: NODE_THEME.selector,
+            inputs: [],
+            outputs: [{ id: 'exec_out', label: 'Execution' }],
+          },
+        }),
+      },
+      {
+        type: 'debug',
+        label: 'Debug',
+        keywords: ['log', 'inspect', 'print', 'alert', 'console'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Debug',
+            category: 'flow',
+            themeColor: NODE_THEME.action,
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'value',   label: 'Value',     type: 'expr'  },
+              { id: 'label',   label: 'Label',     type: 'text', placeholder: 'tag (optional)' },
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' },
+              { id: 'value',    label: 'Value' },
+            ],
+            values: { label: '' },
+          },
+        }),
+      },
+      {
+        type: 'getApplication',
+        label: 'Get Application',
+        keywords: ['app', 'application', 'global'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Get Application',
+            category: 'data',
+            themeColor: NODE_THEME.selector,
+            inputs: [],
+            outputs: [{ id: 'value', label: 'app' }],
+          },
+        }),
+      },
+      {
+        type: 'getProjectItems',
+        label: 'Get Project Items',
+        keywords: ['project', 'items', 'app', 'itemcollection', 'addComp'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Get Project Items',
+            category: 'data',
+            themeColor: NODE_THEME.selector,
+            inputs: [],
+            // Shorthand for Get Application → Application Get project →
+            // Project Get items. Wire this straight into addComp's
+            // "ItemCollection" input.
+            outputs: [{ id: 'value', label: 'items' }],
+          },
         }),
       },
     ],
@@ -228,6 +309,75 @@ export const NODE_LIBRARY = [
         }),
       },
       {
+        type: 'colorPicker',
+        label: 'Color Picker',
+        keywords: ['color', 'rgb', 'hex', 'hsv', 'palette'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Color Picker',
+            category: 'data',
+            themeColor: '#e84393',
+            inputs: [
+              { id: 'color', label: 'Color', type: 'color' },
+            ],
+            outputs: [
+              { id: 'hex', label: 'HEX' },
+              { id: 'rgb', label: 'RGB [0-1]' },
+              { id: 'rgba', label: 'RGBA [0-1]' },
+              { id: 'rgb255', label: 'RGB [0-255]' },
+            ],
+            values: { color: '#ff0000' },
+          },
+        }),
+      },
+      {
+        type: 'newFile',
+        label: 'New File',
+        keywords: ['file', 'path', 'io'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'New File',
+            category: 'data',
+            themeColor: '#e67e22',
+            inputs: [
+              { id: 'path', label: 'Path', type: 'text', placeholder: '~/Desktop/render.png' },
+            ],
+            outputs: [
+              { id: 'file', label: 'File' },
+            ],
+            values: { path: '' },
+          },
+        }),
+      },
+      {
+        type: 'newFolder',
+        label: 'New Folder',
+        keywords: ['folder', 'path', 'io', 'directory'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'New Folder',
+            category: 'data',
+            themeColor: '#e67e22',
+            inputs: [
+              { id: 'path', label: 'Path', type: 'text', placeholder: '~/Desktop/renders' },
+            ],
+            outputs: [
+              { id: 'folder', label: 'Folder' },
+            ],
+            values: { path: '' },
+          },
+        }),
+      },
+      {
         type: 'splitVec',
         label: 'Split Vector',
         keywords: ['split', 'vector', 'decompose', 'xy', 'components', 'x', 'y'],
@@ -401,30 +551,71 @@ export const NODE_LIBRARY = [
   },
 ];
 
+export const NODE_LIBRARY = [
+  ..._BASE_NODE_LIBRARY,
+  ...JS_NODE_LIBRARY,
+  {
+    category: 'After Effects DOM',
+    subcategories: AE_NODE_LIBRARY
+  }
+];
+
 // Flattened list with category attached — handy for search ranking.
 export function flattenLibrary() {
   const out = [];
   for (const cat of NODE_LIBRARY) {
-    for (const item of cat.items) {
-      out.push({ ...item, category: cat.category });
+    if (cat.items) {
+      for (const item of cat.items) {
+        out.push({ ...item, category: cat.category });
+      }
+    }
+    if (cat.subcategories) {
+      for (const sub of cat.subcategories) {
+        if (sub.items) {
+          for (const item of sub.items) {
+            out.push({ ...item, category: `${cat.category} > ${sub.category}` });
+          }
+        }
+      }
     }
   }
   return out;
 }
 
-// Find the first input/output port on a node template that matches a source
-// handle being dropped onto empty canvas. Used to auto-wire after pick.
-export function findCompatibleHandle(nodeData, role, isExec) {
-  // role = 'target' (we need an input) | 'source' (we need an output)
+// Build a human-readable catalog of every node, including its input/output handles.
+// Used to inject the allowed vocabulary into the Copilot LLM's system prompt so
+// it stops hallucinating node types that don't exist.
+export function getNodeCatalogSummary() {
+  const lines = [];
+  for (const entry of flattenLibrary()) {
+    let inputs = [];
+    let outputs = [];
+    try {
+      const sample = entry.factory({ x: 0, y: 0 });
+      const data = sample?.data || {};
+      inputs = Array.isArray(data.inputs) ? data.inputs.map(p => p.id) : [];
+      outputs = Array.isArray(data.outputs) ? data.outputs.map(p => p.id) : [];
+    } catch {
+      // Some node types (reroute, getGlobal, setGlobal) don't declare inputs/outputs;
+      // fall back to an empty handle list rather than crashing the prompt build.
+    }
+    const inStr = inputs.length ? inputs.join(', ') : '—';
+    const outStr = outputs.length ? outputs.join(', ') : '—';
+    lines.push(`- "${entry.label}" (Inputs: ${inStr}. Outputs: ${outStr})`);
+  }
+  return lines.join('\n');
+}
+
+// Find a handle to auto-wire to after dropping a node on the pane.
+//
+// Policy: auto-wire ONLY for handle-less nodes (e.g. reroute) — anything
+// with declared input/output ports must be wired explicitly by the user,
+// because picking the wrong port silently is more confusing than no wire.
+export function findCompatibleHandle(nodeData, role /*, isExec */) {
   if (role === 'target') {
     const inputs = nodeData?.inputs || [];
-    // reroute has no inputs[] structure but always exposes 'in'
-    if (!inputs.length) return 'in';
-    if (isExec) return inputs.find((p) => p.type === 'exec')?.id ?? null;
-    return inputs.find((p) => p.type !== 'exec')?.id ?? null;
+    return inputs.length ? null : 'in';
   }
   const outputs = nodeData?.outputs || [];
-  if (!outputs.length) return 'out';
-  if (isExec) return outputs.find((p) => p.id === 'exec_out')?.id ?? null;
-  return outputs.find((p) => p.id !== 'exec_out')?.id ?? null;
+  return outputs.length ? null : 'out';
 }

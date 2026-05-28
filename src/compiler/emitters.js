@@ -8,9 +8,12 @@
 // ctx shape:
 //   resolveInput(node, port) -> string  (JS expression text)
 //   globals: GlobalVariable[]
-//   walkBranch(nodeId, handleId) -> IRStmt[]  // DFS following an exec_out
-
 import { ir } from './ir';
+import { AE_NODE_EMITTERS, AE_DATA_EMITTERS } from '../generated/aeEmitters';
+import {
+  serializeTreeToResourceString,
+  rootTypeToMode,
+} from '../graph/scriptUITree';
 
 /* ----------------------------- property paths ----------------------------- */
 
@@ -115,10 +118,207 @@ const EBN_NODE_EMITTERS = {
     return [ir.varDecl(name, expr)];
   },
 
+  'Array Push': (node, ctx) => {
+    const arr = ctx.resolveInput(node, { id: 'array', type: 'expr' });
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${arr}.push(${val});`)];
+  },
+
+  'Object Set Key': (node, ctx) => {
+    const obj = ctx.resolveInput(node, { id: 'object', type: 'expr' });
+    const key = ctx.resolveInput(node, { id: 'key', type: 'text' });
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${obj}[${key}] = ${val};`)];
+  },
+
+  // Pure entry point — emits no code, just anchors the exec chain.
+  'Start': () => [],
+
+  'Save JSON': (node, ctx) => {
+    const payload = ctx.resolveInput(node, { id: 'payload', type: 'expr', default: '{}' });
+    const dirMode = node.data?.values?.directory_mode || 'Auto';
+    const stmts = [];
+    if (dirMode === 'Auto') {
+      const fileName = ctx.resolveInput(node, { id: 'file_name', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('_ebn_userData', 'Folder.userData.fsName'),
+        ir.varDecl('_ebn_safeFolder', 'new Folder(_ebn_userData + "/EBN_Saves")'),
+        ir.raw('if (!_ebn_safeFolder.exists) { _ebn_safeFolder.create(); }'),
+        ir.varDecl('targetFile', `new File(_ebn_safeFolder.fsName + "/" + ${fileName})`)
+      );
+    } else {
+      const fullPath = ctx.resolveInput(node, { id: 'full_path', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('targetFile', `new File(${fullPath})`)
+      );
+    }
+    stmts.push(
+      ir.raw('targetFile.open("w");'),
+      ir.raw(`targetFile.write(JSON.stringify(${payload}, undefined, 4));`),
+      ir.raw('targetFile.close();')
+    );
+    return stmts;
+  },
+
+  'Load JSON': (node, ctx) => {
+    const dirMode = node.data?.values?.directory_mode || 'Auto';
+    const stmts = [];
+    if (dirMode === 'Auto') {
+      const fileName = ctx.resolveInput(node, { id: 'file_name', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('_ebn_userData', 'Folder.userData.fsName'),
+        ir.varDecl('_ebn_safeFolder', 'new Folder(_ebn_userData + "/EBN_Saves")'),
+        ir.raw('if (!_ebn_safeFolder.exists) { _ebn_safeFolder.create(); }'),
+        ir.varDecl('targetFile', `new File(_ebn_safeFolder.fsName + "/" + ${fileName})`)
+      );
+    } else {
+      const fullPath = ctx.resolveInput(node, { id: 'full_path', type: 'text', default: '""' });
+      stmts.push(
+        ir.varDecl('targetFile', `new File(${fullPath})`)
+      );
+    }
+    const outVar = ctx.varName(node);
+    stmts.push(
+      ir.varDecl(outVar, 'null'),
+      ir.raw('if (targetFile.exists) {'),
+      ir.raw('    targetFile.open("r");'),
+      ir.raw('    var rawData = targetFile.read();'),
+      ir.raw('    targetFile.close();'),
+      ir.raw('    try {'),
+      ir.raw(`        ${outVar} = JSON.parse(rawData);`),
+      ir.raw('    } catch(e) {'),
+      ir.raw(`        ${outVar} = {}; // Fallback on corrupt JSON`),
+      ir.raw('    }'),
+      ir.raw('} else {'),
+      ir.raw(`    ${outVar} = {}; // Fallback on missing file`),
+      ir.raw('}')
+    );
+    return stmts;
+  },
+
+  // --- ScriptUI ---
+  'ScriptUI Builder': (node, ctx) => {
+    // Tree-first: serialize the structured model when present; fall back to
+    // the legacy resource string for un-migrated nodes.
+    const tree = node.data?.values?.scriptUITree;
+    const resource = tree
+      ? serializeTreeToResourceString(tree)
+      : (node.data?.values?.scriptUI_string || '');
+    const stringLiteral = JSON.stringify(resource);
+    const stringVar = ctx.varName(node) + '_String';
+    const winVar = ctx.varName(node) + '_Window';
+    // Window type is owned by the tree root; legacy nodes use ui_mode.
+    const mode = tree
+      ? rootTypeToMode(tree.type)
+      : (node.data?.values?.ui_mode || 'window');
+    // Panel mode: when AE runs this script as a dockable panel it binds the
+    // Panel to `this`; reuse it, otherwise fall back to a floating window so
+    // the same graph still runs from the ScriptUI launcher / ESTK.
+    const init =
+      mode === 'panel'
+        ? `(this instanceof Panel) ? this : new Window(${stringVar})`
+        : `new Window(${stringVar})`;
+    return [
+      ir.varDecl(stringVar, stringLiteral),
+      ir.varDecl(winVar, init),
+    ];
+  },
+  'UI Event Listener': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'null' });
+    const eventType = node.data?.values?.event_type || 'onClick';
+    // exec_callback = code that runs when the event fires.
+    const callback = ctx.walkBranch(node.id, 'exec_callback');
+    // exec_out = the rest of the setup chain (attach more listeners / show).
+    const cont = ctx.walkBranch(node.id, 'exec_out');
+    return [
+      ir.funcAssign(`${target}.${eventType}`, [], callback),
+      ...cont,
+    ];
+  },
+  'Show Window': (node, ctx) => {
+    const winObj = ctx.resolveInput(node, { id: 'window_obj', type: 'expr', default: 'null' });
+    // Lay out, then show only a real Window. A dockable Panel (panel mode)
+    // is already on screen, so calling .show() on it would throw — guard it.
+    return [
+      ir.raw(`if (${winObj}) { ${winObj}.layout.layout(true); if (${winObj} instanceof Window) ${winObj}.show(); }`),
+    ];
+  },
+  'Custom UI Code': (node, ctx) => {
+    const customCode = node.data?.values?.scriptUI_string || '';
+    return [
+      ir.raw(`// --- Custom UI Code Block ---`),
+      ir.raw(customCode)
+    ];
+  },
+
+  // --- JS control flow (self-branching; see SELF_BRANCHING_LABELS) ---
+  'For Loop': (node, ctx) => {
+    const start = ctx.resolveInput(node, { id: 'start', type: 'number', default: '0' });
+    const end   = ctx.resolveInput(node, { id: 'end',   type: 'number', default: '10' });
+    const step  = ctx.resolveInput(node, { id: 'step',  type: 'number', default: '1' });
+    const idx   = forLoopIndexVar(node, ctx);
+    const body  = ctx.walkBranch(node.id, 'exec_body');
+    const done  = ctx.walkBranch(node.id, 'exec_done');
+    return [
+      ir.forIn(`var ${idx} = ${start}`, `${idx} < ${end}`, `${idx} += ${step}`, body),
+      ...done,
+    ];
+  },
+  'While Loop': (node, ctx) => {
+    const cond = ctx.resolveInput(node, { id: 'cond', type: 'expr', default: 'true' });
+    const body = ctx.walkBranch(node.id, 'exec_body');
+    const done = ctx.walkBranch(node.id, 'exec_done');
+    return [ir.whileLoop(cond, body), ...done];
+  },
+  'For Each (Array)': (node, ctx) => {
+    const arr  = ctx.resolveInput(node, { id: 'array', type: 'expr', default: '[]' });
+    const arrV = `${ctx.varName(node)}_arr`;
+    const idxV = forEachArrayIndexVar(node, ctx);
+    const itmV = forEachArrayItemVar(node, ctx);
+    const body = ctx.walkBranch(node.id, 'exec_body');
+    const done = ctx.walkBranch(node.id, 'exec_done');
+    return [
+      ir.varDecl(arrV, arr),
+      ir.forIn(`var ${idxV} = 0`, `${idxV} < ${arrV}.length`, `${idxV}++`, [
+        ir.varDecl(itmV, `${arrV}[${idxV}]`),
+        ...body,
+      ]),
+      ...done,
+    ];
+  },
+  'Switch Statement': (node, ctx) => {
+    const val = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
+    const cases = [1, 2, 3].map((i) => ({
+      val: ctx.resolveInput(node, { id: `case${i}_val`, type: 'expr', default: 'undefined' }),
+      body: ctx.walkBranch(node.id, `exec_case${i}`),
+    }));
+    const def  = ctx.walkBranch(node.id, 'exec_default');
+    const done = ctx.walkBranch(node.id, 'exec_done');
+    // Lower to an if / else-if chain (=== comparison) — robust in ES3 and
+    // sidesteps switch fall-through surprises.
+    let chain = def;
+    for (let i = cases.length - 1; i >= 0; i--) {
+      chain = [ir.ifElse(`${val} === ${cases[i].val}`, cases[i].body, chain)];
+    }
+    return [...chain, ...done];
+  },
+
+  // Inspector: alerts the resolved value at runtime. Use anywhere in the
+  // exec chain to see what a wire actually carries. `label` is an optional
+  // tag prepended to the alert so multiple Debug nodes are distinguishable.
+  'Debug': (node, ctx) => {
+    const valExpr = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
+    const tag = String(node.data?.values?.label || node.id || 'Debug');
+    // Build a single alert call. ExtendScript coerces objects via toString();
+    // wrap in a try so a bad expr doesn't kill the whole chain.
+    return [ir.raw(`try { alert(${JSON.stringify('DEBUG[' + tag + ']: ')} + String(${valExpr})); } catch (e) { alert(${JSON.stringify('DEBUG[' + tag + '] error: ')} + e.message); }`)];
+  },
+
   // Legacy fixture from the original Phase 5 spec.
   'Set Opacity to 50%': () => [
     ir.raw('targetLayer.property("ADBE Opacity").setValue(50);'),
   ],
+  ...AE_NODE_EMITTERS,
 };
 
 /* ----------------------------- top-level dispatcher ----------------------------- */
@@ -177,9 +377,33 @@ export function emitterFor(node) {
 
 /* ----------------------------- control-flow flags ----------------------------- */
 
+// Stable per-node index variable for a "For Loop" node. Shared by the exec
+// emitter (loop header) and the data-side resolver (its `index` output).
+export function forLoopIndexVar(node, ctx) {
+  return `${ctx.varName(node)}_i`;
+}
+
+// Stable per-node loop vars for "For Each (Array)". Shared by the exec
+// emitter and the `item` / `index` data-side resolvers.
+export function forEachArrayIndexVar(node, ctx) {
+  return `${ctx.varName(node)}_i`;
+}
+export function forEachArrayItemVar(node, ctx) {
+  return `${ctx.varName(node)}_item`;
+}
+
 // Nodes whose emitter takes ownership of their own downstream walking —
 // the orchestrator must NOT auto-recurse along their exec_out edges.
+// Keyed by node.type for the dedicated node kinds…
 export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
+// …and by ebnNode label for the JS control-flow nodes (which are all
+// type 'ebnNode'). astCompiler checks both.
+export const SELF_BRANCHING_LABELS = new Set([
+  'For Loop', 'While Loop', 'Switch Statement', 'For Each (Array)',
+  // Walks exec_callback (handler body) itself and continues via exec_out, so
+  // the orchestrator must not auto-follow its outgoing exec edges.
+  'UI Event Listener',
+]);
 
 /* ----------------------------- data-side expression resolution ----------------------------- */
 
@@ -249,11 +473,28 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
     return 'loopLayer';
   }
 
+  // For loop output
+  if (node.type === 'forLoop') {
+    if (outputHandle === 'index') {
+      return ctx.varName(node) + '_i';
+    }
+  }
+
   // Data-side ebnNode dispatch — keyed by label so these nodes can use
   // the generic shell and still participate in expression composition.
   if (node.type === 'ebnNode') {
-    const fn = EBN_DATA_EMITTERS[node.data?.label];
-    if (fn) return fn(node, ctx);
+    const label = node.data?.label;
+    const fn = EBN_DATA_EMITTERS[label];
+    if (fn) return fn(node, ctx, outputHandle);
+    // Generic fallback: every action node's exec emitter assigns its return
+    // value to `ctx.varName(node)`. When something downstream wires that
+    // node's `result` output, just reuse that variable name — that's what
+    // the action produced. Without this, `addComp.result` → `openInViewer`
+    // silently falls back to the `activeComp` default and the wire does
+    // nothing visible.
+    if (outputHandle === 'result' && EBN_NODE_EMITTERS[label]) {
+      return ctx.varName(node);
+    }
   }
 
   return null;
@@ -262,6 +503,38 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
 /* ----------------------------- data-side label dispatch ----------------------------- */
 
 const EBN_DATA_EMITTERS = {
+  // Expose execution variables to the data graph when explicitly wired
+  'Get Active Comp': () => 'activeComp',
+  // The global `app` object — wire into any AE getter's `Application` input.
+  'Get Application': () => 'app',
+  // Shorthand for the ubiquitous Get Application → project → items chain.
+  'Get Project Items': () => 'app.project.items',
+  // Debug's data-side output is a pass-through of its wired `value` input,
+  // so it can be inserted mid-chain on a data wire without breaking it.
+  'Debug': (node, ctx) => ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' }),
+  'Select Layer by ID': () => 'targetLayer',
+  'Select Layer by Name': () => 'targetLayer',
+  'Select Layer by Index': () => 'targetLayer',
+  'Set Local Variable': (node, ctx) => ctx.varName(node),
+
+  'New File': (node, ctx) => {
+    const pathStr = ctx.resolveInput(node, { id: 'path', type: 'text' });
+    return `new File(${pathStr})`;
+  },
+  'New Folder': (node, ctx) => {
+    const pathStr = ctx.resolveInput(node, { id: 'path', type: 'text' });
+    return `new Folder(${pathStr})`;
+  },
+
+  'Color Picker': (node, ctx, outputHandle) => {
+    const hex = ctx.resolveInput(node, { id: 'color', type: 'text', default: '#ff0000' });
+    if (outputHandle === 'hex') return hex;
+    ctx.useHelper?.('ebnHexToRgb');
+    if (outputHandle === 'rgb255') return `ebnHexToRgb(${hex}, 1, false)`;
+    if (outputHandle === 'rgba') return `ebnHexToRgb(${hex}, 255, true)`;
+    return `ebnHexToRgb(${hex}, 255, false)`; // default 'rgb' is 0-1 scale without alpha
+  },
+
   // Reads layer.property("…").property("…").value, reusing the same
   // slash-path expansion as Set Property so paths stay uniform.
   'Get Property Value': (node, ctx) => {
@@ -277,6 +550,118 @@ const EBN_DATA_EMITTERS = {
     const y = ctx.resolveInput(node, { id: 'y', type: 'number' });
     return `[${x}, ${y}]`;
   },
+  
+  // Array
+  'New Array': () => `[]`,
+  'Array Length': (node, ctx) => {
+    const arr = ctx.resolveInput(node, { id: 'array', type: 'expr', default: '[]' });
+    return `${arr}.length`;
+  },
+  'Array Get Element': (node, ctx) => {
+    const arr = ctx.resolveInput(node, { id: 'array', type: 'expr', default: '[]' });
+    const idx = ctx.resolveInput(node, { id: 'index', type: 'number', default: '0' });
+    return `${arr}[${idx}]`;
+  },
+  
+  // Math
+  'Math Function': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'number', default: '0' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'number', default: '0' });
+    const funcName = node.data?.values?.func || 'round';
+    // Math.min/max can take multiple args, others usually one.
+    if (['min', 'max'].includes(funcName)) return `Math.${funcName}(${a}, ${b})`;
+    return `Math.${funcName}(${a})`;
+  },
+  'Math Random': () => `Math.random()`,
+  // Ranged inclusive integer: Math.floor(Math.random()*(max-min+1))+min
+  'Random Integer': (node, ctx) => {
+    const min = ctx.resolveInput(node, { id: 'min', type: 'number', default: '0' });
+    const max = ctx.resolveInput(node, { id: 'max', type: 'number', default: '100' });
+    return `(Math.floor(Math.random() * ((${max}) - (${min}) + 1)) + (${min}))`;
+  },
+  // For Loop's `index` output references the loop's counter variable.
+  'For Loop': (node, ctx, outputHandle) =>
+    outputHandle === 'index' ? forLoopIndexVar(node, ctx) : null,
+  // For Each (Array)'s loop-local outputs.
+  'For Each (Array)': (node, ctx, outputHandle) => {
+    if (outputHandle === 'item') return forEachArrayItemVar(node, ctx);
+    if (outputHandle === 'index') return forEachArrayIndexVar(node, ctx);
+    return null;
+  },
+  // Boolean literal — resolves its (input-or-inline) value as a bool.
+  'Boolean': (node, ctx) =>
+    ctx.resolveInput(node, { id: 'value', type: 'boolean', default: 'false' }),
+  // Logic gates.
+  'And': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr', default: 'false' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'expr', default: 'false' });
+    return `(${a} && ${b})`;
+  },
+  'Or': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr', default: 'false' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'expr', default: 'false' });
+    return `(${a} || ${b})`;
+  },
+  'Not': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr', default: 'false' });
+    return `(!${a})`;
+  },
+  // Conversions.
+  'To String': (node, ctx) =>
+    `String(${ctx.resolveInput(node, { id: 'value', type: 'expr', default: '""' })})`,
+  'Parse Number': (node, ctx) =>
+    `parseFloat(${ctx.resolveInput(node, { id: 'value', type: 'text', default: '"0"' })})`,
+  // Concatenate: string-join two inputs. Resolve as 'text' so inline
+  // literals get quoted while wired upstream expressions pass through raw
+  // (ExtendScript coerces numbers to strings under "+").
+  'Concatenate': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'text', default: '""' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'text', default: '""' });
+    return `(${a} + ${b})`;
+  },
+
+  // String
+  'String Split': (node, ctx) => {
+    const str = ctx.resolveInput(node, { id: 'string', type: 'text', default: '""' });
+    const sep = ctx.resolveInput(node, { id: 'separator', type: 'text', default: '","' });
+    return `${str}.split(${sep})`;
+  },
+  'String Replace': (node, ctx) => {
+    const str = ctx.resolveInput(node, { id: 'string', type: 'text', default: '""' });
+    const find = ctx.resolveInput(node, { id: 'find', type: 'text', default: '""' });
+    const replace = ctx.resolveInput(node, { id: 'replace', type: 'text', default: '""' });
+    return `${str}.replace(${find}, ${replace})`;
+  },
+  'String Length': (node, ctx) => {
+    const str = ctx.resolveInput(node, { id: 'string', type: 'text', default: '""' });
+    return `${str}.length`;
+  },
+
+  // Object
+  'ScriptUI Builder': (node, ctx, outputHandle) => {
+    const winVar = ctx.varName(node) + '_Window';
+    if (outputHandle === 'window_obj') return winVar;
+    if (outputHandle && outputHandle.startsWith('ui_')) {
+      return `${winVar}.${outputHandle.slice(3)}`;
+    }
+    return null;
+  },
+  'Object Builder': (node, ctx) => {
+    const inputs = node.data?.inputs || [];
+    const props = inputs.map(inp => {
+      const keyStr = JSON.stringify(inp.label || inp.id);
+      const valExpr = ctx.resolveInput(node, { id: inp.id, type: 'expr', default: 'null' });
+      return `${keyStr}: ${valExpr}`;
+    });
+    return `{ ${props.join(', ')} }`;
+  },
+  'New Object': () => `{}`,
+  'Object Get Key': (node, ctx) => {
+    const obj = ctx.resolveInput(node, { id: 'object', type: 'expr', default: '{}' });
+    const key = ctx.resolveInput(node, { id: 'key', type: 'text', default: '""' });
+    return `${obj}[${key}]`;
+  },
+  ...AE_DATA_EMITTERS,
 };
 
 export const MATH_OPS = {

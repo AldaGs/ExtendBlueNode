@@ -6,11 +6,14 @@ import CodeEditor from './components/CodeEditor';
 import PropertiesPanel from './components/PropertiesPanel';
 import GlobalVariablesPanel from './components/GlobalVariablesPanel';
 import CopilotPanel from './components/CopilotPanel';
+import ScriptUIEditor from './components/ScriptUIEditor';
+import ScriptUIBuilderPane from './components/ScriptUIBuilderPane';
 import ViewLeaf from './components/ViewLeaf';
 import ProjectMenu from './components/ProjectMenu';
 import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
+import { scriptUIBuilderOutputs } from './graph/scriptui';
 import {
   setLeafView,
   splitLeaf,
@@ -89,6 +92,27 @@ export default function App() {
       edges: edges.length,
     });
   }, [nodes, edges, globalVariables]);
+
+  // Keep every ScriptUI Builder's output pins in sync with its layout tree
+  // (or legacy resource string) — regardless of selection. (Previously this only ran for the
+  // selected node in PropertiesPanel, so pins went stale after loading a
+  // project or editing the string without selecting the node.) Guarded so
+  // it only writes when a pin set actually changed, avoiding render loops.
+  useEffect(() => {
+    let dirty = false;
+    const next = nodes.map((n) => {
+      if (n.data?.label !== 'ScriptUI Builder') return n;
+      const desired = scriptUIBuilderOutputs(n.data?.values);
+      const cur = n.data?.outputs || [];
+      const same =
+        cur.length === desired.length &&
+        desired.every((o, i) => o.id === cur[i]?.id && o.label === cur[i]?.label);
+      if (same) return n;
+      dirty = true;
+      return { ...n, data: { ...n.data, outputs: desired } };
+    });
+    if (dirty) setNodes(next);
+  }, [nodes, setNodes]);
 
   // Debounced autosave. Cancels the pending write on every subsequent
   // change so we only persist after the user pauses for ~500 ms.
@@ -263,6 +287,23 @@ export default function App() {
             selectedNode={liveSelected}
             setNodes={setNodes}
             onValidityChange={setPropsValid}
+            onRequestScriptUIEditor={(viewId = 'scriptUIEditor') => {
+              setLayout(t => {
+                let foundId = null;
+                function findLeaf(node) {
+                  if (node.type === 'leaf' && node.viewId !== 'canvas') foundId = node.id;
+                  else if (node.type === 'split') {
+                    findLeaf(node.children[0]);
+                    if (!foundId) findLeaf(node.children[1]);
+                  }
+                }
+                findLeaf(t);
+                if (foundId) {
+                  return setLeafView(t, foundId, viewId);
+                }
+                return t;
+              });
+            }}
           />
         ),
       },
@@ -278,7 +319,33 @@ export default function App() {
       },
       copilot: {
         title: 'Copilot',
-        render: () => <CopilotPanel />,
+        render: () => (
+          <CopilotPanel
+            nodes={nodes}
+            edges={edges}
+            setNodes={setNodes}
+            setEdges={setEdges}
+            globalVariables={globalVariables}
+          />
+        ),
+      },
+      scriptUIEditor: {
+        title: 'ScriptUI Editor',
+        render: () => (
+          <ScriptUIEditor
+            selectedNode={liveSelected}
+            setNodes={setNodes}
+          />
+        ),
+      },
+      uiLayout: {
+        title: 'UI Layout',
+        render: () => (
+          <ScriptUIBuilderPane
+            selectedNode={liveSelected}
+            setNodes={setNodes}
+          />
+        ),
       },
     }),
     [

@@ -12,6 +12,14 @@ src/
 
 The simplest path is below — copy-paste, rename, ship.
 
+> **Node inventory & coverage:** see [`NODE_CATALOG.md`](./NODE_CATALOG.md) for the full
+> list of nodes (label, role, inputs/outputs, emitter status). It is auto-generated —
+> after adding or changing a node, run `npm run catalog:nodes` to refresh it, or
+> `npm run audit:nodes` to just check for any node missing an emitter. The audit
+> spawns every node via its factory and verifies the compiler has a matching
+> exec/data emitter, so a "BROKEN" line means the node compiles to an
+> "unknown label" warning.
+
 ---
 
 ## 1. Adding a node that needs no custom UI
@@ -238,3 +246,40 @@ ADBE Transform Group/ADBE Opacity
 You can type the path inline on Set Property, wire a String node with the path as its value, or use the **Property Path** node (under *Data*) which exposes a presets dropdown for the common transform sub-properties plus a free-form path field.
 
 Limitation: match-names with a literal `/` in them aren't supported by the path-splitter yet. If you need one, wire the chain through a chain of separate nodes (planned for a future iteration of Property Path).
+
+---
+
+## ScriptUI panels & dialogs
+
+EBN builds ScriptUI from a declarative **resource string**. Four nodes (under *Javascript › ScriptUI*) cover the whole flow:
+
+| Node | Role | Emits |
+|---|---|---|
+| **ScriptUI Builder** | root generator | `var win = new Window(str)` (Window mode) or `var win = (this instanceof Panel) ? this : new Window(str)` (Panel mode) |
+| **UI Event Listener** | hook a control event into the graph | `el.onClick = function () { … };` |
+| **Show Window** | display it | `win.layout.layout(true); if (win instanceof Window) win.show();` |
+| **Custom UI Code** | escape hatch | raw ExtendScript you write |
+
+### Correct wiring (order matters)
+
+```
+Start ─exec─▶ ScriptUI Builder ─exec─▶ UI Event Listener ─exec─▶ … ─exec─▶ Show Window
+                    │ ui_<name>              ▲ Target Element
+                    └────────────────────────┘
+                                            │ On Event ─exec─▶ (action to run when the event fires)
+```
+
+- **Builder → Listener(s) → Show Window**, in that exec order. Listeners must attach **before** `Show Window`; for a modal `dialog` the compiler emits a warning (console + inline `// Warning:` comment) if you show first, because `.show()` blocks before handlers exist.
+- The Builder auto-parses the resource string and grows one **`ui_<name>`** output pin per named element (`btn: Button { … }` → pin `ui_btn`). Wire that pin into a listener's **Target Element**. Pin parsing is shared with the compiler (`src/graph/scriptui.js`) and runs for every builder on any graph change — no need to select the node.
+- The listener's **On Event** (`exec_callback`) branch is the code that runs when the event fires; its **Execution** (`exec_out`) continues the setup chain to the next listener / Show Window.
+
+### Window vs Panel mode
+
+The Builder's **UI Mode** dropdown (Properties panel):
+
+- **Floating Window** — always `new Window(...)`. Use a `dialog`/`palette`/`window` resource. Good for ESTK / launcher runs.
+- **Dockable Panel** — reuses the AE panel bound to `this` when docked, else opens a window. Use a `palette` resource. `Show Window` is safe either way (it only calls `.show()` on a real Window).
+
+### Editing the layout
+
+Select a **ScriptUI Builder** or **Custom UI Code** node and click **Edit UI Layout** to open the Monaco-backed ScriptUI editor pane for the resource string / custom code.

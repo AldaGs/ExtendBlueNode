@@ -25,9 +25,11 @@ import ForEachSelectedNode from './ForEachSelectedNode';
 import PropertyPathNode from './PropertyPathNode';
 import VectorMathNode from './VectorMathNode';
 import SplitVectorNode from './SplitVectorNode';
+import GroupNode from './GroupNode';
 import AddNodeMenu from './AddNodeMenu';
 import FlowEdge from './FlowEdge';
 import { findCompatibleHandle } from '../nodeLibrary';
+import { groupNodes, ungroupNode } from '../graph/groups';
 
 /* ----------------------------- geometry helpers ----------------------------- */
 
@@ -97,9 +99,11 @@ function FlowCanvasInner({
   // Report selection up to App. Each canvas has its own provider, so this
   // hook only fires for *this* canvas's selection events. The latest
   // canvas to receive a click wins App.selectedNode.
+  const selectedIdsRef = useRef([]);
   useOnSelectionChange({
     onChange: useCallback(
       ({ nodes: selected }) => {
+        selectedIdsRef.current = selected.map((n) => n.id);
         onSelectionChange?.(selected[0] ?? null);
       },
       [onSelectionChange],
@@ -109,6 +113,68 @@ function FlowCanvasInner({
   const rf = useReactFlow();
   const wrapperRef = useRef(null);
   const edgeReconnectSuccessful = useRef(true);
+
+  /* ----------------------------- grouping ----------------------------- */
+
+  // Keep a live ref to edges so the group/ungroup closures (which run inside
+  // a setNodes updater) can read the current edge list without stale capture.
+  const edgesRef = useRef(edges);
+  useEffect(() => { edgesRef.current = edges; }, [edges]);
+
+  const doGroup = useCallback(() => {
+    const ids = selectedIdsRef.current;
+    if (!ids || ids.length < 1) return;
+    // Don't allow grouping a lone group (no-op) but allow 1+ normal nodes.
+    let result = null;
+    setNodes((nds) => {
+      // Compute against the live edges via a ref-free closure: we need both
+      // nodes and edges, so stash the node result and finish in setEdges.
+      result = groupNodes(nds, edgesRef.current, ids);
+      return result ? result.nodes : nds;
+    });
+    if (result) setEdges(() => result.edges);
+  }, [setNodes, setEdges]);
+
+  const doUngroup = useCallback(
+    (groupId) => {
+      let result = null;
+      setNodes((nds) => {
+        result = ungroupNode(nds, edgesRef.current, groupId);
+        return result ? result.nodes : nds;
+      });
+      if (result) setEdges(() => result.edges);
+    },
+    [setNodes, setEdges],
+  );
+
+  // Ctrl/Cmd+G to group the current selection.
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G')) {
+        e.preventDefault();
+        doGroup();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [doGroup]);
+
+  // GroupNode dispatches these DOM events (keeps node.data callback-free).
+  useEffect(() => {
+    const onUngroup = (e) => doUngroup(e.detail?.id);
+    const onRename = (e) => {
+      const { id, label } = e.detail || {};
+      setNodes((nds) =>
+        nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, label } } : n)),
+      );
+    };
+    window.addEventListener('ebn-ungroup', onUngroup);
+    window.addEventListener('ebn-group-rename', onRename);
+    return () => {
+      window.removeEventListener('ebn-ungroup', onUngroup);
+      window.removeEventListener('ebn-group-rename', onRename);
+    };
+  }, [doUngroup, setNodes]);
 
   const nodeTypes = useMemo(
     () => ({
@@ -126,12 +192,73 @@ function FlowCanvasInner({
       propertyPath: PropertyPathNode,
       vecMath: VectorMathNode,
       splitVec: SplitVectorNode,
+      group: GroupNode,
     }),
     [],
   );
 
   // Override the default edge so every wire shows a moving dot.
   const edgeTypes = useMemo(() => ({ default: FlowEdge, flow: FlowEdge }), []);
+
+  // A wire is "live" only if it participates in an exec chain rooted at the
+  // entry node (Get Active Comp) — either an exec edge in that chain, or a
+  // data edge feeding a node that the chain reaches. Inert wires render
+  // without the moving dot so the canvas reads less busy.
+  const liveEdgeIds = useMemo(() => {
+    const live = new Set();
+    const entry = nodes.find((n) => n.data?.label === 'Get Active Comp');
+    if (!entry) return live;
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    const liveNodes = new Set();
+
+    const execStack = [entry.id];
+    while (execStack.length) {
+      const id = execStack.pop();
+      if (liveNodes.has(id)) continue;
+      liveNodes.add(id);
+      const node = byId.get(id);
+      if (!node) continue;
+      for (const e of edges) {
+        if (e.source !== id) continue;
+        const isExec =
+          e.sourceHandle?.startsWith('exec_') && e.targetHandle === 'exec_in';
+        const isReroutePass =
+          node.type === 'reroute' && e.sourceHandle === 'out';
+        if (isExec || isReroutePass) {
+          live.add(e.id);
+          execStack.push(e.target);
+        }
+      }
+    }
+
+    const dataStack = Array.from(liveNodes);
+    const visitedData = new Set();
+    while (dataStack.length) {
+      const id = dataStack.pop();
+      if (visitedData.has(id)) continue;
+      visitedData.add(id);
+      for (const e of edges) {
+        if (e.target !== id) continue;
+        const isExec =
+          e.sourceHandle?.startsWith('exec_') && e.targetHandle === 'exec_in';
+        if (isExec) continue;
+        live.add(e.id);
+        dataStack.push(e.source);
+      }
+    }
+
+    return live;
+  }, [nodes, edges]);
+
+  const decoratedEdges = useMemo(
+    () =>
+      edges.map((e) =>
+        liveEdgeIds.has(e.id) === !!e.data?.live
+          ? e
+          : { ...e, data: { ...e.data, live: liveEdgeIds.has(e.id) } },
+      ),
+    [edges, liveEdgeIds],
+  );
 
   /* ------------ connection + reconnect (one wire per input) ------------ */
 
@@ -214,6 +341,15 @@ function FlowCanvasInner({
 
   const onNodeDragStop = useCallback(
     (_event, dropped) => {
+      // Insert-on-wire is a convenience for *fresh* nodes only. If the
+      // dropped node already participates in any edge, the user is just
+      // repositioning it — never hijack it into a wire. (This is the fix
+      // for "moving nodes around creates connections I didn't want".)
+      const alreadyWired = edges.some(
+        (e) => e.source === dropped.id || e.target === dropped.id,
+      );
+      if (alreadyWired) return;
+
       const c = nodeAnchors(dropped).center;
       const w = dropped.width ?? 40;
       const h = dropped.height ?? 30;
@@ -435,7 +571,7 @@ function FlowCanvasInner({
     >
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={decoratedEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
