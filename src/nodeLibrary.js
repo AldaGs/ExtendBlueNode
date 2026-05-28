@@ -542,19 +542,16 @@ export function getNodeCatalogSummary() {
   return lines.join('\n');
 }
 
-// Find the first input/output port on a node template that matches a source
-// handle being dropped onto empty canvas. Used to auto-wire after pick.
-export function findCompatibleHandle(nodeData, role, isExec) {
-  // role = 'target' (we need an input) | 'source' (we need an output)
+// Find a handle to auto-wire to after dropping a node on the pane.
+//
+// Policy: auto-wire ONLY for handle-less nodes (e.g. reroute) — anything
+// with declared input/output ports must be wired explicitly by the user,
+// because picking the wrong port silently is more confusing than no wire.
+export function findCompatibleHandle(nodeData, role /*, isExec */) {
   if (role === 'target') {
     const inputs = nodeData?.inputs || [];
-    // reroute has no inputs[] structure but always exposes 'in'
-    if (!inputs.length) return 'in';
-    if (isExec) return inputs.find((p) => p.type === 'exec')?.id ?? null;
-    return inputs.find((p) => p.type !== 'exec')?.id ?? null;
+    return inputs.length ? null : 'in';
   }
   const outputs = nodeData?.outputs || [];
-  if (!outputs.length) return 'out';
-  if (isExec) return outputs.find((p) => p.id === 'exec_out')?.id ?? null;
-  return outputs.find((p) => p.id !== 'exec_out')?.id ?? null;
+  return outputs.length ? null : 'out';
 }

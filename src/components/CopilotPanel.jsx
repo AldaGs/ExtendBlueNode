@@ -71,13 +71,21 @@ export default function CopilotPanel({ nodes, edges, setNodes, setEdges, globalV
       if (args.id) newNode.id = args.id; // Allow LLM to specify ID for wiring
       setNodes(nds => [...nds, newNode]);
     } else if (action === 'connect_nodes') {
-      setEdges(eds => [...eds, {
-        id: `e_${args.sourceId}_${args.targetId}_${Date.now()}`,
-        source: args.sourceId,
-        sourceHandle: args.sourceHandle,
-        target: args.targetId,
-        targetHandle: args.targetHandle,
-      }]);
+      setEdges(eds => {
+        // One wire per input handle — evict any existing edge landing on
+        // the same (target, targetHandle), matching the manual-drop policy
+        // enforced in FlowCanvas.onConnect.
+        const cleaned = eds.filter(
+          e => !(e.target === args.targetId && e.targetHandle === args.targetHandle)
+        );
+        return [...cleaned, {
+          id: `e_${args.sourceId}_${args.targetId}_${Date.now()}`,
+          source: args.sourceId,
+          sourceHandle: args.sourceHandle,
+          target: args.targetId,
+          targetHandle: args.targetHandle,
+        }];
+      });
     } else if (action === 'set_property') {
       setNodes(nds => nds.map(n => {
         if (n.id !== args.nodeId) return n;
@@ -188,7 +196,7 @@ Rules:
 - Any AE getter whose input is "Application" must be wired from a "Get Application" node — there is no implicit global "app".
 - NEVER emit duplicate edges. Each (source, sourceHandle, target, targetHandle) tuple must appear at most once.
 - For an action node's data inputs (e.g. addComp's "name", "width"), wire each input EXACTLY ONCE. Do not connect the same value to multiple inputs unless explicitly asked to.
-- Lay nodes left-to-right: first at x=100, then +260 per node, y around 100.
+- Lay nodes left-to-right with generous spacing: x starts at 100 and increases by AT LEAST 320 per column; y rows are spaced by AT LEAST 220. Never reuse the exact same (x, y). Wrap to a new row after ~6 nodes. The app will re-grid for safety, but produce well-spaced coordinates anyway.
 - If the request cannot be fulfilled with the labels above, return {"reply": "<explanation>", "nodes": [], "edges": []}.
 - The JSON must be complete and parseable. Close every brace and bracket.
 - Keep total response under ~40 lines. Be terse.
@@ -383,8 +391,31 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
     }
   };
 
+  // Re-flow proposed nodes onto a non-overlapping grid before they hit the
+  // canvas. The LLM's x/y suggestions are unreliable (overlaps, identical
+  // coordinates) so we honor only the relative ORDER and reposition.
+  const relayoutProposedNodes = (actions) => {
+    const COL_W = 320;   // horizontal spacing per "column"
+    const ROW_H = 220;   // vertical spacing per row
+    const PER_ROW = 6;   // wrap after this many nodes
+    // Anchor relative to the existing canvas so we don't land on top of
+    // nodes that are already there.
+    const existingMaxX = nodes.reduce((m, n) => Math.max(m, n.position?.x || 0), 0);
+    const originX = nodes.length ? existingMaxX + COL_W : 80;
+    const originY = 80;
+    let i = 0;
+    return actions.map(a => {
+      if (a.action !== 'propose_node') return a;
+      const col = i % PER_ROW;
+      const row = Math.floor(i / PER_ROW);
+      i++;
+      return { ...a, args: { ...a.args, x: originX + col * COL_W, y: originY + row * ROW_H } };
+    });
+  };
+
   const applyActions = (actions, msgIndex) => {
-    actions.forEach(a => handleAction(a.action, a.args));
+    const laidOut = relayoutProposedNodes(actions);
+    laidOut.forEach(a => handleAction(a.action, a.args));
     // Remove the pending actions from the message so the button goes away
     setMessages(msgs => msgs.map((m, i) => i === msgIndex ? { ...m, pendingActions: null, content: '> Actions applied.' } : m));
   };
