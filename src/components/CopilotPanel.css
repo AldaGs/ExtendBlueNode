@@ -49,6 +49,23 @@
   border-color: var(--ebn-accent);
 }
 
+.ebn-copilot__keybtn--active {
+  border-color: var(--ebn-accent);
+  background: var(--ebn-accent);
+  color: #fff;
+}
+
+.ebn-copilot__check {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ebn-text-dim, #aaa);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 .ebn-copilot__history {
   flex: 1;
   overflow-y: auto;

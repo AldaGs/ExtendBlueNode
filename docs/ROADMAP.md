@@ -122,11 +122,14 @@ Blender-style "collapse a selection into one reusable node".
 - [x] **Vitest** — boundary-handle exposure, group→ungroup round-trip, grouped-vs-flat compile parity, flatten removes all groups.
 - [ ] **Next**: full nested-canvas editing (enter a group, Group Input/Output proxy nodes, breadcrumb nav); a "Save Group as Preset" library so groups become first-class reusable nodes; AddNodeMenu / context-menu entries for group/ungroup.
 
-## 7. Reverse translation ("Blueprints")
+## 7. Reverse translation ("Blueprints") — ✅ v1 shipped (Wave 7)
 
-- [ ] `/blueprint` slash command takes pasted ExtendScript, LLM emits a DAG JSON conforming to our schema.
-- [ ] Auto-layout incoming graphs with `dagre`.
-- [ ] Diff against the current graph; allow merge or replace.
+Paste existing ExtendScript, get the visual graph that would generate it — for understanding/sharing code you already wrote.
+
+- [x] **Blueprint mode** in the Copilot — a 📐 toggle reframes the panel: paste an ExtendScript program and a reverse-translation system prompt (`getBlueprintSystemPrompt`) asks the model to reconstruct the DAG JSON using only catalog labels, preserving exec order and data flow. Reuses the existing label/handle/edge validation + preview + apply pipeline.
+- [x] **Auto-layout** — `src/graph/blueprintLayout.js` `layoutGraphTopo`: longest-path layering places the exec chain left→right with data feeders in earlier columns and siblings stacked. No `dagre` dependency (offline-safe). Unit-tested.
+- [x] **Replace or append** — a "Replace canvas" checkbox swaps the current graph for the translation, or appends to it.
+- [ ] **Next**: true diff/merge against the current graph (highlight what changed before applying); a deterministic pre-parser to seed the LLM with statement structure for long programs.
 
 ## 8. Polish & distribution
 
@@ -144,4 +147,4 @@ Blender-style "collapse a selection into one reusable node".
 - For **product depth**: §6 → §7. The LLM angle plus reverse-translation is the moat against plain CEP authoring tools. The §3 IR refactor lowered the agent's integration cost significantly.
 - For **partnership conversations**: cut a signed ZXP from §8 first so prospects can install it without enabling dev mode. Then layer the Copilot demo on top.
 
-Current single-dev recommendation: **Waves 1–3 are shipped** — demo polish (§5 Globals cross-link, more selectors, ScriptUI builder polish), demo reliability (line-map error traceback, per-branch scoping, audit cleanup), and node-coverage depth (keyframe ops, Set Expression, ScriptUI string→tree import). Next per the agreed plan: **§6 Copilot tool-use** (let the model read the graph/IR and propose previewable diffs), then **§7 Blueprints** for the reverse-translation moat.
+Current single-dev recommendation: **Waves 1–3 + §7 Blueprints are shipped** — demo polish (§5 Globals cross-link, more selectors, ScriptUI builder polish), demo reliability (line-map error traceback, per-branch scoping, audit cleanup), node-coverage depth (keyframe ops, Set Expression, ScriptUI string→tree import), and reverse translation (paste ExtendScript → graph). Remaining moat work: **§6 Copilot tool-use** (let the model read the graph/IR and propose previewable diffs) and Blueprint v2 (true diff/merge). Plus §6.5 nested-group editing and §8 distribution (signed ZXP) when partnership-ready.

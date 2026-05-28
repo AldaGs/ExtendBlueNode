@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { flattenLibrary, getNodeCatalogSummary } from '../nodeLibrary';
 import { getScriptUIPromptSection } from '../graph/scriptUITree';
+import { layoutGraphTopo } from '../graph/blueprintLayout';
 import { CLOUD_PROVIDERS, getStoredKey, setStoredKey, callCloud } from '../services/cloudLlmService';
 import './CopilotPanel.css'; // Let's create this file next
 
@@ -37,6 +38,39 @@ const PROVIDERS = {
   gemini:  { label: CLOUD_PROVIDERS.gemini.label, models: CLOUD_PROVIDERS.gemini.models, isCloud: true, cloudKey: 'gemini' },
 };
 
+// Reverse translation ("Blueprint"): given pasted ExtendScript, ask the model
+// to reconstruct the node graph. Reuses the same catalog + JSON contract as the
+// forward prompt so the existing validate/apply pipeline handles the result.
+function getBlueprintSystemPrompt() {
+  const catalog = getNodeCatalogSummary();
+  return `You are EBN Blueprint. You convert an existing After Effects ExtendScript (.jsx) program INTO the visual node graph that would generate it. This is reverse-engineering: read the code, map each operation to the closest node, and wire them up.
+
+CRITICAL INSTRUCTION: You may ONLY use the exact node labels listed below. Do NOT invent node types, labels, or ports.
+
+=================================================================
+NODE CATALOG (verbatim labels + valid handle ids):
+${catalog}
+=================================================================
+
+Required JSON shape:
+{
+  "reply": "<one short sentence describing the translation>",
+  "nodes": [ { "id": "<unique>", "label": "<verbatim from the list above>", "values": { <inline prop overrides matching the code> } } ],
+  "edges": [ { "from": "<node id>", "fromHandle": "exec_out", "to": "<node id>", "toHandle": "exec_in" } ]
+}
+
+Translation rules:
+- Map each statement/operation in the source to the closest node label. Preserve EXECUTION ORDER: chain action nodes via "exec_out" -> "exec_in" in the order the statements run. The chain starts at "Start" (or "Get Active Comp" when the code reads app.project.activeItem).
+- Capture literal arguments as inline "values" keyed by the matching input handle id (e.g. a comp width/height/duration, a setValue amount, a property match-name). Do NOT create Integer/String nodes for plain literals.
+- Reconstruct DATA FLOW: when one operation's result feeds another (a selected layer passed to a property setter, a comp passed to a layer collection), wire the producing node's data output to the consuming node's data input. Data getters have no exec handles.
+- For a property setter, put the match-name / slash path in the consuming node's "property" value; setValue amount in "value".
+- If a statement has NO matching node, skip it and mention it in "reply" (do not invent a label). Prefer "Custom UI Code" only for ScriptUI blocks.
+- x/y are optional and ignored — the app lays the graph out automatically.
+- Output ONLY the JSON object. It must be complete and parseable. No comments inside string values.
+
+${getScriptUIPromptSection()}`;
+}
+
 export default function CopilotPanel({ nodes, edges, setNodes, setEdges, globalVariables }) {
   const [chatInput, setChatInput] = useState('');
   const [provider, setProvider] = useState('ollama');
@@ -51,6 +85,8 @@ export default function CopilotPanel({ nodes, edges, setNodes, setEdges, globalV
     { role: 'system', content: '> Copilot ready.\n> Pick a provider and type a request to build or modify nodes.' }
   ]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [blueprintMode, setBlueprintMode] = useState(false);
+  const [replaceCanvas, setReplaceCanvas] = useState(true);
   const bottomRef = useRef(null);
 
   // Auto-scroll to bottom
@@ -234,8 +270,13 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
     setIsGenerating(true);
 
     try {
-      const systemPrompt = getSystemPrompt();
-      const recentHistory = newMessages.filter(m => m.role !== 'system').slice(-6);
+      // Blueprint mode reverse-translates a single pasted program: a focused
+      // system prompt + only the pasted code (no chat history). Chat mode keeps
+      // the rolling history so follow-up edits have context.
+      const systemPrompt = blueprintMode ? getBlueprintSystemPrompt() : getSystemPrompt();
+      const recentHistory = blueprintMode
+        ? [{ role: 'user', content: `Translate this ExtendScript into the node graph:\n\n${userText}` }]
+        : newMessages.filter(m => m.role !== 'system').slice(-6);
       const providerCfg = PROVIDERS[provider];
 
       let assistantContent = '';
@@ -390,7 +431,13 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
       if (validActions.length > 0) {
         setMessages(msgs => [
           ...msgs,
-          { role: 'system', content: '', pendingActions: validActions }
+          {
+            role: 'system',
+            content: '',
+            pendingActions: validActions,
+            blueprint: blueprintMode,
+            replace: blueprintMode && replaceCanvas,
+          },
         ]);
       }
 
@@ -423,8 +470,16 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
     });
   };
 
-  const applyActions = (actions, msgIndex) => {
-    const laidOut = relayoutProposedNodes(actions);
+  const applyActions = (actions, msgIndex, opts = {}) => {
+    // Blueprint results get a readable topological layout (and may replace the
+    // canvas); chat results keep the relative-order grid re-flow.
+    const laidOut = opts.blueprint
+      ? layoutGraphTopo(actions)
+      : relayoutProposedNodes(actions);
+    if (opts.replace) {
+      setNodes(() => []);
+      setEdges(() => []);
+    }
     laidOut.forEach(a => handleAction(a.action, a.args));
     // Remove the pending actions from the message so the button goes away
     setMessages(msgs => msgs.map((m, i) => i === msgIndex ? { ...m, pendingActions: null, content: '> Actions applied.' } : m));
@@ -478,6 +533,24 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
             title="Set API key"
           >🔑</button>
         )}
+        <button
+          type="button"
+          className={`ebn-copilot__keybtn${blueprintMode ? ' ebn-copilot__keybtn--active' : ''}`}
+          onClick={() => setBlueprintMode(b => !b)}
+          disabled={isGenerating}
+          title="Blueprint mode: paste ExtendScript to translate it into nodes"
+        >📐 Blueprint</button>
+        {blueprintMode && (
+          <label className="ebn-copilot__check" title="Replace the current canvas with the translation">
+            <input
+              type="checkbox"
+              checked={replaceCanvas}
+              onChange={(e) => setReplaceCanvas(e.target.checked)}
+              disabled={isGenerating}
+            />
+            Replace canvas
+          </label>
+        )}
       </div>
       {showKeyEditor && PROVIDERS[provider].isCloud && (
         <div className="ebn-copilot__keyrow">
@@ -506,9 +579,11 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
             {m.pendingActions && (
               <button
                 className="ebn-btn-primary"
-                onClick={() => applyActions(m.pendingActions, i)}
+                onClick={() => applyActions(m.pendingActions, i, { blueprint: m.blueprint, replace: m.replace })}
               >
-                Apply {m.pendingActions.length} Action(s)
+                {m.blueprint
+                  ? `${m.replace ? 'Replace canvas with' : 'Add'} ${m.pendingActions.length} node action(s)`
+                  : `Apply ${m.pendingActions.length} Action(s)`}
               </button>
             )}
           </div>
@@ -518,7 +593,13 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
       <form className="ebn-copilot__input" onSubmit={onSubmit}>
         <textarea
           rows={1}
-          placeholder={isGenerating ? "Thinking..." : "Ask the copilot…  (Enter to send, Shift+Enter for newline)"}
+          placeholder={
+            isGenerating
+              ? "Thinking..."
+              : blueprintMode
+                ? "Paste ExtendScript (.jsx) to translate into nodes…  (Shift+Enter for newline)"
+                : "Ask the copilot…  (Enter to send, Shift+Enter for newline)"
+          }
           value={chatInput}
           onChange={(e) => { setChatInput(e.target.value); autoSize(e.target); }}
           onKeyDown={onTextareaKeyDown}
