@@ -25,9 +25,11 @@ import ForEachSelectedNode from './ForEachSelectedNode';
 import PropertyPathNode from './PropertyPathNode';
 import VectorMathNode from './VectorMathNode';
 import SplitVectorNode from './SplitVectorNode';
+import GroupNode from './GroupNode';
 import AddNodeMenu from './AddNodeMenu';
 import FlowEdge from './FlowEdge';
 import { findCompatibleHandle } from '../nodeLibrary';
+import { groupNodes, ungroupNode } from '../graph/groups';
 
 /* ----------------------------- geometry helpers ----------------------------- */
 
@@ -97,9 +99,11 @@ function FlowCanvasInner({
   // Report selection up to App. Each canvas has its own provider, so this
   // hook only fires for *this* canvas's selection events. The latest
   // canvas to receive a click wins App.selectedNode.
+  const selectedIdsRef = useRef([]);
   useOnSelectionChange({
     onChange: useCallback(
       ({ nodes: selected }) => {
+        selectedIdsRef.current = selected.map((n) => n.id);
         onSelectionChange?.(selected[0] ?? null);
       },
       [onSelectionChange],
@@ -109,6 +113,68 @@ function FlowCanvasInner({
   const rf = useReactFlow();
   const wrapperRef = useRef(null);
   const edgeReconnectSuccessful = useRef(true);
+
+  /* ----------------------------- grouping ----------------------------- */
+
+  // Keep a live ref to edges so the group/ungroup closures (which run inside
+  // a setNodes updater) can read the current edge list without stale capture.
+  const edgesRef = useRef(edges);
+  useEffect(() => { edgesRef.current = edges; }, [edges]);
+
+  const doGroup = useCallback(() => {
+    const ids = selectedIdsRef.current;
+    if (!ids || ids.length < 1) return;
+    // Don't allow grouping a lone group (no-op) but allow 1+ normal nodes.
+    let result = null;
+    setNodes((nds) => {
+      // Compute against the live edges via a ref-free closure: we need both
+      // nodes and edges, so stash the node result and finish in setEdges.
+      result = groupNodes(nds, edgesRef.current, ids);
+      return result ? result.nodes : nds;
+    });
+    if (result) setEdges(() => result.edges);
+  }, [setNodes, setEdges]);
+
+  const doUngroup = useCallback(
+    (groupId) => {
+      let result = null;
+      setNodes((nds) => {
+        result = ungroupNode(nds, edgesRef.current, groupId);
+        return result ? result.nodes : nds;
+      });
+      if (result) setEdges(() => result.edges);
+    },
+    [setNodes, setEdges],
+  );
+
+  // Ctrl/Cmd+G to group the current selection.
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G')) {
+        e.preventDefault();
+        doGroup();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [doGroup]);
+
+  // GroupNode dispatches these DOM events (keeps node.data callback-free).
+  useEffect(() => {
+    const onUngroup = (e) => doUngroup(e.detail?.id);
+    const onRename = (e) => {
+      const { id, label } = e.detail || {};
+      setNodes((nds) =>
+        nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, label } } : n)),
+      );
+    };
+    window.addEventListener('ebn-ungroup', onUngroup);
+    window.addEventListener('ebn-group-rename', onRename);
+    return () => {
+      window.removeEventListener('ebn-ungroup', onUngroup);
+      window.removeEventListener('ebn-group-rename', onRename);
+    };
+  }, [doUngroup, setNodes]);
 
   const nodeTypes = useMemo(
     () => ({
@@ -126,6 +192,7 @@ function FlowCanvasInner({
       propertyPath: PropertyPathNode,
       vecMath: VectorMathNode,
       splitVec: SplitVectorNode,
+      group: GroupNode,
     }),
     [],
   );

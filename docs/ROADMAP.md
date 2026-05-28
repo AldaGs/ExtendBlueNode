@@ -78,6 +78,17 @@ Already discussed. Small but high-impact.
 - [ ] **Slash commands**: `/explain`, `/fix`, `/refactor`, `/blueprint <paste>` (see §7).
 - [ ] **Conversation memory** scoped to the current `.ebn` project.
 
+## 6.5 Node Groups — ✅ v1 shipped
+
+Blender-style "collapse a selection into one reusable node".
+
+- [x] **`src/graph/groups.js`** — pure `groupNodes()` / `ungroupNode()` / `flattenGroups()`. Boundary edges crossing the selection are re-pointed to synthetic `gi_*` / `go_*` handles; the mapping back to inner `(nodeId, handle)` is stored on the group node's `data`.
+- [x] **Compile-time flattening** — `compileToIR` calls `flattenGroups` first (recursive, id-namespaced), so emitters/IR never need to know groups exist. Nested groups work.
+- [x] **`GroupNode` component** — dynamic boundary handles, click-to-rename, double-click / ⤢ to ungroup (via DOM CustomEvents so `node.data` stays serializable).
+- [x] **FlowCanvas wiring** — Ctrl/Cmd+G groups the current multi-selection; tracks the full selection set.
+- [x] **Vitest** — boundary-handle exposure, group→ungroup round-trip, grouped-vs-flat compile parity, flatten removes all groups.
+- [ ] **Next**: full nested-canvas editing (enter a group, Group Input/Output proxy nodes, breadcrumb nav); a "Save Group as Preset" library so groups become first-class reusable nodes; AddNodeMenu / context-menu entries for group/ungroup.
+
 ## 7. Reverse translation ("Blueprints")
 
 - [ ] `/blueprint` slash command takes pasted ExtendScript, LLM emits a DAG JSON conforming to our schema.

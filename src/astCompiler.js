@@ -14,6 +14,7 @@ import {
   resolveExpressionFor,
 } from './compiler/emitters';
 import { HELPERS } from './compiler/helpers';
+import { flattenGroups } from './graph/groups';
 
 const EXEC_OUT = 'exec_out';
 const EXEC_IN  = 'exec_in';
@@ -102,7 +103,10 @@ function resolveSourceNode(byId, edges, targetId, handleId) {
 
 /* ----------------------------- IR build pass ----------------------------- */
 
-export function compileToIR(nodes, edges, globalVariables = []) {
+export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
+  // Expand any group nodes into their constituent flat graph first, so the
+  // rest of the compiler never has to reason about nesting.
+  const { nodes, edges } = flattenGroups(rawNodes, rawEdges);
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const execEdges = edges.filter(
     (e) => e.sourceHandle === EXEC_OUT ||
