@@ -184,7 +184,10 @@ Rules:
 - Every "label" MUST be a verbatim copy of one entry from the list above. Case-sensitive. No paraphrasing, no inventing.
 - Exec-flow handles are "exec_out" / "exec_in". For data wires, use the property key name as the handle.
 - Action nodes (any node that exposes BOTH "exec_in" and "exec_out") MUST be chained: connect "exec_out" of one action to "exec_in" of the next, in the order they should run. The chain MUST start at a node that has "exec_out" but no "exec_in" — typically "Start" (for general scripts) or "Get Active Comp" (when you need the active composition). Without this, the actions become orphans and are not executed.
+- Data-side getters (e.g. "Get Application", "Application Get project", "Project Get items", "CompItem Get layers") have NO "exec_in"/"exec_out". DO NOT chain them via "exec_out" → "exec_in". They participate purely through data wires: connect their data output to the matching data input of the node that needs the value. Wiring them with exec handles will be rejected as invalid.
 - Any AE getter whose input is "Application" must be wired from a "Get Application" node — there is no implicit global "app".
+- NEVER emit duplicate edges. Each (source, sourceHandle, target, targetHandle) tuple must appear at most once.
+- For an action node's data inputs (e.g. addComp's "name", "width"), wire each input EXACTLY ONCE. Do not connect the same value to multiple inputs unless explicitly asked to.
 - Lay nodes left-to-right: first at x=100, then +260 per node, y around 100.
 - If the request cannot be fulfilled with the labels above, return {"reply": "<explanation>", "nodes": [], "edges": []}.
 - The JSON must be complete and parseable. Close every brace and bracket.
@@ -275,26 +278,78 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
       const library = flattenLibrary();
       const knownLabels = new Set(library.map(t => t.label));
       const lcMap = new Map(library.map(t => [t.label.toLowerCase(), t.label]));
+      // Cache handle sets per label so we can validate edges without
+      // spawning the actual node.
+      const handleCache = new Map();
+      const handlesForLabel = (label) => {
+        if (handleCache.has(label)) return handleCache.get(label);
+        const tmpl = library.find(t => t.label === label);
+        let inputs = new Set(), outputs = new Set();
+        try {
+          const sample = tmpl?.factory({ x: 0, y: 0 });
+          (sample?.data?.inputs || []).forEach(p => inputs.add(p.id));
+          (sample?.data?.outputs || []).forEach(p => outputs.add(p.id));
+        } catch {}
+        const out = { inputs, outputs };
+        handleCache.set(label, out);
+        return out;
+      };
+
       const unknown = [];
       const validActions = [];
+      // Track the id -> label of nodes the LLM is proposing in *this* batch
+      // so we can validate the edges that reference them.
+      const proposedNodeLabel = new Map();
+      // Also map existing canvas nodes for edges that target current state.
+      const existingNodeLabel = new Map();
+      nodes.forEach(n => existingNodeLabel.set(n.id, n.data?.label || ''));
+
       for (const a of actions) {
         if (a.action === 'propose_node') {
           const lbl = a.args?.label || '';
-          if (knownLabels.has(lbl)) {
-            validActions.push(a);
-          } else {
-            // Try case-insensitive match before reporting as unknown
+          let resolved = lbl;
+          if (!knownLabels.has(lbl)) {
             const ci = lcMap.get(lbl.toLowerCase());
             if (ci) {
-              validActions.push({ ...a, args: { ...a.args, label: ci } });
+              resolved = ci;
             } else {
               const suggestion = suggestLabel(lbl, library.map(t => t.label));
               unknown.push({ requested: lbl, suggestion });
+              continue;
             }
           }
-        } else {
+          proposedNodeLabel.set(a.args.id, resolved);
+          validActions.push({ ...a, args: { ...a.args, label: resolved } });
+        } else if (a.action !== 'connect_nodes') {
           validActions.push(a);
         }
+      }
+
+      // Edge validation pass — dedupe (source, target, sH, tH) tuples AND
+      // drop edges that reference handles that don't exist on the node.
+      const seenEdges = new Set();
+      let droppedDuplicate = 0;
+      let droppedBadHandle = 0;
+      let droppedMissingNode = 0;
+      for (const a of actions) {
+        if (a.action !== 'connect_nodes') continue;
+        const { sourceId, sourceHandle, targetId, targetHandle } = a.args || {};
+        const key = `${sourceId}::${sourceHandle}->${targetId}::${targetHandle}`;
+        if (seenEdges.has(key)) { droppedDuplicate++; continue; }
+        seenEdges.add(key);
+
+        const srcLabel = proposedNodeLabel.get(sourceId) || existingNodeLabel.get(sourceId);
+        const tgtLabel = proposedNodeLabel.get(targetId) || existingNodeLabel.get(targetId);
+        if (!srcLabel || !tgtLabel) { droppedMissingNode++; continue; }
+        const srcH = handlesForLabel(srcLabel);
+        const tgtH = handlesForLabel(tgtLabel);
+        // Allow unknown handles only if the node has no declared ports at all
+        // (e.g. reroute) — otherwise require an exact match.
+        const srcOk = srcH.outputs.size === 0 || srcH.outputs.has(sourceHandle);
+        const tgtOk = tgtH.inputs.size === 0 || tgtH.inputs.has(targetHandle);
+        if (!srcOk || !tgtOk) { droppedBadHandle++; continue; }
+
+        validActions.push(a);
       }
 
       let finalReply = reply || '(no reply)';
@@ -303,6 +358,10 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
           `  • "${u.requested}"${u.suggestion ? ` — did you mean "${u.suggestion}"?` : ' — no close match'}`
         ).join('\n');
         finalReply += `\n\n⚠ ${unknown.length} unknown node label(s) rejected:\n${lines}`;
+      }
+      const edgeDrops = droppedDuplicate + droppedBadHandle + droppedMissingNode;
+      if (edgeDrops) {
+        finalReply += `\n\n⚠ ${edgeDrops} edge(s) rejected (${droppedDuplicate} duplicate, ${droppedBadHandle} bad handle, ${droppedMissingNode} missing node).`;
       }
 
       setMessages(msgs => {
