@@ -247,6 +247,22 @@ const EBN_NODE_EMITTERS = {
     const done = ctx.walkBranch(node.id, 'exec_done');
     return [ir.whileLoop(cond, body), ...done];
   },
+  'For Each (Array)': (node, ctx) => {
+    const arr  = ctx.resolveInput(node, { id: 'array', type: 'expr', default: '[]' });
+    const arrV = `${ctx.varName(node)}_arr`;
+    const idxV = forEachArrayIndexVar(node, ctx);
+    const itmV = forEachArrayItemVar(node, ctx);
+    const body = ctx.walkBranch(node.id, 'exec_body');
+    const done = ctx.walkBranch(node.id, 'exec_done');
+    return [
+      ir.varDecl(arrV, arr),
+      ir.forIn(`var ${idxV} = 0`, `${idxV} < ${arrV}.length`, `${idxV}++`, [
+        ir.varDecl(itmV, `${arrV}[${idxV}]`),
+        ...body,
+      ]),
+      ...done,
+    ];
+  },
   'Switch Statement': (node, ctx) => {
     const val = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
     const cases = [1, 2, 3].map((i) => ({
@@ -344,13 +360,22 @@ export function forLoopIndexVar(node, ctx) {
   return `${ctx.varName(node)}_i`;
 }
 
+// Stable per-node loop vars for "For Each (Array)". Shared by the exec
+// emitter and the `item` / `index` data-side resolvers.
+export function forEachArrayIndexVar(node, ctx) {
+  return `${ctx.varName(node)}_i`;
+}
+export function forEachArrayItemVar(node, ctx) {
+  return `${ctx.varName(node)}_item`;
+}
+
 // Nodes whose emitter takes ownership of their own downstream walking —
 // the orchestrator must NOT auto-recurse along their exec_out edges.
 // Keyed by node.type for the dedicated node kinds…
 export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
 // …and by ebnNode label for the JS control-flow nodes (which are all
 // type 'ebnNode'). astCompiler checks both.
-export const SELF_BRANCHING_LABELS = new Set(['For Loop', 'While Loop', 'Switch Statement']);
+export const SELF_BRANCHING_LABELS = new Set(['For Loop', 'While Loop', 'Switch Statement', 'For Each (Array)']);
 
 /* ----------------------------- data-side expression resolution ----------------------------- */
 
@@ -529,6 +554,35 @@ const EBN_DATA_EMITTERS = {
   // For Loop's `index` output references the loop's counter variable.
   'For Loop': (node, ctx, outputHandle) =>
     outputHandle === 'index' ? forLoopIndexVar(node, ctx) : null,
+  // For Each (Array)'s loop-local outputs.
+  'For Each (Array)': (node, ctx, outputHandle) => {
+    if (outputHandle === 'item') return forEachArrayItemVar(node, ctx);
+    if (outputHandle === 'index') return forEachArrayIndexVar(node, ctx);
+    return null;
+  },
+  // Boolean literal — resolves its (input-or-inline) value as a bool.
+  'Boolean': (node, ctx) =>
+    ctx.resolveInput(node, { id: 'value', type: 'boolean', default: 'false' }),
+  // Logic gates.
+  'And': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr', default: 'false' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'expr', default: 'false' });
+    return `(${a} && ${b})`;
+  },
+  'Or': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr', default: 'false' });
+    const b = ctx.resolveInput(node, { id: 'b', type: 'expr', default: 'false' });
+    return `(${a} || ${b})`;
+  },
+  'Not': (node, ctx) => {
+    const a = ctx.resolveInput(node, { id: 'a', type: 'expr', default: 'false' });
+    return `(!${a})`;
+  },
+  // Conversions.
+  'To String': (node, ctx) =>
+    `String(${ctx.resolveInput(node, { id: 'value', type: 'expr', default: '""' })})`,
+  'Parse Number': (node, ctx) =>
+    `parseFloat(${ctx.resolveInput(node, { id: 'value', type: 'text', default: '"0"' })})`,
   // Concatenate: string-join two inputs. Resolve as 'text' so inline
   // literals get quoted while wired upstream expressions pass through raw
   // (ExtendScript coerces numbers to strings under "+").

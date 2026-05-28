@@ -22,7 +22,7 @@ export default function SmartInput({
 
   const onChange = useCallback(
     (e) => {
-      const raw = e.target.value;
+      const raw = type === 'boolean' ? e.target.checked : e.target.value;
       const next = type === 'number' ? (raw === '' ? '' : Number(raw)) : raw;
       setNodes((nds) =>
         nds.map((n) =>
@@ -55,6 +55,15 @@ export default function SmartInput({
           <span className="ebn-smart__pill" title="Driven by a wire">
             Linked
           </span>
+        ) : type === 'boolean' ? (
+          <input
+            className="ebn-smart__checkbox"
+            type="checkbox"
+            checked={value === true || value === 'true'}
+            onChange={onChange}
+            onPointerDown={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+          />
         ) : (
           <input
             className={`ebn-smart__input${type === 'color' ? ' ebn-smart__input--color' : ''}`}

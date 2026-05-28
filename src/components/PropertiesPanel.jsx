@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { scriptUIBuilderOutputs } from '../graph/scriptui';
 import './PropertiesPanel.css';
 
 const JS_IDENTIFIER = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
@@ -86,6 +87,26 @@ export default function PropertiesPanel({
     [selectedNode, setNodes],
   );
 
+  useEffect(() => {
+    const isScriptUIBuilder = selectedNode?.data?.label === 'ScriptUI Builder';
+    const scriptUIString = selectedNode?.data?.values?.scriptUI_string;
+
+    if (isScriptUIBuilder && scriptUIString != null) {
+      // Single source of truth shared with the compiler (src/graph/scriptui.js).
+      const newOutputs = scriptUIBuilderOutputs(scriptUIString);
+
+      const currentOutputs = selectedNode.data.outputs || [];
+      const changed = newOutputs.length !== currentOutputs.length || 
+                      newOutputs.some((o, i) => o.id !== currentOutputs[i]?.id);
+                      
+      if (changed) {
+        setNodes(nds => nds.map(n => 
+          n.id !== selectedNode.id ? n : { ...n, data: { ...n.data, outputs: newOutputs } }
+        ));
+      }
+    }
+  }, [selectedNode?.data?.label, selectedNode?.data?.values?.scriptUI_string, selectedNode?.id, setNodes, selectedNode?.data?.outputs]);
+
   if (!selectedNode) {
     return (
       <div className="ebn-props ebn-props--empty">
@@ -103,36 +124,6 @@ export default function PropertiesPanel({
   const isUIEventListener = nodeLabel === 'UI Event Listener';
 
   const scriptUIString = selectedNode?.data?.values?.scriptUI_string;
-
-  useEffect(() => {
-    if (isScriptUIBuilder && scriptUIString != null) {
-      const regex = /\b([a-zA-Z0-9_]+)\s*:\s*(?:Button|StaticText|EditText|Checkbox|DropDownList|Panel|Group|ListBox|TreeView|TabbedPanel)/ig;
-      let match;
-      const elements = [];
-      while ((match = regex.exec(scriptUIString)) !== null) {
-        elements.push(match[1]);
-      }
-      
-      const newOutputs = [
-        { id: 'exec_out', label: 'Execution' },
-        { id: 'window_obj', label: 'Window Object' }
-      ];
-      
-      elements.forEach(el => {
-        newOutputs.push({ id: `ui_${el}`, label: el });
-      });
-
-      const currentOutputs = selectedNode.data.outputs || [];
-      const changed = newOutputs.length !== currentOutputs.length || 
-                      newOutputs.some((o, i) => o.id !== currentOutputs[i]?.id);
-                      
-      if (changed) {
-        setNodes(nds => nds.map(n => 
-          n.id !== selectedNode.id ? n : { ...n, data: { ...n.data, outputs: newOutputs } }
-        ));
-      }
-    }
-  }, [isScriptUIBuilder, scriptUIString, selectedNode?.id, setNodes, selectedNode?.data?.outputs]);
 
   return (
     <div className="ebn-props">

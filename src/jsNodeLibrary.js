@@ -94,6 +94,32 @@ export const JS_NODE_LIBRARY = [
               },
             }),
           },
+          {
+            type: 'forEachArray',
+            label: 'For Each (Array)',
+            keywords: ['loop', 'foreach', 'iterate', 'array', 'list'],
+            factory: (pos) => ({
+              id: uid('feach'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'For Each (Array)',
+                category: 'logic',
+                themeColor: '#a36b1f',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'array', label: 'Array', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_body', label: 'Loop Body', type: 'exec' },
+                  { id: 'item', label: 'Item' },
+                  { id: 'index', label: 'Index' },
+                  { id: 'exec_done', label: 'Completed', type: 'exec' },
+                ],
+                values: {},
+              },
+            }),
+          },
         ]
       },
       {
@@ -244,6 +270,125 @@ export const JS_NODE_LIBRARY = [
                 ],
                 outputs: [{ id: 'result', label: 'Result' }],
                 values: { min: 0, max: 100 },
+              },
+            }),
+          },
+        ],
+      },
+      {
+        category: 'Logic',
+        items: [
+          {
+            type: 'boolean',
+            label: 'Boolean',
+            keywords: ['bool', 'true', 'false', 'flag', 'toggle'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Boolean',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [{ id: 'value', label: 'Value', type: 'boolean' }],
+                outputs: [{ id: 'value', label: 'Bool' }],
+                values: { value: true },
+              },
+            }),
+          },
+          {
+            type: 'logicAnd',
+            label: 'And',
+            keywords: ['logic', 'and', '&&', 'both', 'boolean'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'And',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'a', label: 'A', type: 'expr' },
+                  { id: 'b', label: 'B', type: 'expr' },
+                ],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'logicOr',
+            label: 'Or',
+            keywords: ['logic', 'or', '||', 'either', 'boolean'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Or',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [
+                  { id: 'a', label: 'A', type: 'expr' },
+                  { id: 'b', label: 'B', type: 'expr' },
+                ],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'logicNot',
+            label: 'Not',
+            keywords: ['logic', 'not', '!', 'invert', 'negate', 'boolean'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Not',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [{ id: 'a', label: 'A', type: 'expr' }],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'toString',
+            label: 'To String',
+            keywords: ['convert', 'string', 'cast', 'tostring', 'text'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'To String',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [{ id: 'value', label: 'Value', type: 'expr' }],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'parseNumber',
+            label: 'Parse Number',
+            keywords: ['convert', 'number', 'parse', 'parsefloat', 'parseint', 'cast'],
+            factory: (pos) => ({
+              id: uid('node'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Parse Number',
+                category: 'data',
+                themeColor: '#3a6b54',
+                inputs: [{ id: 'value', label: 'Value', type: 'text' }],
+                outputs: [{ id: 'result', label: 'Result' }],
+                values: {},
               },
             }),
           },

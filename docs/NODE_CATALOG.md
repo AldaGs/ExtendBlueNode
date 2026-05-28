@@ -1,7 +1,7 @@
 # EBN Node Catalog (auto-generated)
 
 > Regenerate with `npx vite-node scripts/audit-nodes.mjs --catalog`.
-> 1254 nodes total, 0 broken. Hand-authored: 52; auto-generated After Effects DOM: 1202 (see scripts/generate-ae-nodes.mjs).
+> 1261 nodes total, 0 broken. Hand-authored: 59; auto-generated After Effects DOM: 1202 (see scripts/generate-ae-nodes.mjs).
 
 ## Actions
 
@@ -53,6 +53,7 @@
 
 | Node | Role | Status | Inputs | Outputs |
 |---|---|---|---|---|
+| For Each (Array) | exec+data | ✅ | exec_in, array | exec_body, item, index, exec_done |
 | For Loop | exec+data | ✅ | exec_in, start, end, step | exec_body, index, exec_done |
 | Switch Statement | exec | ✅ | exec_in, value, case1_val, case2_val, case3_val | exec_case1, exec_case2, exec_case3, exec_default, exec_done |
 | While Loop | exec | ✅ | exec_in, cond | exec_body, exec_done |
@@ -63,6 +64,17 @@
 |---|---|---|---|---|
 | Load JSON | exec+data | ✅ | exec_in, file_name | exec_out, payload |
 | Save JSON | exec | ✅ | exec_in, payload, file_name | exec_out |
+
+## Javascript > Logic
+
+| Node | Role | Status | Inputs | Outputs |
+|---|---|---|---|---|
+| And | data | ✅ | a, b | result |
+| Boolean | data | ✅ | value | value |
+| Not | data | ✅ | a | result |
+| Or | data | ✅ | a, b | result |
+| Parse Number | data | ✅ | value | result |
+| To String | data | ✅ | value | result |
 
 ## Javascript > Math
 
