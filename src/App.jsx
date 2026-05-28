@@ -12,6 +12,7 @@ import ProjectMenu from './components/ProjectMenu';
 import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
 import { compileToExtendScript } from './astCompiler';
+import { scriptUIBuilderOutputs } from './graph/scriptui';
 import {
   setLeafView,
   splitLeaf,
@@ -90,6 +91,27 @@ export default function App() {
       edges: edges.length,
     });
   }, [nodes, edges, globalVariables]);
+
+  // Keep every ScriptUI Builder's output pins in sync with its resource
+  // string — regardless of selection. (Previously this only ran for the
+  // selected node in PropertiesPanel, so pins went stale after loading a
+  // project or editing the string without selecting the node.) Guarded so
+  // it only writes when a pin set actually changed, avoiding render loops.
+  useEffect(() => {
+    let dirty = false;
+    const next = nodes.map((n) => {
+      if (n.data?.label !== 'ScriptUI Builder') return n;
+      const desired = scriptUIBuilderOutputs(n.data?.values?.scriptUI_string);
+      const cur = n.data?.outputs || [];
+      const same =
+        cur.length === desired.length &&
+        desired.every((o, i) => o.id === cur[i]?.id && o.label === cur[i]?.label);
+      if (same) return n;
+      dirty = true;
+      return { ...n, data: { ...n.data, outputs: desired } };
+    });
+    if (dirty) setNodes(next);
+  }, [nodes, setNodes]);
 
   // Debounced autosave. Cancels the pending write on every subsequent
   // change so we only persist after the user pauses for ~500 ms.

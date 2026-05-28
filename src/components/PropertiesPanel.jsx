@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { scriptUIBuilderOutputs } from '../graph/scriptui';
 import './PropertiesPanel.css';
 
 const JS_IDENTIFIER = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
@@ -87,25 +86,8 @@ export default function PropertiesPanel({
     [selectedNode, setNodes],
   );
 
-  useEffect(() => {
-    const isScriptUIBuilder = selectedNode?.data?.label === 'ScriptUI Builder';
-    const scriptUIString = selectedNode?.data?.values?.scriptUI_string;
-
-    if (isScriptUIBuilder && scriptUIString != null) {
-      // Single source of truth shared with the compiler (src/graph/scriptui.js).
-      const newOutputs = scriptUIBuilderOutputs(scriptUIString);
-
-      const currentOutputs = selectedNode.data.outputs || [];
-      const changed = newOutputs.length !== currentOutputs.length || 
-                      newOutputs.some((o, i) => o.id !== currentOutputs[i]?.id);
-                      
-      if (changed) {
-        setNodes(nds => nds.map(n => 
-          n.id !== selectedNode.id ? n : { ...n, data: { ...n.data, outputs: newOutputs } }
-        ));
-      }
-    }
-  }, [selectedNode?.data?.label, selectedNode?.data?.values?.scriptUI_string, selectedNode?.id, setNodes, selectedNode?.data?.outputs]);
+  // ScriptUI Builder output-pin sync now lives in App.jsx (runs for every
+  // builder, not just the selected one) — see scriptUIBuilderOutputs.
 
   if (!selectedNode) {
     return (
@@ -181,6 +163,24 @@ export default function PropertiesPanel({
             Edit UI Layout
           </button>
         </div>
+      )}
+
+      {isScriptUIBuilder && (
+        <label className="ebn-props__field" style={{ marginTop: '12px' }}>
+          <span className="ebn-props__label">UI Mode</span>
+          <select
+            className="ebn-props__input"
+            value={selectedNode.data.values?.ui_mode || 'window'}
+            onChange={(e) => patchValues('ui_mode', e.target.value)}
+          >
+            <option value="window">Floating Window</option>
+            <option value="panel">Dockable Panel</option>
+          </select>
+          <span className="ebn-props__hint">
+            Panel reuses the docked AE panel (<code>this</code>) when available,
+            else opens a window. Use a <code>palette</code> resource for panels.
+          </span>
+        </label>
       )}
 
       {isUIEventListener && (

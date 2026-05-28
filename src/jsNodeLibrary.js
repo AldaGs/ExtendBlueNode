@@ -645,7 +645,8 @@ export const JS_NODE_LIBRARY = [
                   { id: 'window_obj', label: 'Window Object' },
                 ],
                 values: {
-                  scriptUI_string: 'dialog { text: "My Dialog", btn_submit: Button { text: "Submit" } }'
+                  scriptUI_string: 'dialog { text: "My Dialog", btn_submit: Button { text: "Submit" } }',
+                  ui_mode: 'window', // 'window' (floating) | 'panel' (dockable)
                 },
               },
             }),

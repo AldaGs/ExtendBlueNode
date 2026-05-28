@@ -197,10 +197,17 @@ const EBN_NODE_EMITTERS = {
     const stringLiteral = JSON.stringify(node.data?.values?.scriptUI_string || '');
     const stringVar = ctx.varName(node) + '_String';
     const winVar = ctx.varName(node) + '_Window';
-    
+    const mode = node.data?.values?.ui_mode || 'window';
+    // Panel mode: when AE runs this script as a dockable panel it binds the
+    // Panel to `this`; reuse it, otherwise fall back to a floating window so
+    // the same graph still runs from the ScriptUI launcher / ESTK.
+    const init =
+      mode === 'panel'
+        ? `(this instanceof Panel) ? this : new Window(${stringVar})`
+        : `new Window(${stringVar})`;
     return [
       ir.varDecl(stringVar, stringLiteral),
-      ir.varDecl(winVar, `new Window(${stringVar})`)
+      ir.varDecl(winVar, init),
     ];
   },
   'UI Event Listener': (node, ctx) => {
@@ -216,8 +223,10 @@ const EBN_NODE_EMITTERS = {
   },
   'Show Window': (node, ctx) => {
     const winObj = ctx.resolveInput(node, { id: 'window_obj', type: 'expr', default: 'null' });
+    // Lay out, then show only a real Window. A dockable Panel (panel mode)
+    // is already on screen, so calling .show() on it would throw — guard it.
     return [
-      ir.raw(`if (${winObj}) ${winObj}.show();`)
+      ir.raw(`if (${winObj}) { ${winObj}.layout.layout(true); if (${winObj} instanceof Window) ${winObj}.show(); }`),
     ];
   },
   'Custom UI Code': (node, ctx) => {
