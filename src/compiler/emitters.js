@@ -266,8 +266,18 @@ export function resolveExpressionFor(node, ctx, outputHandle) {
   // Data-side ebnNode dispatch — keyed by label so these nodes can use
   // the generic shell and still participate in expression composition.
   if (node.type === 'ebnNode') {
-    const fn = EBN_DATA_EMITTERS[node.data?.label];
+    const label = node.data?.label;
+    const fn = EBN_DATA_EMITTERS[label];
     if (fn) return fn(node, ctx, outputHandle);
+    // Generic fallback: every action node's exec emitter assigns its return
+    // value to `ctx.varName(node)`. When something downstream wires that
+    // node's `result` output, just reuse that variable name — that's what
+    // the action produced. Without this, `addComp.result` → `openInViewer`
+    // silently falls back to the `activeComp` default and the wire does
+    // nothing visible.
+    if (outputHandle === 'result' && EBN_NODE_EMITTERS[label]) {
+      return ctx.varName(node);
+    }
   }
 
   return null;
