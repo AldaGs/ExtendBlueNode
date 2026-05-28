@@ -26,7 +26,7 @@ Phased. Each phase ends with a tag-worthy deliverable. Effort is rough person-da
 - [x] `src/cep.js`: `isCep()`, `runInHost(script)`, `pingHost()`. Always resolves, translates the cryptic "EvalScript error." to a helpful manifest-path hint.
 - [x] Wire the button: shows *Injecting…*, then a colored Run-status pill (*Injected* green / *Run error* red / *Browser mode* grey) with the timestamp and message tooltip.
 - [x] **First successful inject from the panel into AE confirmed** by project owner.
-- [ ] **Error traceback v1** — needs the IR to track `lineNo → nodeId`. Cheap once we extend the printer (rolled into §4 polish below).
+- [x] **Error traceback v1 (Wave 2)** — IR now tracks `lineNo → nodeId`; a failed inject highlights the offending node. See §4 wave 3.
 
 ## 3. Compiler IR pass — ✅ shipped (`c135439`)
 
@@ -51,7 +51,7 @@ Queued for §4 wave 3:
 - [x] **More AE selectors** — All Selected Layers (`<comp>.selectedLayers`, pairs with For Each (Array)) and Select Layers by Class (whitelisted `AVLayer` / `TextLayer` / `ShapeLayer` / `CameraLayer` / `LightLayer`, filtered via the hoisted `ebnLayersByClass` helper). Class picker in the Properties panel.
 - [ ] **Keyframe ops** — Add Keyframe at Time, Remove Keyframe, Read Value at Time.
 - [ ] **Expression authoring** — a Math/Expression node that writes into `.expression` instead of `.setValue`.
-- [ ] **Line-map for error traceback** — IR printer tracks `lineNo → nodeId`; AE error parser highlights the offending node in red on the canvas.
+- [x] **Line-map for error traceback (Wave 2)** — the IR printer is line-oriented and tags every line with its originating `nodeId` (`printIRWithMap`); `compileWithLineMap` returns `{ code, lineMap }`. On a failed inject, `App` maps the host's `err.line` to a node and flags it with a pulsing red outline on the canvas (cleared on the next edit).
 
 ## 4b. JavaScript general-purpose nodes — ✅ shipped (`da1640c` + `8367247`)
 
@@ -143,4 +143,4 @@ Blender-style "collapse a selection into one reusable node".
 - For **product depth**: §6 → §7. The LLM angle plus reverse-translation is the moat against plain CEP authoring tools. The §3 IR refactor lowered the agent's integration cost significantly.
 - For **partnership conversations**: cut a signed ZXP from §8 first so prospects can install it without enabling dev mode. Then layer the Copilot demo on top.
 
-Current single-dev recommendation: **Wave 1 demo-polish is shipped** (§5 Globals cross-link, more selectors, ScriptUI builder polish). Next per the agreed plan: **Wave 2 — demo reliability** (line-map error traceback so a failed inject highlights the offending node, per-branch variable scoping, audit false-positive cleanup), then **§6 tool-use** and **§7 Blueprints** for the moat.
+Current single-dev recommendation: **Waves 1 + 2 are shipped** — demo polish (§5 Globals cross-link, more selectors, ScriptUI builder polish) and demo reliability (line-map error traceback, per-branch scoping, audit cleanup). Next per the agreed plan: **Wave 3 — node coverage depth** (keyframe ops, expression-authoring node, ScriptUI string→tree import), then **§6 Copilot tool-use** and **§7 Blueprints** for the moat.

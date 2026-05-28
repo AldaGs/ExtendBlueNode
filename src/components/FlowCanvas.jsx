@@ -95,6 +95,7 @@ function FlowCanvasInner({
   onNodesChange,
   onEdgesChange,
   onSelectionChange,
+  errorNodeId,
 }) {
   // Report selection up to App. Each canvas has its own provider, so this
   // hook only fires for *this* canvas's selection events. The latest
@@ -258,6 +259,20 @@ function FlowCanvasInner({
           : { ...e, data: { ...e.data, live: liveEdgeIds.has(e.id) } },
       ),
     [edges, liveEdgeIds],
+  );
+
+  // Flag the node a runtime error traced back to with a red-outline class,
+  // without mutating App's node state (purely presentational).
+  const decoratedNodes = useMemo(
+    () =>
+      errorNodeId
+        ? nodes.map((n) =>
+            n.id === errorNodeId
+              ? { ...n, className: `${n.className || ''} ebn-node--error`.trim() }
+              : n,
+          )
+        : nodes,
+    [nodes, errorNodeId],
   );
 
   /* ------------ connection + reconnect (one wire per input) ------------ */
@@ -570,7 +585,7 @@ function FlowCanvasInner({
       onContextMenu={onContextMenu}
     >
       <ReactFlow
-        nodes={nodes}
+        nodes={decoratedNodes}
         edges={decoratedEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}

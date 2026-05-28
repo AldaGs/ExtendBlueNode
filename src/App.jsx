@@ -12,7 +12,7 @@ import ViewLeaf from './components/ViewLeaf';
 import ProjectMenu from './components/ProjectMenu';
 import { GlobalsProvider } from './state/GlobalsContext';
 import { initialNodes, initialEdges } from './graph/initialGraph';
-import { compileToExtendScript } from './astCompiler';
+import { compileWithLineMap } from './astCompiler';
 import { scriptUIBuilderOutputs } from './graph/scriptui';
 import {
   setLeafView,
@@ -74,7 +74,13 @@ export default function App() {
   const [lastSave, setLastSave] = useState(restored ? Date.now() : null);
   const [running, setRunning] = useState(false);
   const [lastRun, setLastRun] = useState(null); // {at, ok, message, offline}
+  const [errorNodeId, setErrorNodeId] = useState(null); // node to flag red after a run error
   const activeComp = 'Main_Comp_01';
+
+  // line -> nodeId map for the most recent compile, used to trace a runtime
+  // error line back to the node that produced it. A ref (not state) so the
+  // compile effect doesn't re-run when it updates.
+  const lineMapRef = useRef({});
 
   // Cursor for staggering spawned-from-panel nodes so they don't pile on top.
   const spawnCursorRef = useRef(0);
@@ -85,7 +91,11 @@ export default function App() {
   );
 
   useEffect(() => {
-    setGeneratedCode(compileToExtendScript(nodes, edges, globalVariables));
+    const { code, lineMap } = compileWithLineMap(nodes, edges, globalVariables);
+    setGeneratedCode(code);
+    lineMapRef.current = lineMap;
+    // A graph/code change invalidates any prior error highlight.
+    setErrorNodeId(null);
     setLastCompile({
       at: Date.now(),
       nodes: nodes.length,
@@ -200,6 +210,12 @@ export default function App() {
     setRunning(true);
     try {
       const result = await runInHost(generatedCode);
+      // Trace a runtime error line back to the node that emitted it.
+      const tracedNodeId =
+        !result.ok && result.line != null
+          ? lineMapRef.current[Number(result.line)] ?? null
+          : null;
+      setErrorNodeId(tracedNodeId);
       setLastRun({
         at: Date.now(),
         ok: !!result.ok,
@@ -207,12 +223,14 @@ export default function App() {
         message: result.ok
           ? 'Injected successfully.'
           : (result.message || 'Unknown host error.') +
-            (result.line ? ` (line ${result.line})` : ''),
+            (result.line ? ` (line ${result.line})` : '') +
+            (tracedNodeId ? ' — offending node highlighted on canvas' : ''),
       });
+      if (result.ok) setErrorNodeId(null);
       if (!result.ok) {
         // Mirror to console so DevTools always has the full payload.
         // eslint-disable-next-line no-console
-        console.warn('[ebn] inject failed:', result);
+        console.warn('[ebn] inject failed:', result, '-> node', tracedNodeId);
       }
     } finally {
       setRunning(false);
@@ -268,6 +286,7 @@ export default function App() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onSelectionChange={setSelectedNode}
+            errorNodeId={errorNodeId}
           />
         ),
       },
@@ -351,7 +370,7 @@ export default function App() {
     [
       nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange,
       generatedCode, liveSelected, propsValid, globalVariables,
-      onSpawnGlobalRef,
+      onSpawnGlobalRef, errorNodeId,
     ],
   );
 

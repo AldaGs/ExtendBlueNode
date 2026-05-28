@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { compileToExtendScript, compileToIR } from './astCompiler';
+import { compileToExtendScript, compileToIR, compileWithLineMap } from './astCompiler';
 
 /* ----------------------------- factories ----------------------------- */
 
@@ -82,6 +82,24 @@ describe('compileToExtendScript', () => {
     expect(out).toMatch(/app\.beginUndoGroup/);
     expect(out).toMatch(/app\.endUndoGroup/);
     expect(out).toMatch(/} catch \(error\)/);
+  });
+
+  it('compileWithLineMap traces each emitted line back to its node', () => {
+    const a = getActiveComp('a');
+    const b = selectLayer('b', 7);
+    const c = setProperty('c');
+    const { code, lineMap } = compileWithLineMap(
+      [a, b, c],
+      [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'c')],
+    );
+    const lines = code.split('\n');
+    const giLine = lines.findIndex((l) => /app\.project\.activeItem/.test(l));
+    const setLine = lines.findIndex((l) => /\.setValue\(50\)/.test(l));
+    expect(giLine).toBeGreaterThan(-1);
+    expect(setLine).toBeGreaterThan(-1);
+    // lineMap is 1-based; the index+1 line traces to the emitting node.
+    expect(lineMap[giLine + 1]).toBe('a');
+    expect(lineMap[setLine + 1]).toBe('c');
   });
 
   it('walks a linear chain and emits each step in order', () => {
@@ -432,6 +450,33 @@ describe('select + selectors + for-each', () => {
       [execEdge('e1', 'a', 'b'), execEdge('e2', 'b', 'c')],
     );
     expect(out).toMatch(/targetLayer\.property\("ADBE Opacity"\)\.setValue\(50\)/);
+  });
+
+  it('two wired selectors keep independent layers (no targetLayer clobber)', () => {
+    // a -> s1 -> c1 -> s2 -> c2 ; each Set Property wired to its own selector.
+    // After s2 reassigns targetLayer, c1 must still act on s1's captured layer.
+    const a = getActiveComp('a');
+    const s1 = selectLayerByName('s1', 'Title');
+    const c1 = setProperty('c1', { value: 10 });
+    const s2 = selectLayerByName('s2', 'Subtitle');
+    const c2 = setProperty('c2', { value: 20 });
+    const out = compileToExtendScript(
+      [a, s1, c1, s2, c2],
+      [
+        execEdge('e1', 'a', 's1'),
+        execEdge('e2', 's1', 'c1'),
+        execEdge('e3', 'c1', 's2'),
+        execEdge('e4', 's2', 'c2'),
+        dataEdge('d1', 's1', 'layer', 'c1', 'layer'),
+        dataEdge('d2', 's2', 'layer', 'c2', 'layer'),
+      ],
+    );
+    // Each selector captures into its own var_<id>.
+    expect(out).toMatch(/var var_s1 = targetLayer;/);
+    expect(out).toMatch(/var var_s2 = targetLayer;/);
+    // Each Set Property targets its own captured layer, not the shared one.
+    expect(out).toMatch(/var_s1\.property\("ADBE Opacity"\)\.setValue\(10\)/);
+    expect(out).toMatch(/var_s2\.property\("ADBE Opacity"\)\.setValue\(20\)/);
   });
 });
 

@@ -1,7 +1,7 @@
 # EBN Node Catalog (auto-generated)
 
 > Regenerate with `npx vite-node scripts/audit-nodes.mjs --catalog`.
-> 1631 nodes total, 1 broken. Hand-authored: 65; auto-generated After Effects DOM: 1566 (see scripts/generate-ae-nodes.mjs).
+> 1631 nodes total, 0 broken. Hand-authored: 65; auto-generated After Effects DOM: 1566 (see scripts/generate-ae-nodes.mjs).
 
 ## Actions
 
@@ -54,7 +54,7 @@
 | Node | Role | Status | Inputs | Outputs |
 |---|---|---|---|---|
 | Call Function | exec+data | ✅ | exec_in, arg1, arg2, arg3, arg4 | exec_out, result |
-| Define Function | exec+data | ❌ | functionName, params | exec_body, param1, param2, param3, param4 |
+| Define Function | exec+data | ✅ | functionName, params | exec_body, param1, param2, param3, param4 |
 | For Each (Array) | exec+data | ✅ | exec_in, array | exec_body, item, index, exec_done |
 | For Loop | exec+data | ✅ | exec_in, start, end, step | exec_body, index, exec_done |
 | Return | exec | ✅ | exec_in, value | — |

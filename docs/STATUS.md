@@ -48,8 +48,9 @@ Tri-pane UI shell, CEP manifest + AE preview pipeline, ComfyUI/Blender-style nod
 | JS nodes | General-purpose tier | Array, Object, String, Logic, Math, control-flow (For Loop / For Each / While / Switch), user-defined functions (Define / Call / Return), File I/O (Load/Save JSON, New File/Folder), Debug, Set Local Variable, Color Picker, Vector Math |
 | ScriptUI | Panels & dialogs | Four nodes (Builder / Event Listener / Show Window / Custom UI Code), structured-tree model + serializer, visual builder pane with live `ui_<name>` pin sync, chainable listeners with ordering warning, palette-first non-modal default |
 | Copilot | LLM backends | Local Ollama + cloud (Claude / OpenAI / Gemini) services; system prompt built from live node catalog + ScriptUI authoring section; emits DAG JSON applied to the canvas |
-| Tests | Suite growth | 23 → 62 cases, all green; new control-flow, ScriptUI, and selector coverage |
+| Tests | Suite growth | 23 → 64 cases, all green; new control-flow, ScriptUI, selector, scoping, and line-map coverage |
 | Wave 1 | Demo polish | Globals "+ Get/+ Set" + Promote-to-Global; new selectors (All Selected Layers, Select Layers by Class); ScriptUI builder pane gains more controls, alignChildren / slider / preferredSize editors |
+| Wave 2 | Demo reliability | Line-map error traceback (failed inject highlights the offending node in red); per-branch variable scoping fix; `audit:nodes` false-positive cleanup (0 broken) |
 
 Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
@@ -67,11 +68,11 @@ Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
 | Severity | Item | Notes |
 | --- | --- | --- |
-| Low | Two-branch graphs reuse `targetLayer` across siblings | Each `Select Layer` reassigns `targetLayer`; the immediately-following `Set Property` uses the right value, but the var name isn't per-branch unique. Cleanest fix lands with the typed-variable extension to the IR (planned alongside scope-aware emitters) |
+| ~~Low~~ Fixed (Wave 2) | ~~Two-branch graphs reuse `targetLayer` across siblings~~ | Selectors still set the shared `targetLayer` (linear-graph fallback) but also capture the selection into a per-node variable that the selector's data output resolves to, so an explicitly-wired consumer is stable even after a sibling selector reassigns `targetLayer` |
 | Low | Match-names containing literal `/` can't be expressed inline | Workaround: use a String node with the raw name, or call multiple consecutive Set Properties. Documented in `docs/NODES.md`. A per-segment Property Path UI is queued |
 | Low | Build bundle ~4 MB un-gzipped (Monaco) | Already split into its own chunk so the app shell loads first (107 KB gzipped). Code-splitting Monaco language workers further is queued (see §0 of the roadmap) |
 | Low | Copilot generates graphs but can't yet read/patch them | Backends are live (Ollama + cloud); LLM tool-use (read graph/IR, propose diffs with preview) is the next §6 increment |
-| Low | `audit:nodes` reports Define Function as broken | False positive — Define Function is hoisted in `astCompiler.js`, not part of the exec chain, and is test-covered. Audit heuristic could be taught to skip hoisted node kinds |
+| ~~Low~~ Fixed (Wave 2) | ~~`audit:nodes` reports Define Function as broken~~ | The audit now whitelists hoisted node labels (`HOISTED_LABELS`), so it reports 0 broken |
 
 ## 5. Risks & mitigations
 
@@ -82,8 +83,8 @@ Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
 ## 6. Numbers
 
-- **Tests:** 62/62 green.
-- **Nodes:** 1,631 total (65 hand-authored + 1,566 auto-generated AE DOM); 1,630 with verified emitters, 1 audit false-positive (Define Function, hoisted).
+- **Tests:** 64/64 green.
+- **Nodes:** 1,631 total (65 hand-authored + 1,566 auto-generated AE DOM); audit reports 0 broken.
 - **Bundle:** app shell 363 KB (107 KB gzipped), Monaco split into its own 4 MB chunk (loaded on first Code-view mount).
 - **Commits since last status report:** ScriptUI + JS-node + AE-DOM-generation + Copilot-backend waves, all with green-test gating.
 

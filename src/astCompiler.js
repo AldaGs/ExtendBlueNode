@@ -7,7 +7,7 @@
 // Per-node-kind emit logic lives in ./compiler/emitters; this file
 // orchestrates the walk, hoisting, and orphan reporting.
 
-import { ir, printIR } from './compiler/ir';
+import { ir, printIRWithMap } from './compiler/ir';
 import {
   emitterFor,
   SELF_BRANCHING_TYPES,
@@ -177,6 +177,11 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
 
     const emit = emitterFor(node);
     const own = emit ? emit(node, ctx) : [];
+    // Tag each statement this node produced with its id (unless an inner
+    // walk already tagged it) so the printer can build a line -> node map.
+    for (const s of own) {
+      if (s && s.nodeId == null) s.nodeId = node.id;
+    }
 
     if (
       SELF_BRANCHING_TYPES.has(node.type) ||
@@ -207,7 +212,9 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
   for (const def of funcDefNodes) {
     reached.add(def.id);
     const body = ctx.walkBranch(def.id, 'exec_body');
-    funcDeclsIR.push(ir.funcDecl(funcDefName(def, ctx), funcDefParams(def, ctx), body));
+    const decl = ir.funcDecl(funcDefName(def, ctx), funcDefParams(def, ctx), body);
+    decl.nodeId = def.id;
+    funcDeclsIR.push(decl);
   }
 
   /* --- walk first so helpers / reached / orphans are all settled --- */
@@ -299,8 +306,10 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
 const JSON_POLYFILL = `// JSON Polyfill
 if(typeof JSON!=="object"){JSON={};}(function(){"use strict";var rx_one=/^[\\],:{}\\s]*$/,rx_two=/\\\\(?:["\\\\\\/bfnrt]|u[0-9a-fA-F]{4})/g,rx_three=/"[^"\\\\\\n\\r]*"|true|false|null|-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?/g,rx_four=/(?:^|:|,)(?:\\s*\\[)+/g,rx_escapable=/[\\\\\\"\\u0000-\\u001f\\u007f-\\u009f\\u00ad\\u0600-\\u0604\\u070f\\u17b4\\u17b5\\u200c-\\u200f\\u2028-\\u202f\\u2060-\\u206f\\ufeff\\ufff0-\\uffff]/g,rx_dangerous=/[\\u0000\\u00ad\\u0600-\\u0604\\u070f\\u17b4\\u17b5\\u200c-\\u200f\\u2028-\\u202f\\u2060-\\u206f\\ufeff\\ufff0-\\uffff]/g;function f(n){return n<10?"0"+n:n;}function this_value(){return this.valueOf();}if(typeof Date.prototype.toJSON!=="function"){Date.prototype.toJSON=function(){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null;};Boolean.prototype.toJSON=this_value;Number.prototype.toJSON=this_value;String.prototype.toJSON=this_value;}var gap,indent,meta,rep;function quote(string){rx_escapable.lastIndex=0;return rx_escapable.test(string)?"\\\""+string.replace(rx_escapable,function(a){var c=meta[a];return typeof c==="string"?c:"\\\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4);})+"\\\"":"\\\""+string+"\\\"";}function str(key,holder){var i,k,v,length,mind=gap,partial,value=holder[key];if(value&&typeof value==="object"&&typeof value.toJSON==="function"){value=value.toJSON(key);}if(typeof rep==="function"){value=rep.call(holder,key,value);}switch(typeof value){case"string":return quote(value);case"number":return isFinite(value)?String(value):"null";case"boolean":case"null":return String(value);case"object":if(!value){return"null";}gap+=indent;partial=[];if(Object.prototype.toString.apply(value)==="[object Array]"){length=value.length;for(i=0;i<length;i+=1){partial[i]=str(i,value)||"null";}v=partial.length===0?"[]":gap?"[\\n"+gap+partial.join(",\\n"+gap)+"\\n"+mind+"]":"["+partial.join(",")+"]";gap=mind;return v;}if(rep&&typeof rep==="object"){length=rep.length;for(i=0;i<length;i+=1){if(typeof rep[i]==="string"){k=rep[i];v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v);}}}}else{for(k in value){if(Object.prototype.hasOwnProperty.call(value,k)){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v);}}}}v=partial.length===0?"{}":gap?"{\\n"+gap+partial.join(",\\n"+gap)+"\\n"+mind+"}":"{"+partial.join(",")+"}";gap=mind;return v;}}if(typeof JSON.stringify!=="function"){meta={"\\b":"\\\\b","\\t":"\\\\t","\\n":"\\\\n","\\f":"\\\\f","\\r":"\\\\r","\\\"":"\\\\\\\"","\\\\":"\\\\\\\\"};JSON.stringify=function(value,replacer,space){var i;gap="";indent="";if(typeof space==="number"){for(i=0;i<space;i+=1){indent+=" ";}}else if(typeof space==="string"){indent=space;}rep=replacer;if(replacer&&typeof replacer!=="function"&&(typeof replacer!=="object"||typeof replacer.length!=="number")){throw new Error("JSON.stringify");}return str("",{"":value});};}if(typeof JSON.parse!=="function"){JSON.parse=function(text,reviver){var j;function walk(holder,key){var k,v,value=holder[key];if(value&&typeof value==="object"){for(k in value){if(Object.prototype.hasOwnProperty.call(value,k)){v=walk(value,k);if(v!==undefined){value[k]=v;}else{delete value[k];}}}}return reviver.call(holder,key,value);}text=String(text);rx_dangerous.lastIndex=0;if(rx_dangerous.test(text)){text=text.replace(rx_dangerous,function(a){return"\\\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4);});}if(rx_one.test(text.replace(rx_two,"@").replace(rx_three,"]").replace(rx_four,""))){j=eval("("+text+")");return(typeof reviver==="function")?walk({"":j},""):j;}throw new SyntaxError("JSON.parse");};}}());`;
 
-export function compileToExtendScript(nodes, edges, globalVariables = []) {
-  if (!nodes || nodes.length === 0) return '// No nodes to compile.';
+// Returns { code, lineMap } where lineMap is a 1-based { line: nodeId } map
+// into `code`, so a runtime error on a given line can be traced to its node.
+export function compileWithLineMap(nodes, edges, globalVariables = []) {
+  if (!nodes || nodes.length === 0) return { code: '// No nodes to compile.', lineMap: {} };
 
   const needsJson = nodes.some(n => n.data?.label === 'Save JSON' || n.data?.label === 'Load JSON');
 
@@ -322,11 +331,14 @@ export function compileToExtendScript(nodes, edges, globalVariables = []) {
     ir.raw("alert('EBN Execution Error: ' + error.message);"),
   ];
 
-  const mainScript = printIR([ir.tryCatch(bodyIR, catchIR)]);
+  // The polyfill is prefixed verbatim, so shift the map past its lines.
+  const prefix = needsJson ? JSON_POLYFILL + '\n\n' : '';
+  const offset = prefix ? prefix.split('\n').length - 1 : 0;
+  const { code, lineMap } = printIRWithMap([ir.tryCatch(bodyIR, catchIR)], offset);
 
-  if (needsJson) {
-    return JSON_POLYFILL + '\n\n' + mainScript;
-  }
+  return { code: prefix + code, lineMap };
+}
 
-  return mainScript;
+export function compileToExtendScript(nodes, edges, globalVariables = []) {
+  return compileWithLineMap(nodes, edges, globalVariables).code;
 }

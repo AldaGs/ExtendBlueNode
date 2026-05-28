@@ -270,3 +270,17 @@
 .ebn-copilot__input button:hover {
   color: var(--ebn-accent-hover);
 }
+
+/* Runtime-error highlight: the node a failed inject traced back to. */
+.react-flow__node.ebn-node--error {
+  outline: 2px solid #ff4d4f;
+  outline-offset: 2px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.35), 0 0 16px rgba(255, 77, 79, 0.55);
+  animation: ebn-error-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ebn-error-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.30), 0 0 12px rgba(255, 77, 79, 0.45); }
+  50%      { box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.55), 0 0 22px rgba(255, 77, 79, 0.75); }
+}

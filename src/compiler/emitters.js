@@ -58,6 +58,17 @@ function sanitizeLayerClass(value) {
   return LAYER_CLASSES.indexOf(value) !== -1 ? value : 'AVLayer';
 }
 
+// Shared body for the Select-Layer-by-* emitters: assign the shared
+// `targetLayer` (linear-graph fallback) AND a per-node capture variable that
+// the selector's data output resolves to (stable under sibling reassignment).
+function selectorCapture(node, ctx, expr) {
+  return [
+    ir.varDecl('targetLayer', expr),
+    ir.throwIfNot('targetLayer', 'Layer not found.'),
+    ir.varDecl(ctx.varName(node), 'targetLayer'),
+  ];
+}
+
 /* ----------------------------- math / compare ----------------------------- */
 
 // Inline expression for a wired data input. The orchestrator inlines
@@ -75,28 +86,24 @@ const EBN_NODE_EMITTERS = {
     ),
   ],
 
+  // Selectors keep `targetLayer` as the shared "most recently selected layer"
+  // for the common linear graph (an unwired Set Property falls back to it).
+  // They ALSO capture the selection into a per-node variable so an explicitly
+  // wired consumer references a stable layer even after a later sibling
+  // selector reassigns `targetLayer` — see selectorCapture / its data emitter.
   'Select Layer by ID': (node, ctx) => {
     const layerId = ctx.resolveInput(node, { id: 'layer_id', type: 'number' });
-    return [
-      ir.varDecl('targetLayer', `activeComp.layerByID(${layerId})`),
-      ir.throwIfNot('targetLayer', 'Layer not found.'),
-    ];
+    return selectorCapture(node, ctx, `activeComp.layerByID(${layerId})`);
   },
 
   'Select Layer by Name': (node, ctx) => {
     const name = ctx.resolveInput(node, { id: 'layer_name', type: 'text' });
-    return [
-      ir.varDecl('targetLayer', `activeComp.layer(${name})`),
-      ir.throwIfNot('targetLayer', 'Layer not found.'),
-    ];
+    return selectorCapture(node, ctx, `activeComp.layer(${name})`);
   },
 
   'Select Layer by Index': (node, ctx) => {
     const idx = ctx.resolveInput(node, { id: 'layer_index', type: 'number' });
-    return [
-      ir.varDecl('targetLayer', `activeComp.layer(${idx})`),
-      ir.throwIfNot('targetLayer', 'Layer not found.'),
-    ];
+    return selectorCapture(node, ctx, `activeComp.layer(${idx})`);
   },
 
   'Set Property': (node, ctx) => {
@@ -597,9 +604,11 @@ const EBN_DATA_EMITTERS = {
   // Debug's data-side output is a pass-through of its wired `value` input,
   // so it can be inserted mid-chain on a data wire without breaking it.
   'Debug': (node, ctx) => ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' }),
-  'Select Layer by ID': () => 'targetLayer',
-  'Select Layer by Name': () => 'targetLayer',
-  'Select Layer by Index': () => 'targetLayer',
+  // The per-node capture variable declared by selectorCapture — stable even
+  // after a later sibling selector reassigns the shared `targetLayer`.
+  'Select Layer by ID': (node, ctx) => ctx.varName(node),
+  'Select Layer by Name': (node, ctx) => ctx.varName(node),
+  'Select Layer by Index': (node, ctx) => ctx.varName(node),
   'Set Local Variable': (node, ctx) => ctx.varName(node),
 
   // Array of the comp's currently selected layers — pairs with For Each (Array).

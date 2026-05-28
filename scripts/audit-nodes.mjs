@@ -27,6 +27,11 @@ const ctx = {
   sanitizeVarName: (x) => x,
 };
 
+// Labels handled by a hoisting pass in astCompiler.js rather than the per-node
+// exec emitter registry. They legitimately have no entry in emitterFor, so the
+// "unknown label" stub is expected — not a real break.
+const HOISTED_LABELS = new Set(['Define Function']);
+
 function execHandles(node) {
   const ins = node.data?.inputs || [];
   const outs = node.data?.outputs || [];
@@ -83,7 +88,7 @@ for (const tmpl of flattenLibrary()) {
 
   let status = 'ok';
   const reasons = [];
-  if (isExec && isExecBroken(node)) {
+  if (isExec && !HOISTED_LABELS.has(label) && isExecBroken(node)) {
     status = 'BROKEN';
     reasons.push('no exec emitter');
   }
