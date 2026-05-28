@@ -131,4 +131,119 @@ describe('control-flow + naming nodes', () => {
     expect(out).toMatch(/while \(false\)/);
     expect(out).not.toMatch(/unknown ebnNode label/);
   });
+
+  it('Walk Property Tree emits a recursive helper and exposes the current property', () => {
+    const walk = {
+      id: 'w', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Walk Property Tree',
+        inputs: [
+          { id: 'exec_in', label: 'Execution', ...exec },
+          { id: 'root', label: 'Root Property', type: 'expr' },
+        ],
+        outputs: [
+          { id: 'exec_body', label: 'Per Property', ...exec },
+          { id: 'property', label: 'Property' },
+          { id: 'exec_done', label: 'Completed', ...exec },
+        ],
+        values: { root: 'rootGroup' },
+      },
+    };
+    // Set Expression sink: `<property>.expression = "x";`
+    const setExpr = {
+      id: 'se', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Property Set expression',
+        inputs: [
+          { id: 'exec_in', label: 'Execution', ...exec },
+          { id: 'target', label: 'Property', type: 'expr' },
+          { id: 'value', label: 'expression', type: 'text' },
+        ],
+        outputs: [{ id: 'exec_out', label: 'Execution' }],
+        values: { value: 'x' },
+      },
+    };
+    const out = compileToExtendScript(
+      [start('s'), walk, setExpr],
+      [
+        eExec('e1', 's', 'w'),
+        { id: 'eb', source: 'w', sourceHandle: 'exec_body', target: 'se', targetHandle: 'exec_in' },
+        eData('dp', 'w', 'property', 'se', 'target'),
+      ],
+    );
+    // Recursive helper: declares, guards on numProperties, descends 1-based.
+    expect(out).toMatch(/function \w+_walk\(\w+_node\) \{/);
+    expect(out).toMatch(/if \(\w+_node\.numProperties == null\) \{ return; \}/);
+    expect(out).toMatch(/for \(var \w+_i = 1; \w+_i <= \w+_node\.numProperties; \w+_i\+\+\)/);
+    expect(out).toMatch(/\w+_walk\(\w+_node\.property\(\w+_i\)\);/);
+    // Initial call on the root, and the body sets expression on the visited node.
+    expect(out).toMatch(/\w+_walk\(rootGroup\);/);
+    expect(out).toMatch(/\w+_node\.expression = "x";/);
+    expect(out).not.toMatch(/unknown ebnNode label/);
+  });
+
+  it('Define Function hoists a named function and Call Function invokes it by name', () => {
+    const def = {
+      id: 'd', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Define Function',
+        inputs: [
+          { id: 'functionName', label: 'Name', type: 'text' },
+          { id: 'params', label: 'Params', type: 'text' },
+        ],
+        outputs: [
+          { id: 'exec_body', label: 'Body', ...exec },
+          { id: 'param1', label: 'Param 1' },
+        ],
+        values: { functionName: 'square', params: 'n' },
+      },
+    };
+    // Body: Return n  (value wired from the def's param1 output).
+    const ret = {
+      id: 'r', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Return',
+        inputs: [
+          { id: 'exec_in', label: 'Execution', ...exec },
+          { id: 'value', label: 'Value', type: 'expr' },
+        ],
+        outputs: [],
+        values: {},
+      },
+    };
+    const call = {
+      id: 'c', type: 'ebnNode', position: { x: 0, y: 0 },
+      data: {
+        label: 'Call Function',
+        inputs: [
+          { id: 'exec_in', label: 'Execution', ...exec },
+          { id: 'arg1', label: 'Arg 1', type: 'expr' },
+          { id: 'arg2', label: 'Arg 2', type: 'expr' },
+          { id: 'arg3', label: 'Arg 3', type: 'expr' },
+          { id: 'arg4', label: 'Arg 4', type: 'expr' },
+        ],
+        outputs: [{ id: 'exec_out', label: 'Execution', ...exec }, { id: 'result', label: 'Result' }],
+        values: { functionName: 'square', arg1: '5' },
+      },
+    };
+    const out = compileToExtendScript(
+      [start('s'), def, ret, call],
+      [
+        // function body
+        { id: 'eb', source: 'd', sourceHandle: 'exec_body', target: 'r', targetHandle: 'exec_in' },
+        eData('dp', 'd', 'param1', 'r', 'value'),
+        // main chain calls it
+        eExec('e1', 's', 'c'),
+      ],
+    );
+    // Hoisted declaration with the param signature and a return of the param.
+    expect(out).toMatch(/function square\(n\) \{/);
+    expect(out).toMatch(/return n;/);
+    // The call passes arg1 and captures the result into the call node's var.
+    expect(out).toMatch(/var \w+ = square\(5\);/);
+    // Function section precedes the execution chain.
+    expect(out.indexOf('function square')).toBeLessThan(out.indexOf('square(5)'));
+    expect(out).not.toMatch(/unknown ebnNode label/);
+    expect(out).not.toMatch(/no Define Function named/);
+  });
 });

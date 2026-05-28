@@ -42,6 +42,106 @@ export const JS_NODE_LIBRARY = [
             }),
           },
           {
+            type: 'walkPropertyTree',
+            label: 'Walk Property Tree',
+            keywords: ['walk', 'recurse', 'tree', 'property', 'contents', 'descend', 'traverse'],
+            factory: (pos) => ({
+              id: uid('walk'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Walk Property Tree',
+                category: 'logic',
+                themeColor: '#a36b1f',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'root', label: 'Root Property', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_body', label: 'Per Property', type: 'exec' },
+                  { id: 'property', label: 'Property' },
+                  { id: 'exec_done', label: 'Completed', type: 'exec' },
+                ],
+                values: {},
+              },
+            }),
+          },
+          {
+            type: 'defineFunction',
+            label: 'Define Function',
+            keywords: ['function', 'define', 'def', 'declare', 'subroutine', 'recurse'],
+            factory: (pos) => ({
+              id: uid('fn'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Define Function',
+                category: 'logic',
+                themeColor: '#7a2b6b',
+                inputs: [
+                  { id: 'functionName', label: 'Name', type: 'text', placeholder: 'myFunc' },
+                  { id: 'params', label: 'Params (comma-sep)', type: 'text', placeholder: 'a, b' },
+                ],
+                outputs: [
+                  { id: 'exec_body', label: 'Body', type: 'exec' },
+                  { id: 'param1', label: 'Param 1' },
+                  { id: 'param2', label: 'Param 2' },
+                  { id: 'param3', label: 'Param 3' },
+                  { id: 'param4', label: 'Param 4' },
+                ],
+                values: { functionName: 'myFunc', params: '' },
+              },
+            }),
+          },
+          {
+            type: 'callFunction',
+            label: 'Call Function',
+            keywords: ['function', 'call', 'invoke', 'run', 'apply'],
+            factory: (pos) => ({
+              id: uid('call'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Call Function',
+                category: 'logic',
+                themeColor: '#7a2b6b',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'arg1', label: 'Arg 1', type: 'expr' },
+                  { id: 'arg2', label: 'Arg 2', type: 'expr' },
+                  { id: 'arg3', label: 'Arg 3', type: 'expr' },
+                  { id: 'arg4', label: 'Arg 4', type: 'expr' },
+                ],
+                outputs: [
+                  { id: 'exec_out', label: 'Execution', type: 'exec' },
+                  { id: 'result', label: 'Result' },
+                ],
+                values: { functionName: 'myFunc' },
+              },
+            }),
+          },
+          {
+            type: 'returnNode',
+            label: 'Return',
+            keywords: ['return', 'result', 'output', 'yield'],
+            factory: (pos) => ({
+              id: uid('return'),
+              type: 'ebnNode',
+              position: pos,
+              data: {
+                label: 'Return',
+                category: 'logic',
+                themeColor: '#7a2b6b',
+                inputs: [
+                  { id: 'exec_in', label: 'Execution', type: 'exec' },
+                  { id: 'value', label: 'Value', type: 'expr' },
+                ],
+                outputs: [],
+                values: { value: '' },
+              },
+            }),
+          },
+          {
             type: 'whileLoop',
             label: 'While Loop',
             keywords: ['loop', 'while', 'repeat', 'condition'],

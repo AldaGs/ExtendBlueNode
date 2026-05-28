@@ -29,6 +29,11 @@ export const ir = {
   funcAssign: (target, params, body) => ({
     kind: 'funcAssign', target, params: params || [], body,
   }),
+  // `function name(params) { body }` — a hoisted named declaration, e.g. the
+  // recursive helper emitted by "Walk Property Tree".
+  funcDecl: (name, params, body) => ({
+    kind: 'funcDecl', name, params: params || [], body,
+  }),
   tryCatch: (body, catchBody, errVar = 'error') => ({
     kind: 'tryCatch', body, catchBody, errVar,
   }),
@@ -81,6 +86,12 @@ function printOne(s, depth) {
     case 'funcAssign': {
       const head = `${indent(depth)}${s.target} = function (${s.params.join(', ')}) {`;
       return [head, printIR(s.body, depth + 1), `${indent(depth)}};`]
+        .filter((l) => l !== '')
+        .join('\n');
+    }
+    case 'funcDecl': {
+      const head = `${indent(depth)}function ${s.name}(${s.params.join(', ')}) {`;
+      return [head, printIR(s.body, depth + 1), `${indent(depth)}}`]
         .filter((l) => l !== '')
         .join('\n');
     }

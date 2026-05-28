@@ -121,6 +121,48 @@ function generateNodes() {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: '${defaultTarget}' });
     return \`\${target}.${propName}\`;
   }`);
+
+            // Writable properties also get a "Set <prop>" action node so the
+            // graph can assign them (e.g. `property.expression = ...`). The AE
+            // typings mark read-only members `readonly`; skip those.
+            const isWritable = !prop.isReadonly();
+            if (isWritable) {
+                const setLabel = `${className} Set ${propName}`;
+                const valuePortType = mapTypeToPortType(prop.getTypeNode());
+
+                items.push(`
+      {
+        type: 'ae_${className}_set_${propName}',
+        label: '${setLabel}',
+        keywords: ['${className.toLowerCase()}', '${propName.toLowerCase()}', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: '${setLabel}',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: '${className}', type: 'expr' },
+              { id: 'value', label: '${propName}', type: '${valuePortType}' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      }`);
+
+                nodeEmitters.push(`
+  '${setLabel}': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: '${defaultTarget}' });
+    const value = ctx.resolveInput(node, { id: 'value', type: '${valuePortType}' });
+    return [ir.raw(\`\${target}.${propName} = \${value};\`)];
+  }`);
+            }
         }
 
         // Methods (Execution nodes)

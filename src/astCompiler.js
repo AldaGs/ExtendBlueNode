@@ -13,6 +13,8 @@ import {
   SELF_BRANCHING_TYPES,
   SELF_BRANCHING_LABELS,
   resolveExpressionFor,
+  funcDefName,
+  funcDefParams,
 } from './compiler/emitters';
 import { HELPERS } from './compiler/helpers';
 import { flattenGroups } from './graph/groups';
@@ -190,6 +192,24 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
     return [...own, ...next];
   }
 
+  /* --- hoist user-defined functions before the main walk --- */
+
+  // Each `Define Function` becomes a hoisted `function name(params) { body }`.
+  // We register all of them BEFORE walking any body so that calls (including
+  // forward references and mutual recursion) resolve. Walking the body marks
+  // its nodes reached, so they neither re-emit in the chain nor show as
+  // orphans. The def node itself is never "executed" (no exec_in).
+  const funcDefNodes = nodes.filter((n) => n.data?.label === 'Define Function');
+  ctx.functions = new Map(
+    funcDefNodes.map((d) => [funcDefName(d, ctx), { params: funcDefParams(d, ctx) }]),
+  );
+  const funcDeclsIR = [];
+  for (const def of funcDefNodes) {
+    reached.add(def.id);
+    const body = ctx.walkBranch(def.id, 'exec_body');
+    funcDeclsIR.push(ir.funcDecl(funcDefName(def, ctx), funcDefParams(def, ctx), body));
+  }
+
   /* --- walk first so helpers / reached / orphans are all settled --- */
 
   // Chain entry point: prefer an explicit `Start` node, then fall back to
@@ -224,6 +244,12 @@ export function compileToIR(rawNodes, rawEdges, globalVariables = []) {
   if (primDecls.length) {
     out.push(ir.comment('--- Primitive Nodes ---'));
     out.push(...primDecls);
+    out.push(ir.blank());
+  }
+
+  if (funcDeclsIR.length) {
+    out.push(ir.comment('--- Functions ---'));
+    out.push(...funcDeclsIR);
     out.push(ir.blank());
   }
 

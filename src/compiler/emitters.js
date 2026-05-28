@@ -286,6 +286,53 @@ const EBN_NODE_EMITTERS = {
       ...done,
     ];
   },
+  // Walks a property's entire descendant tree, running exec_body once per
+  // visited property (pre-order). Emits a recursive helper + initial call —
+  // the canonical AE "apply to all properties" pattern. The `property` output
+  // resolves to the helper's parameter (see resolveExpressionFor).
+  'Walk Property Tree': (node, ctx) => {
+    const root  = ctx.resolveInput(node, { id: 'root', type: 'expr', default: 'undefined' });
+    const fn    = `${ctx.varName(node)}_walk`;
+    const param = walkPropertyNodeVar(node, ctx);
+    const idx   = `${ctx.varName(node)}_i`;
+    const body  = ctx.walkBranch(node.id, 'exec_body');
+    const done  = ctx.walkBranch(node.id, 'exec_done');
+    return [
+      ir.funcDecl(fn, [param], [
+        ...body,
+        ir.raw(`if (${param}.numProperties == null) { return; }`),
+        ir.forIn(`var ${idx} = 1`, `${idx} <= ${param}.numProperties`, `${idx}++`, [
+          ir.raw(`${fn}(${param}.property(${idx}));`),
+        ]),
+      ]),
+      ir.raw(`${fn}(${root});`),
+      ...done,
+    ];
+  },
+  // Calls a user-defined function by name. A *leaf* exec node: it emits a
+  // single call and continues down exec_out (recursion, if any, lives in the
+  // generated function body — never in the node walk). Arg count comes from
+  // the bound Define Function's parameter list (ctx.functions registry).
+  'Call Function': (node, ctx) => {
+    const name = ctx.sanitizeVarName(node.data?.values?.functionName);
+    if (!name) return [ir.comment('Call Function: no function name set')];
+    const def = ctx.functions && ctx.functions.get(name);
+    if (!def) return [ir.comment(`Call Function: no Define Function named '${name}'`)];
+    const args = def.params.map((_, i) =>
+      ctx.resolveInput(node, { id: `arg${i + 1}`, type: 'expr', default: 'undefined' }),
+    );
+    const outVar = ctx.varName(node);
+    return [ir.varDecl(outVar, `${name}(${args.join(', ')})`)];
+  },
+  // Returns from the enclosing Define Function body. Bare `return;` when no
+  // value is wired/inline, otherwise `return <expr>;`.
+  'Return': (node, ctx) => {
+    const wired = ctx.sourceOf(node, 'value');
+    const inline = node.data?.values?.value;
+    if (!wired && (inline == null || inline === '')) return [ir.raw('return;')];
+    const v = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
+    return [ir.raw(`return ${v};`)];
+  },
   'Switch Statement': (node, ctx) => {
     const val = ctx.resolveInput(node, { id: 'value', type: 'expr', default: 'undefined' });
     const cases = [1, 2, 3].map((i) => ({
@@ -392,6 +439,34 @@ export function forEachArrayItemVar(node, ctx) {
   return `${ctx.varName(node)}_item`;
 }
 
+// Stable per-node parameter var for "Walk Property Tree" — the current
+// property being visited. Shared by the exec emitter (helper param) and the
+// `property` data-side resolver. Only in scope inside the helper body.
+export function walkPropertyNodeVar(node, ctx) {
+  return `${ctx.varName(node)}_node`;
+}
+
+// --- User-defined functions (Define Function / Call Function) ---
+
+// The function's generated name. Sanitized from the node's `functionName`
+// value; falls back to a per-node-unique identifier so an unnamed def still
+// produces valid (if uncallable) code.
+export function funcDefName(node, ctx) {
+  const clean = ctx.sanitizeVarName(node.data?.values?.functionName);
+  return clean || `ebnFn_${ctx.varName(node)}`;
+}
+
+// Parsed parameter identifiers from the comma-separated `params` value,
+// sanitized to valid identifiers. Shared by the hoist pass (signature) and
+// the `paramN` data-side resolver (references inside the body).
+export function funcDefParams(node, ctx) {
+  const raw = node.data?.values?.params || '';
+  return String(raw)
+    .split(',')
+    .map((s) => ctx.sanitizeVarName(s))
+    .filter(Boolean);
+}
+
 // Nodes whose emitter takes ownership of their own downstream walking —
 // the orchestrator must NOT auto-recurse along their exec_out edges.
 // Keyed by node.type for the dedicated node kinds…
@@ -400,6 +475,7 @@ export const SELF_BRANCHING_TYPES = new Set(['if', 'forEachSelected']);
 // type 'ebnNode'). astCompiler checks both.
 export const SELF_BRANCHING_LABELS = new Set([
   'For Loop', 'While Loop', 'Switch Statement', 'For Each (Array)',
+  'Walk Property Tree',
   // Walks exec_callback (handler body) itself and continues via exec_out, so
   // the orchestrator must not auto-follow its outgoing exec edges.
   'UI Event Listener',
@@ -588,6 +664,19 @@ const EBN_DATA_EMITTERS = {
     if (outputHandle === 'index') return forEachArrayIndexVar(node, ctx);
     return null;
   },
+  // Walk Property Tree's `property` output references the helper's parameter.
+  'Walk Property Tree': (node, ctx, outputHandle) =>
+    outputHandle === 'property' ? walkPropertyNodeVar(node, ctx) : null,
+  // Define Function's `paramN` outputs reference the Nth parameter identifier,
+  // in scope only inside the function body.
+  'Define Function': (node, ctx, outputHandle) => {
+    const m = /^param(\d+)$/.exec(outputHandle || '');
+    if (!m) return null;
+    return funcDefParams(node, ctx)[Number(m[1]) - 1] ?? null;
+  },
+  // Call Function's `result` references the captured return value.
+  'Call Function': (node, ctx, outputHandle) =>
+    outputHandle === 'result' ? ctx.varName(node) : null,
   // Boolean literal — resolves its (input-or-inline) value as a bool.
   'Boolean': (node, ctx) =>
     ctx.resolveInput(node, { id: 'value', type: 'boolean', default: 'false' }),

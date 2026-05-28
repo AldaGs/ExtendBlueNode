@@ -2,6 +2,36 @@
 import { ir } from '../compiler/ir';
 
 export const AE_NODE_EMITTERS = {
+  'Application Set availableGPUAccelTypes': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.availableGPUAccelTypes = ${value};`)];
+  },
+  'Application Set disableRendering': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.disableRendering = ${value};`)];
+  },
+  'Application Set onError': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.onError = ${value};`)];
+  },
+  'Application Set exitCode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.exitCode = ${value};`)];
+  },
+  'Application Set exitAfterLaunchAndEval': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.exitAfterLaunchAndEval = ${value};`)];
+  },
+  'Application Set saveProjectOnCrash': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.saveProjectOnCrash = ${value};`)];
+  },
   'Application newProject': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app' });
     
@@ -212,6 +242,71 @@ export const AE_NODE_EMITTERS = {
     
     return [ir.raw(`${target}.saveToDisk();`)];
   },
+  'AVItem Set width': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.width = ${value};`)];
+  },
+  'AVItem Set height': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.height = ${value};`)];
+  },
+  'AVItem Set pixelAspect': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.pixelAspect = ${value};`)];
+  },
+  'AVItem Set frameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameRate = ${value};`)];
+  },
+  'AVItem Set frameDuration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameDuration = ${value};`)];
+  },
+  'AVItem Set duration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.duration = ${value};`)];
+  },
+  'AVItem Set useProxy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.useProxy = ${value};`)];
+  },
+  'AVItem Set time': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.time = ${value};`)];
+  },
+  'AVItem Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'AVItem Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'AVItem Set parentFolder': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parentFolder = ${value};`)];
+  },
+  'AVItem Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
+  'AVItem Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
   'AVItem setProxy': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
     const arg0 = ctx.resolveInput(node, { id: 'file', type: 'expr' });
@@ -268,6 +363,156 @@ export const AE_NODE_EMITTERS = {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'avitem' });
     
     return [ir.raw(`${target}.remove();`)];
+  },
+  'AVLayer Set audioEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.audioEnabled = ${value};`)];
+  },
+  'AVLayer Set motionBlur': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.motionBlur = ${value};`)];
+  },
+  'AVLayer Set effectsActive': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.effectsActive = ${value};`)];
+  },
+  'AVLayer Set adjustmentLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.adjustmentLayer = ${value};`)];
+  },
+  'AVLayer Set environmentLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.environmentLayer = ${value};`)];
+  },
+  'AVLayer Set guideLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.guideLayer = ${value};`)];
+  },
+  'AVLayer Set threeDLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.threeDLayer = ${value};`)];
+  },
+  'AVLayer Set threeDPerChar': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.threeDPerChar = ${value};`)];
+  },
+  'AVLayer Set collapseTransformation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.collapseTransformation = ${value};`)];
+  },
+  'AVLayer Set frameBlendingType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.frameBlendingType = ${value};`)];
+  },
+  'AVLayer Set timeRemapEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.timeRemapEnabled = ${value};`)];
+  },
+  'AVLayer Set blendingMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.blendingMode = ${value};`)];
+  },
+  'AVLayer Set preserveTransparency': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.preserveTransparency = ${value};`)];
+  },
+  'AVLayer Set samplingQuality': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.samplingQuality = ${value};`)];
+  },
+  'AVLayer Set trackMatteType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.trackMatteType = ${value};`)];
+  },
+  'AVLayer Set quality': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.quality = ${value};`)];
+  },
+  'AVLayer Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'AVLayer Set parent': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parent = ${value};`)];
+  },
+  'AVLayer Set startTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.startTime = ${value};`)];
+  },
+  'AVLayer Set stretch': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.stretch = ${value};`)];
+  },
+  'AVLayer Set inPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.inPoint = ${value};`)];
+  },
+  'AVLayer Set outPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.outPoint = ${value};`)];
+  },
+  'AVLayer Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'AVLayer Set solo': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.solo = ${value};`)];
+  },
+  'AVLayer Set shy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.shy = ${value};`)];
+  },
+  'AVLayer Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'AVLayer Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'AVLayer Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'AVLayer Set autoOrient': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.autoOrient = ${value};`)];
+  },
+  'AVLayer Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'AVLayer audioActiveAtTime': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
@@ -420,6 +665,76 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
   },
+  'CameraLayer Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'CameraLayer Set parent': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parent = ${value};`)];
+  },
+  'CameraLayer Set startTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.startTime = ${value};`)];
+  },
+  'CameraLayer Set stretch': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.stretch = ${value};`)];
+  },
+  'CameraLayer Set inPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.inPoint = ${value};`)];
+  },
+  'CameraLayer Set outPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.outPoint = ${value};`)];
+  },
+  'CameraLayer Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'CameraLayer Set solo': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.solo = ${value};`)];
+  },
+  'CameraLayer Set shy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.shy = ${value};`)];
+  },
+  'CameraLayer Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'CameraLayer Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'CameraLayer Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'CameraLayer Set autoOrient': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.autoOrient = ${value};`)];
+  },
+  'CameraLayer Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
   'CameraLayer moveToBeginning': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
     
@@ -506,6 +821,166 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'name', type: 'text' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
+  },
+  'CompItem Set frameDuration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameDuration = ${value};`)];
+  },
+  'CompItem Set workAreaStart': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.workAreaStart = ${value};`)];
+  },
+  'CompItem Set workAreaDuration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.workAreaDuration = ${value};`)];
+  },
+  'CompItem Set hideShyLayers': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.hideShyLayers = ${value};`)];
+  },
+  'CompItem Set motionBlur': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.motionBlur = ${value};`)];
+  },
+  'CompItem Set draft3d': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.draft3d = ${value};`)];
+  },
+  'CompItem Set frameBlending': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.frameBlending = ${value};`)];
+  },
+  'CompItem Set preserveNestedFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.preserveNestedFrameRate = ${value};`)];
+  },
+  'CompItem Set preserveNestedResolution': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.preserveNestedResolution = ${value};`)];
+  },
+  'CompItem Set bgColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.bgColor = ${value};`)];
+  },
+  'CompItem Set displayStartTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.displayStartTime = ${value};`)];
+  },
+  'CompItem Set resolutionFactor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.resolutionFactor = ${value};`)];
+  },
+  'CompItem Set shutterAngle': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.shutterAngle = ${value};`)];
+  },
+  'CompItem Set shutterPhase': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.shutterPhase = ${value};`)];
+  },
+  'CompItem Set motionBlurSamplesPerFrame': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.motionBlurSamplesPerFrame = ${value};`)];
+  },
+  'CompItem Set motionBlurAdaptiveSampleLimit': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.motionBlurAdaptiveSampleLimit = ${value};`)];
+  },
+  'CompItem Set motionGraphicsTemplateName': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.motionGraphicsTemplateName = ${value};`)];
+  },
+  'CompItem Set renderer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.renderer = ${value};`)];
+  },
+  'CompItem Set dropFrame': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.dropFrame = ${value};`)];
+  },
+  'CompItem Set displayStartFrame': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.displayStartFrame = ${value};`)];
+  },
+  'CompItem Set width': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.width = ${value};`)];
+  },
+  'CompItem Set height': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.height = ${value};`)];
+  },
+  'CompItem Set pixelAspect': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.pixelAspect = ${value};`)];
+  },
+  'CompItem Set frameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameRate = ${value};`)];
+  },
+  'CompItem Set duration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.duration = ${value};`)];
+  },
+  'CompItem Set useProxy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.useProxy = ${value};`)];
+  },
+  'CompItem Set time': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.time = ${value};`)];
+  },
+  'CompItem Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'CompItem Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'CompItem Set parentFolder': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parentFolder = ${value};`)];
+  },
+  'CompItem Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
+  'CompItem Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
   },
   'CompItem duplicate': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'activeComp' });
@@ -633,6 +1108,56 @@ export const AE_NODE_EMITTERS = {
     
     return [ir.raw(`${target}.remove();`)];
   },
+  'FileSource Set hasAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.hasAlpha = ${value};`)];
+  },
+  'FileSource Set alphaMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.alphaMode = ${value};`)];
+  },
+  'FileSource Set premulColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.premulColor = ${value};`)];
+  },
+  'FileSource Set invertAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.invertAlpha = ${value};`)];
+  },
+  'FileSource Set fieldSeparationType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.fieldSeparationType = ${value};`)];
+  },
+  'FileSource Set highQualityFieldSeparation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.highQualityFieldSeparation = ${value};`)];
+  },
+  'FileSource Set removePulldown': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.removePulldown = ${value};`)];
+  },
+  'FileSource Set loop': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.loop = ${value};`)];
+  },
+  'FileSource Set nativeFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.nativeFrameRate = ${value};`)];
+  },
+  'FileSource Set conformFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.conformFrameRate = ${value};`)];
+  },
   'FileSource reload': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
     
@@ -647,6 +1172,31 @@ export const AE_NODE_EMITTERS = {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'filesource' });
     const arg0 = ctx.resolveInput(node, { id: 'method', type: 'expr' });
     return [ir.raw(`${target}.guessPulldown(${arg0});`)];
+  },
+  'FolderItem Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'FolderItem Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'FolderItem Set parentFolder': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parentFolder = ${value};`)];
+  },
+  'FolderItem Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
+  'FolderItem Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
   },
   'FolderItem item': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
@@ -676,6 +1226,71 @@ export const AE_NODE_EMITTERS = {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'folderitem' });
     
     return [ir.raw(`${target}.remove();`)];
+  },
+  'FootageItem Set width': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.width = ${value};`)];
+  },
+  'FootageItem Set height': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.height = ${value};`)];
+  },
+  'FootageItem Set pixelAspect': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.pixelAspect = ${value};`)];
+  },
+  'FootageItem Set frameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameRate = ${value};`)];
+  },
+  'FootageItem Set frameDuration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameDuration = ${value};`)];
+  },
+  'FootageItem Set duration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.duration = ${value};`)];
+  },
+  'FootageItem Set useProxy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.useProxy = ${value};`)];
+  },
+  'FootageItem Set time': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.time = ${value};`)];
+  },
+  'FootageItem Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'FootageItem Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'FootageItem Set parentFolder': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parentFolder = ${value};`)];
+  },
+  'FootageItem Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
+  'FootageItem Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
   },
   'FootageItem openInViewer': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footageitem' });
@@ -769,6 +1384,71 @@ export const AE_NODE_EMITTERS = {
     
     return [ir.raw(`${target}.remove();`)];
   },
+  'PlaceholderItem Set width': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.width = ${value};`)];
+  },
+  'PlaceholderItem Set height': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.height = ${value};`)];
+  },
+  'PlaceholderItem Set pixelAspect': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.pixelAspect = ${value};`)];
+  },
+  'PlaceholderItem Set frameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameRate = ${value};`)];
+  },
+  'PlaceholderItem Set frameDuration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.frameDuration = ${value};`)];
+  },
+  'PlaceholderItem Set duration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.duration = ${value};`)];
+  },
+  'PlaceholderItem Set useProxy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.useProxy = ${value};`)];
+  },
+  'PlaceholderItem Set time': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.time = ${value};`)];
+  },
+  'PlaceholderItem Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'PlaceholderItem Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'PlaceholderItem Set parentFolder': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parentFolder = ${value};`)];
+  },
+  'PlaceholderItem Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
+  'PlaceholderItem Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
   'PlaceholderItem openInViewer': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholderitem' });
     
@@ -861,6 +1541,56 @@ export const AE_NODE_EMITTERS = {
     
     return [ir.raw(`${target}.remove();`)];
   },
+  'FootageSource Set hasAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.hasAlpha = ${value};`)];
+  },
+  'FootageSource Set alphaMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.alphaMode = ${value};`)];
+  },
+  'FootageSource Set premulColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.premulColor = ${value};`)];
+  },
+  'FootageSource Set invertAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.invertAlpha = ${value};`)];
+  },
+  'FootageSource Set fieldSeparationType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.fieldSeparationType = ${value};`)];
+  },
+  'FootageSource Set highQualityFieldSeparation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.highQualityFieldSeparation = ${value};`)];
+  },
+  'FootageSource Set removePulldown': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.removePulldown = ${value};`)];
+  },
+  'FootageSource Set loop': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.loop = ${value};`)];
+  },
+  'FootageSource Set nativeFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.nativeFrameRate = ${value};`)];
+  },
+  'FootageSource Set conformFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.conformFrameRate = ${value};`)];
+  },
   'FootageSource guessAlphaMode': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'footagesource' });
     
@@ -871,11 +1601,56 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'method', type: 'expr' });
     return [ir.raw(`${target}.guessPulldown(${arg0});`)];
   },
+  'ImportOptions Set importAs': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'importoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.importAs = ${value};`)];
+  },
+  'ImportOptions Set sequence': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'importoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.sequence = ${value};`)];
+  },
+  'ImportOptions Set forceAlphabetical': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'importoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.forceAlphabetical = ${value};`)];
+  },
+  'ImportOptions Set file': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'importoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.file = ${value};`)];
+  },
   'ImportOptions canImportAs': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'importoptions' });
     const arg0 = ctx.resolveInput(node, { id: 'type', type: 'expr' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.canImportAs(${arg0})`)];
+  },
+  'Item Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'item' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'Item Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'item' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'Item Set parentFolder': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'item' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parentFolder = ${value};`)];
+  },
+  'Item Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'item' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
+  'Item Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'item' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
   },
   'Item addGuide': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'item' });
@@ -916,6 +1691,86 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'name', type: 'text' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.addFolder(${arg0})`)];
+  },
+  'KeyframeEase Set speed': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'keyframeease' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.speed = ${value};`)];
+  },
+  'KeyframeEase Set influence': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'keyframeease' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.influence = ${value};`)];
+  },
+  'Layer Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'Layer Set parent': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parent = ${value};`)];
+  },
+  'Layer Set startTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.startTime = ${value};`)];
+  },
+  'Layer Set stretch': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.stretch = ${value};`)];
+  },
+  'Layer Set inPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.inPoint = ${value};`)];
+  },
+  'Layer Set outPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.outPoint = ${value};`)];
+  },
+  'Layer Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'Layer Set solo': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.solo = ${value};`)];
+  },
+  'Layer Set shy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.shy = ${value};`)];
+  },
+  'Layer Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'Layer Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'Layer Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'Layer Set autoOrient': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.autoOrient = ${value};`)];
+  },
+  'Layer Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'Layer moveToBeginning': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
@@ -1075,6 +1930,81 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.precompose(${arg0}, ${arg1}, ${arg2})`)];
   },
+  'LightLayer Set lightType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.lightType = ${value};`)];
+  },
+  'LightLayer Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'LightLayer Set parent': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parent = ${value};`)];
+  },
+  'LightLayer Set startTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.startTime = ${value};`)];
+  },
+  'LightLayer Set stretch': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.stretch = ${value};`)];
+  },
+  'LightLayer Set inPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.inPoint = ${value};`)];
+  },
+  'LightLayer Set outPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.outPoint = ${value};`)];
+  },
+  'LightLayer Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'LightLayer Set solo': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.solo = ${value};`)];
+  },
+  'LightLayer Set shy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.shy = ${value};`)];
+  },
+  'LightLayer Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'LightLayer Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'LightLayer Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'LightLayer Set autoOrient': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.autoOrient = ${value};`)];
+  },
+  'LightLayer Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
   'LightLayer moveToBeginning': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
     
@@ -1162,6 +2092,51 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
   },
+  'MarkerValue Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'MarkerValue Set chapter': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.chapter = ${value};`)];
+  },
+  'MarkerValue Set cuePointName': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.cuePointName = ${value};`)];
+  },
+  'MarkerValue Set duration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.duration = ${value};`)];
+  },
+  'MarkerValue Set eventCuePoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.eventCuePoint = ${value};`)];
+  },
+  'MarkerValue Set url': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.url = ${value};`)];
+  },
+  'MarkerValue Set frameTarget': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.frameTarget = ${value};`)];
+  },
+  'MarkerValue Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'MarkerValue Set protectedRegion': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.protectedRegion = ${value};`)];
+  },
   'MarkerValue getParameters': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
     
@@ -1172,6 +2147,81 @@ export const AE_NODE_EMITTERS = {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'markervalue' });
     const arg0 = ctx.resolveInput(node, { id: 'keyValuePairs', type: 'expr' });
     return [ir.raw(`${target}.setParameters(${arg0});`)];
+  },
+  'MaskPropertyGroup Set maskMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskMode = ${value};`)];
+  },
+  'MaskPropertyGroup Set inverted': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.inverted = ${value};`)];
+  },
+  'MaskPropertyGroup Set rotoBezier': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.rotoBezier = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskMotionBlur': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskMotionBlur = ${value};`)];
+  },
+  'MaskPropertyGroup Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'MaskPropertyGroup Set color': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.color = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskShape': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskShape = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskPath': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskPath = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskFeather': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskFeather = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskFeatherFalloff': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskFeatherFalloff = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskOpacity': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskOpacity = ${value};`)];
+  },
+  'MaskPropertyGroup Set maskExpansion': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.maskExpansion = ${value};`)];
+  },
+  'MaskPropertyGroup Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'MaskPropertyGroup Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'MaskPropertyGroup Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'MaskPropertyGroup canAddProperty': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'maskpropertygroup' });
@@ -1219,6 +2269,21 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
   },
+  'OutputModule Set file': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'outputmodule' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.file = ${value};`)];
+  },
+  'OutputModule Set postRenderAction': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'outputmodule' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.postRenderAction = ${value};`)];
+  },
+  'OutputModule Set includeSourceXMP': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'outputmodule' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.includeSourceXMP = ${value};`)];
+  },
   'OutputModule remove': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'outputmodule' });
     
@@ -1257,6 +2322,56 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'settings', type: 'expr' });
     return [ir.raw(`${target}.setSettings(${arg0});`)];
   },
+  'PlaceholderSource Set hasAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.hasAlpha = ${value};`)];
+  },
+  'PlaceholderSource Set alphaMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.alphaMode = ${value};`)];
+  },
+  'PlaceholderSource Set premulColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.premulColor = ${value};`)];
+  },
+  'PlaceholderSource Set invertAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.invertAlpha = ${value};`)];
+  },
+  'PlaceholderSource Set fieldSeparationType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.fieldSeparationType = ${value};`)];
+  },
+  'PlaceholderSource Set highQualityFieldSeparation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.highQualityFieldSeparation = ${value};`)];
+  },
+  'PlaceholderSource Set removePulldown': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.removePulldown = ${value};`)];
+  },
+  'PlaceholderSource Set loop': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.loop = ${value};`)];
+  },
+  'PlaceholderSource Set nativeFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.nativeFrameRate = ${value};`)];
+  },
+  'PlaceholderSource Set conformFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.conformFrameRate = ${value};`)];
+  },
   'PlaceholderSource guessAlphaMode': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
     
@@ -1266,6 +2381,91 @@ export const AE_NODE_EMITTERS = {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'placeholdersource' });
     const arg0 = ctx.resolveInput(node, { id: 'method', type: 'expr' });
     return [ir.raw(`${target}.guessPulldown(${arg0});`)];
+  },
+  'Project Set bitsPerChannel': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.bitsPerChannel = ${value};`)];
+  },
+  'Project Set transparencyGridThumbnails': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.transparencyGridThumbnails = ${value};`)];
+  },
+  'Project Set displayStartFrame': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.displayStartFrame = ${value};`)];
+  },
+  'Project Set gpuAccelType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.gpuAccelType = ${value};`)];
+  },
+  'Project Set linearBlending': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.linearBlending = ${value};`)];
+  },
+  'Project Set xmpPacket': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.xmpPacket = ${value};`)];
+  },
+  'Project Set framesCountType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.framesCountType = ${value};`)];
+  },
+  'Project Set feetFramesFilmType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.feetFramesFilmType = ${value};`)];
+  },
+  'Project Set framesUseFeetFrames': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.framesUseFeetFrames = ${value};`)];
+  },
+  'Project Set footageTimecodeDisplayStartType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.footageTimecodeDisplayStartType = ${value};`)];
+  },
+  'Project Set timeDisplayType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.timeDisplayType = ${value};`)];
+  },
+  'Project Set toolType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.toolType = ${value};`)];
+  },
+  'Project Set workingGamma': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.workingGamma = ${value};`)];
+  },
+  'Project Set workingSpace': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.workingSpace = ${value};`)];
+  },
+  'Project Set linearizeWorkingSpace': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.linearizeWorkingSpace = ${value};`)];
+  },
+  'Project Set compensateForSceneReferredProfiles': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.compensateForSceneReferredProfiles = ${value};`)];
+  },
+  'Project Set expressionEngine': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.expressionEngine = ${value};`)];
   },
   'Project item': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'app.project' });
@@ -1449,6 +2649,36 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'folder', type: 'expr' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.setDefaultImportFolder(${arg0})`)];
+  },
+  'Property Set expression': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.expression = ${value};`)];
+  },
+  'Property Set expressionEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.expressionEnabled = ${value};`)];
+  },
+  'Property Set dimensionsSeparated': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.dimensionsSeparated = ${value};`)];
+  },
+  'Property Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'Property Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'Property Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'Property valueAtTime': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'property' });
@@ -1746,6 +2976,21 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
   },
+  'PropertyBase Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertybase' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'PropertyBase Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertybase' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'PropertyBase Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertybase' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
+  },
   'PropertyBase propertyGroup': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertybase' });
     const arg0 = ctx.resolveInput(node, { id: 'countUp', type: 'number' });
@@ -1779,6 +3024,21 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'name', type: 'text' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
+  },
+  'PropertyGroup Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'PropertyGroup Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'PropertyGroup Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertygroup' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'PropertyGroup canAddProperty': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'propertygroup' });
@@ -1856,6 +3116,36 @@ export const AE_NODE_EMITTERS = {
     const arg0 = ctx.resolveInput(node, { id: 'index', type: 'number' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.item(${arg0})`)];
+  },
+  'RenderQueueItem Set render': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.render = ${value};`)];
+  },
+  'RenderQueueItem Set timeSpanStart': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.timeSpanStart = ${value};`)];
+  },
+  'RenderQueueItem Set timeSpanDuration': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.timeSpanDuration = ${value};`)];
+  },
+  'RenderQueueItem Set skipFrames': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.skipFrames = ${value};`)];
+  },
+  'RenderQueueItem Set onStatus': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.onStatus = ${value};`)];
+  },
+  'RenderQueueItem Set logType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.logType = ${value};`)];
   },
   'RenderQueueItem getSetting': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'renderqueueitem' });
@@ -1936,6 +3226,211 @@ export const AE_NODE_EMITTERS = {
     const arg2 = ctx.resolveInput(node, { id: 'type', type: 'expr' });
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.haveSetting(${arg0}, ${arg1}, ${arg2})`)];
+  },
+  'Shape Set closed': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.closed = ${value};`)];
+  },
+  'Shape Set vertices': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.vertices = ${value};`)];
+  },
+  'Shape Set inTangents': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.inTangents = ${value};`)];
+  },
+  'Shape Set outTangents': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.outTangents = ${value};`)];
+  },
+  'Shape Set featherSegLocs': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherSegLocs = ${value};`)];
+  },
+  'Shape Set featherRelSegLocs': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherRelSegLocs = ${value};`)];
+  },
+  'Shape Set featherRadii': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherRadii = ${value};`)];
+  },
+  'Shape Set featherInterps': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherInterps = ${value};`)];
+  },
+  'Shape Set featherTensions': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherTensions = ${value};`)];
+  },
+  'Shape Set featherTypes': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherTypes = ${value};`)];
+  },
+  'Shape Set featherRelCornerAngles': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'shape' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.featherRelCornerAngles = ${value};`)];
+  },
+  'ShapeLayer Set audioEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.audioEnabled = ${value};`)];
+  },
+  'ShapeLayer Set motionBlur': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.motionBlur = ${value};`)];
+  },
+  'ShapeLayer Set effectsActive': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.effectsActive = ${value};`)];
+  },
+  'ShapeLayer Set adjustmentLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.adjustmentLayer = ${value};`)];
+  },
+  'ShapeLayer Set environmentLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.environmentLayer = ${value};`)];
+  },
+  'ShapeLayer Set guideLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.guideLayer = ${value};`)];
+  },
+  'ShapeLayer Set threeDLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.threeDLayer = ${value};`)];
+  },
+  'ShapeLayer Set threeDPerChar': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.threeDPerChar = ${value};`)];
+  },
+  'ShapeLayer Set collapseTransformation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.collapseTransformation = ${value};`)];
+  },
+  'ShapeLayer Set frameBlendingType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.frameBlendingType = ${value};`)];
+  },
+  'ShapeLayer Set timeRemapEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.timeRemapEnabled = ${value};`)];
+  },
+  'ShapeLayer Set blendingMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.blendingMode = ${value};`)];
+  },
+  'ShapeLayer Set preserveTransparency': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.preserveTransparency = ${value};`)];
+  },
+  'ShapeLayer Set samplingQuality': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.samplingQuality = ${value};`)];
+  },
+  'ShapeLayer Set trackMatteType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.trackMatteType = ${value};`)];
+  },
+  'ShapeLayer Set quality': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.quality = ${value};`)];
+  },
+  'ShapeLayer Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'ShapeLayer Set parent': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parent = ${value};`)];
+  },
+  'ShapeLayer Set startTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.startTime = ${value};`)];
+  },
+  'ShapeLayer Set stretch': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.stretch = ${value};`)];
+  },
+  'ShapeLayer Set inPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.inPoint = ${value};`)];
+  },
+  'ShapeLayer Set outPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.outPoint = ${value};`)];
+  },
+  'ShapeLayer Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'ShapeLayer Set solo': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.solo = ${value};`)];
+  },
+  'ShapeLayer Set shy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.shy = ${value};`)];
+  },
+  'ShapeLayer Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'ShapeLayer Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'ShapeLayer Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'ShapeLayer Set autoOrient': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.autoOrient = ${value};`)];
+  },
+  'ShapeLayer Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'ShapeLayer audioActiveAtTime': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
@@ -2088,6 +3583,61 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.property(${arg0})`)];
   },
+  'SolidSource Set color': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.color = ${value};`)];
+  },
+  'SolidSource Set hasAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.hasAlpha = ${value};`)];
+  },
+  'SolidSource Set alphaMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.alphaMode = ${value};`)];
+  },
+  'SolidSource Set premulColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.premulColor = ${value};`)];
+  },
+  'SolidSource Set invertAlpha': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.invertAlpha = ${value};`)];
+  },
+  'SolidSource Set fieldSeparationType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.fieldSeparationType = ${value};`)];
+  },
+  'SolidSource Set highQualityFieldSeparation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.highQualityFieldSeparation = ${value};`)];
+  },
+  'SolidSource Set removePulldown': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.removePulldown = ${value};`)];
+  },
+  'SolidSource Set loop': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.loop = ${value};`)];
+  },
+  'SolidSource Set nativeFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.nativeFrameRate = ${value};`)];
+  },
+  'SolidSource Set conformFrameRate': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.conformFrameRate = ${value};`)];
+  },
   'SolidSource guessAlphaMode': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'solidsource' });
     
@@ -2104,6 +3654,71 @@ export const AE_NODE_EMITTERS = {
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.callSystem(${arg0})`)];
   },
+  'TextDocument Set text': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.text = ${value};`)];
+  },
+  'TextDocument Set applyFill': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.applyFill = ${value};`)];
+  },
+  'TextDocument Set applyStroke': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.applyStroke = ${value};`)];
+  },
+  'TextDocument Set fillColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.fillColor = ${value};`)];
+  },
+  'TextDocument Set font': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.font = ${value};`)];
+  },
+  'TextDocument Set fontSize': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.fontSize = ${value};`)];
+  },
+  'TextDocument Set justification': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.justification = ${value};`)];
+  },
+  'TextDocument Set leading': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.leading = ${value};`)];
+  },
+  'TextDocument Set strokeColor': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.strokeColor = ${value};`)];
+  },
+  'TextDocument Set strokeOverFill': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.strokeOverFill = ${value};`)];
+  },
+  'TextDocument Set strokeWidth': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.strokeWidth = ${value};`)];
+  },
+  'TextDocument Set tracking': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.tracking = ${value};`)];
+  },
+  'TextDocument Set boxTextSize': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.boxTextSize = ${value};`)];
+  },
   'TextDocument resetCharStyle': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
     
@@ -2113,6 +3728,156 @@ export const AE_NODE_EMITTERS = {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'textdocument' });
     
     return [ir.raw(`${target}.resetParagraphStyle();`)];
+  },
+  'TextLayer Set audioEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.audioEnabled = ${value};`)];
+  },
+  'TextLayer Set motionBlur': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.motionBlur = ${value};`)];
+  },
+  'TextLayer Set effectsActive': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.effectsActive = ${value};`)];
+  },
+  'TextLayer Set adjustmentLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.adjustmentLayer = ${value};`)];
+  },
+  'TextLayer Set environmentLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.environmentLayer = ${value};`)];
+  },
+  'TextLayer Set guideLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.guideLayer = ${value};`)];
+  },
+  'TextLayer Set threeDLayer': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.threeDLayer = ${value};`)];
+  },
+  'TextLayer Set threeDPerChar': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.threeDPerChar = ${value};`)];
+  },
+  'TextLayer Set collapseTransformation': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.collapseTransformation = ${value};`)];
+  },
+  'TextLayer Set frameBlendingType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.frameBlendingType = ${value};`)];
+  },
+  'TextLayer Set timeRemapEnabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.timeRemapEnabled = ${value};`)];
+  },
+  'TextLayer Set blendingMode': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.blendingMode = ${value};`)];
+  },
+  'TextLayer Set preserveTransparency': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.preserveTransparency = ${value};`)];
+  },
+  'TextLayer Set samplingQuality': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.samplingQuality = ${value};`)];
+  },
+  'TextLayer Set trackMatteType': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.trackMatteType = ${value};`)];
+  },
+  'TextLayer Set quality': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.quality = ${value};`)];
+  },
+  'TextLayer Set name': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.name = ${value};`)];
+  },
+  'TextLayer Set parent': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.parent = ${value};`)];
+  },
+  'TextLayer Set startTime': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.startTime = ${value};`)];
+  },
+  'TextLayer Set stretch': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.stretch = ${value};`)];
+  },
+  'TextLayer Set inPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.inPoint = ${value};`)];
+  },
+  'TextLayer Set outPoint': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.outPoint = ${value};`)];
+  },
+  'TextLayer Set enabled': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.enabled = ${value};`)];
+  },
+  'TextLayer Set solo': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.solo = ${value};`)];
+  },
+  'TextLayer Set shy': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.shy = ${value};`)];
+  },
+  'TextLayer Set locked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.locked = ${value};`)];
+  },
+  'TextLayer Set comment': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'text' });
+    return [ir.raw(`${target}.comment = ${value};`)];
+  },
+  'TextLayer Set label': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.label = ${value};`)];
+  },
+  'TextLayer Set autoOrient': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.autoOrient = ${value};`)];
+  },
+  'TextLayer Set selected': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.selected = ${value};`)];
   },
   'TextLayer audioActiveAtTime': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'targetLayer' });
@@ -2270,11 +4035,66 @@ export const AE_NODE_EMITTERS = {
     
     return [ir.raw(`${target}.setActive();`)];
   },
+  'Viewer Set activeViewIndex': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.activeViewIndex = ${value};`)];
+  },
+  'Viewer Set guidesLocked': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.guidesLocked = ${value};`)];
+  },
+  'Viewer Set guidesSnap': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.guidesSnap = ${value};`)];
+  },
+  'Viewer Set guidesVisibility': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.guidesVisibility = ${value};`)];
+  },
+  'Viewer Set rulers': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.rulers = ${value};`)];
+  },
+  'Viewer Set maximized': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.maximized = ${value};`)];
+  },
   'Viewer setActive': (node, ctx) => {
     const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewer' });
     
     const outVar = ctx.varName(node);
     return [ir.varDecl(outVar, `${target}.setActive()`)];
+  },
+  'ViewOptions Set channels': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.channels = ${value};`)];
+  },
+  'ViewOptions Set checkerboards': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'boolean' });
+    return [ir.raw(`${target}.checkerboards = ${value};`)];
+  },
+  'ViewOptions Set exposure': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.exposure = ${value};`)];
+  },
+  'ViewOptions Set fastPreview': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'expr' });
+    return [ir.raw(`${target}.fastPreview = ${value};`)];
+  },
+  'ViewOptions Set zoom': (node, ctx) => {
+    const target = ctx.resolveInput(node, { id: 'target', type: 'expr', default: 'viewoptions' });
+    const value = ctx.resolveInput(node, { id: 'value', type: 'number' });
+    return [ir.raw(`${target}.zoom = ${value};`)];
   }
 };
 

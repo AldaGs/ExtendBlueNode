@@ -319,6 +319,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Application_set_availableGPUAccelTypes',
+        label: 'Application Set availableGPUAccelTypes',
+        keywords: ['application', 'availablegpuacceltypes', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Application Set availableGPUAccelTypes',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Application', type: 'expr' },
+              { id: 'value', label: 'availableGPUAccelTypes', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Application_get_disableRendering',
         label: 'Application Get disableRendering',
         keywords: ['application', 'disablerendering', 'get'],
@@ -335,6 +359,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'disableRendering' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Application_set_disableRendering',
+        label: 'Application Set disableRendering',
+        keywords: ['application', 'disablerendering', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Application Set disableRendering',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Application', type: 'expr' },
+              { id: 'value', label: 'disableRendering', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -363,6 +411,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Application_set_onError',
+        label: 'Application Set onError',
+        keywords: ['application', 'onerror', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Application Set onError',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Application', type: 'expr' },
+              { id: 'value', label: 'onError', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Application_get_exitCode',
         label: 'Application Get exitCode',
         keywords: ['application', 'exitcode', 'get'],
@@ -379,6 +451,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'exitCode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Application_set_exitCode',
+        label: 'Application Set exitCode',
+        keywords: ['application', 'exitcode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Application Set exitCode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Application', type: 'expr' },
+              { id: 'value', label: 'exitCode', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -407,6 +503,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Application_set_exitAfterLaunchAndEval',
+        label: 'Application Set exitAfterLaunchAndEval',
+        keywords: ['application', 'exitafterlaunchandeval', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Application Set exitAfterLaunchAndEval',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Application', type: 'expr' },
+              { id: 'value', label: 'exitAfterLaunchAndEval', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Application_get_saveProjectOnCrash',
         label: 'Application Get saveProjectOnCrash',
         keywords: ['application', 'saveprojectoncrash', 'get'],
@@ -423,6 +543,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'saveProjectOnCrash' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Application_set_saveProjectOnCrash',
+        label: 'Application Set saveProjectOnCrash',
+        keywords: ['application', 'saveprojectoncrash', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Application Set saveProjectOnCrash',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Application', type: 'expr' },
+              { id: 'value', label: 'saveProjectOnCrash', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -1441,6 +1585,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_width',
+        label: 'AVItem Set width',
+        keywords: ['avitem', 'width', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set width',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'width', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_height',
         label: 'AVItem Get height',
         keywords: ['avitem', 'height', 'get'],
@@ -1457,6 +1625,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'height' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVItem_set_height',
+        label: 'AVItem Set height',
+        keywords: ['avitem', 'height', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set height',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'height', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -1485,6 +1677,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_pixelAspect',
+        label: 'AVItem Set pixelAspect',
+        keywords: ['avitem', 'pixelaspect', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set pixelAspect',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'pixelAspect', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_frameRate',
         label: 'AVItem Get frameRate',
         keywords: ['avitem', 'framerate', 'get'],
@@ -1501,6 +1717,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVItem_set_frameRate',
+        label: 'AVItem Set frameRate',
+        keywords: ['avitem', 'framerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set frameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'frameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -1529,6 +1769,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_frameDuration',
+        label: 'AVItem Set frameDuration',
+        keywords: ['avitem', 'frameduration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set frameDuration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'frameDuration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_duration',
         label: 'AVItem Get duration',
         keywords: ['avitem', 'duration', 'get'],
@@ -1545,6 +1809,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'duration' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVItem_set_duration',
+        label: 'AVItem Set duration',
+        keywords: ['avitem', 'duration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set duration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'duration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -1573,6 +1861,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_useProxy',
+        label: 'AVItem Set useProxy',
+        keywords: ['avitem', 'useproxy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set useProxy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'useProxy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_time',
         label: 'AVItem Get time',
         keywords: ['avitem', 'time', 'get'],
@@ -1589,6 +1901,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'time' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVItem_set_time',
+        label: 'AVItem Set time',
+        keywords: ['avitem', 'time', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set time',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'time', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -1661,6 +1997,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_name',
+        label: 'AVItem Set name',
+        keywords: ['avitem', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_comment',
         label: 'AVItem Get comment',
         keywords: ['avitem', 'comment', 'get'],
@@ -1677,6 +2037,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'comment' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVItem_set_comment',
+        label: 'AVItem Set comment',
+        keywords: ['avitem', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -1705,6 +2089,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_parentFolder',
+        label: 'AVItem Set parentFolder',
+        keywords: ['avitem', 'parentfolder', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set parentFolder',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'parentFolder', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_selected',
         label: 'AVItem Get selected',
         keywords: ['avitem', 'selected', 'get'],
@@ -1727,6 +2135,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVItem_set_selected',
+        label: 'AVItem Set selected',
+        keywords: ['avitem', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVItem_get_label',
         label: 'AVItem Get label',
         keywords: ['avitem', 'label', 'get'],
@@ -1743,6 +2175,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'label' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVItem_set_label',
+        label: 'AVItem Set label',
+        keywords: ['avitem', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVItem Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVItem', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2244,6 +2700,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_audioEnabled',
+        label: 'AVLayer Set audioEnabled',
+        keywords: ['avlayer', 'audioenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set audioEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'audioEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_motionBlur',
         label: 'AVLayer Get motionBlur',
         keywords: ['avlayer', 'motionblur', 'get'],
@@ -2260,6 +2740,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'motionBlur' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_motionBlur',
+        label: 'AVLayer Set motionBlur',
+        keywords: ['avlayer', 'motionblur', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set motionBlur',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'motionBlur', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2288,6 +2792,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_effectsActive',
+        label: 'AVLayer Set effectsActive',
+        keywords: ['avlayer', 'effectsactive', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set effectsActive',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'effectsActive', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_adjustmentLayer',
         label: 'AVLayer Get adjustmentLayer',
         keywords: ['avlayer', 'adjustmentlayer', 'get'],
@@ -2304,6 +2832,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'adjustmentLayer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_adjustmentLayer',
+        label: 'AVLayer Set adjustmentLayer',
+        keywords: ['avlayer', 'adjustmentlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set adjustmentLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'adjustmentLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2332,6 +2884,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_environmentLayer',
+        label: 'AVLayer Set environmentLayer',
+        keywords: ['avlayer', 'environmentlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set environmentLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'environmentLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_guideLayer',
         label: 'AVLayer Get guideLayer',
         keywords: ['avlayer', 'guidelayer', 'get'],
@@ -2348,6 +2924,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'guideLayer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_guideLayer',
+        label: 'AVLayer Set guideLayer',
+        keywords: ['avlayer', 'guidelayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set guideLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'guideLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2376,6 +2976,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_threeDLayer',
+        label: 'AVLayer Set threeDLayer',
+        keywords: ['avlayer', 'threedlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set threeDLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'threeDLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_threeDPerChar',
         label: 'AVLayer Get threeDPerChar',
         keywords: ['avlayer', 'threedperchar', 'get'],
@@ -2392,6 +3016,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'threeDPerChar' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_threeDPerChar',
+        label: 'AVLayer Set threeDPerChar',
+        keywords: ['avlayer', 'threedperchar', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set threeDPerChar',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'threeDPerChar', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2420,6 +3068,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_collapseTransformation',
+        label: 'AVLayer Set collapseTransformation',
+        keywords: ['avlayer', 'collapsetransformation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set collapseTransformation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'collapseTransformation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_frameBlendingType',
         label: 'AVLayer Get frameBlendingType',
         keywords: ['avlayer', 'frameblendingtype', 'get'],
@@ -2436,6 +3108,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameBlendingType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_frameBlendingType',
+        label: 'AVLayer Set frameBlendingType',
+        keywords: ['avlayer', 'frameblendingtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set frameBlendingType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'frameBlendingType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2464,6 +3160,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_timeRemapEnabled',
+        label: 'AVLayer Set timeRemapEnabled',
+        keywords: ['avlayer', 'timeremapenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set timeRemapEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'timeRemapEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_blendingMode',
         label: 'AVLayer Get blendingMode',
         keywords: ['avlayer', 'blendingmode', 'get'],
@@ -2480,6 +3200,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'blendingMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_blendingMode',
+        label: 'AVLayer Set blendingMode',
+        keywords: ['avlayer', 'blendingmode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set blendingMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'blendingMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2508,6 +3252,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_preserveTransparency',
+        label: 'AVLayer Set preserveTransparency',
+        keywords: ['avlayer', 'preservetransparency', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set preserveTransparency',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'preserveTransparency', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_samplingQuality',
         label: 'AVLayer Get samplingQuality',
         keywords: ['avlayer', 'samplingquality', 'get'],
@@ -2524,6 +3292,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'samplingQuality' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_samplingQuality',
+        label: 'AVLayer Set samplingQuality',
+        keywords: ['avlayer', 'samplingquality', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set samplingQuality',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'samplingQuality', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2552,6 +3344,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_trackMatteType',
+        label: 'AVLayer Set trackMatteType',
+        keywords: ['avlayer', 'trackmattetype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set trackMatteType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'trackMatteType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_quality',
         label: 'AVLayer Get quality',
         keywords: ['avlayer', 'quality', 'get'],
@@ -2568,6 +3384,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'quality' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_quality',
+        label: 'AVLayer Set quality',
+        keywords: ['avlayer', 'quality', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set quality',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'quality', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2926,6 +3766,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_name',
+        label: 'AVLayer Set name',
+        keywords: ['avlayer', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_parent',
         label: 'AVLayer Get parent',
         keywords: ['avlayer', 'parent', 'get'],
@@ -2942,6 +3806,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'parent' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_parent',
+        label: 'AVLayer Set parent',
+        keywords: ['avlayer', 'parent', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set parent',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'parent', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -2970,6 +3858,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_startTime',
+        label: 'AVLayer Set startTime',
+        keywords: ['avlayer', 'starttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set startTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'startTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_stretch',
         label: 'AVLayer Get stretch',
         keywords: ['avlayer', 'stretch', 'get'],
@@ -2986,6 +3898,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'stretch' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_stretch',
+        label: 'AVLayer Set stretch',
+        keywords: ['avlayer', 'stretch', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set stretch',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'stretch', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -3014,6 +3950,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_inPoint',
+        label: 'AVLayer Set inPoint',
+        keywords: ['avlayer', 'inpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set inPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'inPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_outPoint',
         label: 'AVLayer Get outPoint',
         keywords: ['avlayer', 'outpoint', 'get'],
@@ -3030,6 +3990,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outPoint' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_outPoint',
+        label: 'AVLayer Set outPoint',
+        keywords: ['avlayer', 'outpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set outPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'outPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -3058,6 +4042,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_enabled',
+        label: 'AVLayer Set enabled',
+        keywords: ['avlayer', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_solo',
         label: 'AVLayer Get solo',
         keywords: ['avlayer', 'solo', 'get'],
@@ -3074,6 +4082,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'solo' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_solo',
+        label: 'AVLayer Set solo',
+        keywords: ['avlayer', 'solo', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set solo',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'solo', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -3102,6 +4134,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_shy',
+        label: 'AVLayer Set shy',
+        keywords: ['avlayer', 'shy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set shy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'shy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_locked',
         label: 'AVLayer Get locked',
         keywords: ['avlayer', 'locked', 'get'],
@@ -3118,6 +4174,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'locked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_locked',
+        label: 'AVLayer Set locked',
+        keywords: ['avlayer', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -3146,6 +4226,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_comment',
+        label: 'AVLayer Set comment',
+        keywords: ['avlayer', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_label',
         label: 'AVLayer Get label',
         keywords: ['avlayer', 'label', 'get'],
@@ -3168,6 +4272,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_AVLayer_set_label',
+        label: 'AVLayer Set label',
+        keywords: ['avlayer', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_AVLayer_get_autoOrient',
         label: 'AVLayer Get autoOrient',
         keywords: ['avlayer', 'autoorient', 'get'],
@@ -3184,6 +4312,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'autoOrient' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_autoOrient',
+        label: 'AVLayer Set autoOrient',
+        keywords: ['avlayer', 'autoorient', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set autoOrient',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'autoOrient', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -3778,6 +4930,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_AVLayer_set_selected',
+        label: 'AVLayer Set selected',
+        keywords: ['avlayer', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'AVLayer Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'AVLayer', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -4649,6 +5825,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_name',
+        label: 'CameraLayer Set name',
+        keywords: ['cameralayer', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_parent',
         label: 'CameraLayer Get parent',
         keywords: ['cameralayer', 'parent', 'get'],
@@ -4665,6 +5865,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'parent' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_parent',
+        label: 'CameraLayer Set parent',
+        keywords: ['cameralayer', 'parent', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set parent',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'parent', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -4693,6 +5917,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_startTime',
+        label: 'CameraLayer Set startTime',
+        keywords: ['cameralayer', 'starttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set startTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'startTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_stretch',
         label: 'CameraLayer Get stretch',
         keywords: ['cameralayer', 'stretch', 'get'],
@@ -4709,6 +5957,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'stretch' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_stretch',
+        label: 'CameraLayer Set stretch',
+        keywords: ['cameralayer', 'stretch', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set stretch',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'stretch', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -4737,6 +6009,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_inPoint',
+        label: 'CameraLayer Set inPoint',
+        keywords: ['cameralayer', 'inpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set inPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'inPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_outPoint',
         label: 'CameraLayer Get outPoint',
         keywords: ['cameralayer', 'outpoint', 'get'],
@@ -4753,6 +6049,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outPoint' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_outPoint',
+        label: 'CameraLayer Set outPoint',
+        keywords: ['cameralayer', 'outpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set outPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'outPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -4781,6 +6101,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_enabled',
+        label: 'CameraLayer Set enabled',
+        keywords: ['cameralayer', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_solo',
         label: 'CameraLayer Get solo',
         keywords: ['cameralayer', 'solo', 'get'],
@@ -4797,6 +6141,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'solo' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_solo',
+        label: 'CameraLayer Set solo',
+        keywords: ['cameralayer', 'solo', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set solo',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'solo', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -4825,6 +6193,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_shy',
+        label: 'CameraLayer Set shy',
+        keywords: ['cameralayer', 'shy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set shy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'shy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_locked',
         label: 'CameraLayer Get locked',
         keywords: ['cameralayer', 'locked', 'get'],
@@ -4841,6 +6233,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'locked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_locked',
+        label: 'CameraLayer Set locked',
+        keywords: ['cameralayer', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -4869,6 +6285,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_comment',
+        label: 'CameraLayer Set comment',
+        keywords: ['cameralayer', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_label',
         label: 'CameraLayer Get label',
         keywords: ['cameralayer', 'label', 'get'],
@@ -4891,6 +6331,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CameraLayer_set_label',
+        label: 'CameraLayer Set label',
+        keywords: ['cameralayer', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CameraLayer_get_autoOrient',
         label: 'CameraLayer Get autoOrient',
         keywords: ['cameralayer', 'autoorient', 'get'],
@@ -4907,6 +6371,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'autoOrient' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_autoOrient',
+        label: 'CameraLayer Set autoOrient',
+        keywords: ['cameralayer', 'autoorient', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set autoOrient',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'autoOrient', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -5501,6 +6989,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CameraLayer_set_selected',
+        label: 'CameraLayer Set selected',
+        keywords: ['cameralayer', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CameraLayer Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CameraLayer', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6124,6 +7636,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_frameDuration',
+        label: 'CompItem Set frameDuration',
+        keywords: ['compitem', 'frameduration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set frameDuration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'frameDuration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_workAreaStart',
         label: 'CompItem Get workAreaStart',
         keywords: ['compitem', 'workareastart', 'get'],
@@ -6140,6 +7676,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'workAreaStart' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_workAreaStart',
+        label: 'CompItem Set workAreaStart',
+        keywords: ['compitem', 'workareastart', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set workAreaStart',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'workAreaStart', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6168,6 +7728,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_workAreaDuration',
+        label: 'CompItem Set workAreaDuration',
+        keywords: ['compitem', 'workareaduration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set workAreaDuration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'workAreaDuration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_hideShyLayers',
         label: 'CompItem Get hideShyLayers',
         keywords: ['compitem', 'hideshylayers', 'get'],
@@ -6184,6 +7768,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'hideShyLayers' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_hideShyLayers',
+        label: 'CompItem Set hideShyLayers',
+        keywords: ['compitem', 'hideshylayers', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set hideShyLayers',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'hideShyLayers', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6212,6 +7820,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_motionBlur',
+        label: 'CompItem Set motionBlur',
+        keywords: ['compitem', 'motionblur', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set motionBlur',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'motionBlur', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_draft3d',
         label: 'CompItem Get draft3d',
         keywords: ['compitem', 'draft3d', 'get'],
@@ -6228,6 +7860,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'draft3d' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_draft3d',
+        label: 'CompItem Set draft3d',
+        keywords: ['compitem', 'draft3d', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set draft3d',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'draft3d', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6256,6 +7912,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_frameBlending',
+        label: 'CompItem Set frameBlending',
+        keywords: ['compitem', 'frameblending', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set frameBlending',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'frameBlending', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_preserveNestedFrameRate',
         label: 'CompItem Get preserveNestedFrameRate',
         keywords: ['compitem', 'preservenestedframerate', 'get'],
@@ -6272,6 +7952,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'preserveNestedFrameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_preserveNestedFrameRate',
+        label: 'CompItem Set preserveNestedFrameRate',
+        keywords: ['compitem', 'preservenestedframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set preserveNestedFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'preserveNestedFrameRate', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6300,6 +8004,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_preserveNestedResolution',
+        label: 'CompItem Set preserveNestedResolution',
+        keywords: ['compitem', 'preservenestedresolution', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set preserveNestedResolution',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'preserveNestedResolution', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_bgColor',
         label: 'CompItem Get bgColor',
         keywords: ['compitem', 'bgcolor', 'get'],
@@ -6316,6 +8044,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'bgColor' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_bgColor',
+        label: 'CompItem Set bgColor',
+        keywords: ['compitem', 'bgcolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set bgColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'bgColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6344,6 +8096,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_displayStartTime',
+        label: 'CompItem Set displayStartTime',
+        keywords: ['compitem', 'displaystarttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set displayStartTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'displayStartTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_resolutionFactor',
         label: 'CompItem Get resolutionFactor',
         keywords: ['compitem', 'resolutionfactor', 'get'],
@@ -6360,6 +8136,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'resolutionFactor' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_resolutionFactor',
+        label: 'CompItem Set resolutionFactor',
+        keywords: ['compitem', 'resolutionfactor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set resolutionFactor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'resolutionFactor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6388,6 +8188,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_shutterAngle',
+        label: 'CompItem Set shutterAngle',
+        keywords: ['compitem', 'shutterangle', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set shutterAngle',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'shutterAngle', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_shutterPhase',
         label: 'CompItem Get shutterPhase',
         keywords: ['compitem', 'shutterphase', 'get'],
@@ -6404,6 +8228,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'shutterPhase' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_shutterPhase',
+        label: 'CompItem Set shutterPhase',
+        keywords: ['compitem', 'shutterphase', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set shutterPhase',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'shutterPhase', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6432,6 +8280,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_motionBlurSamplesPerFrame',
+        label: 'CompItem Set motionBlurSamplesPerFrame',
+        keywords: ['compitem', 'motionblursamplesperframe', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set motionBlurSamplesPerFrame',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'motionBlurSamplesPerFrame', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_motionBlurAdaptiveSampleLimit',
         label: 'CompItem Get motionBlurAdaptiveSampleLimit',
         keywords: ['compitem', 'motionbluradaptivesamplelimit', 'get'],
@@ -6448,6 +8320,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'motionBlurAdaptiveSampleLimit' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_motionBlurAdaptiveSampleLimit',
+        label: 'CompItem Set motionBlurAdaptiveSampleLimit',
+        keywords: ['compitem', 'motionbluradaptivesamplelimit', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set motionBlurAdaptiveSampleLimit',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'motionBlurAdaptiveSampleLimit', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6476,6 +8372,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_motionGraphicsTemplateName',
+        label: 'CompItem Set motionGraphicsTemplateName',
+        keywords: ['compitem', 'motiongraphicstemplatename', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set motionGraphicsTemplateName',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'motionGraphicsTemplateName', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_renderer',
         label: 'CompItem Get renderer',
         keywords: ['compitem', 'renderer', 'get'],
@@ -6492,6 +8412,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'renderer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_renderer',
+        label: 'CompItem Set renderer',
+        keywords: ['compitem', 'renderer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set renderer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'renderer', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6520,6 +8464,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_dropFrame',
+        label: 'CompItem Set dropFrame',
+        keywords: ['compitem', 'dropframe', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set dropFrame',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'dropFrame', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_displayStartFrame',
         label: 'CompItem Get displayStartFrame',
         keywords: ['compitem', 'displaystartframe', 'get'],
@@ -6536,6 +8504,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'displayStartFrame' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_displayStartFrame',
+        label: 'CompItem Set displayStartFrame',
+        keywords: ['compitem', 'displaystartframe', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set displayStartFrame',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'displayStartFrame', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6696,6 +8688,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_width',
+        label: 'CompItem Set width',
+        keywords: ['compitem', 'width', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set width',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'width', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_height',
         label: 'CompItem Get height',
         keywords: ['compitem', 'height', 'get'],
@@ -6712,6 +8728,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'height' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_height',
+        label: 'CompItem Set height',
+        keywords: ['compitem', 'height', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set height',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'height', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6740,6 +8780,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_pixelAspect',
+        label: 'CompItem Set pixelAspect',
+        keywords: ['compitem', 'pixelaspect', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set pixelAspect',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'pixelAspect', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_frameRate',
         label: 'CompItem Get frameRate',
         keywords: ['compitem', 'framerate', 'get'],
@@ -6756,6 +8820,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_frameRate',
+        label: 'CompItem Set frameRate',
+        keywords: ['compitem', 'framerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set frameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'frameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6784,6 +8872,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_duration',
+        label: 'CompItem Set duration',
+        keywords: ['compitem', 'duration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set duration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'duration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_useProxy',
         label: 'CompItem Get useProxy',
         keywords: ['compitem', 'useproxy', 'get'],
@@ -6806,6 +8918,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_useProxy',
+        label: 'CompItem Set useProxy',
+        keywords: ['compitem', 'useproxy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set useProxy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'useProxy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_time',
         label: 'CompItem Get time',
         keywords: ['compitem', 'time', 'get'],
@@ -6822,6 +8958,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'time' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_time',
+        label: 'CompItem Set time',
+        keywords: ['compitem', 'time', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set time',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'time', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6894,6 +9054,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_name',
+        label: 'CompItem Set name',
+        keywords: ['compitem', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_comment',
         label: 'CompItem Get comment',
         keywords: ['compitem', 'comment', 'get'],
@@ -6910,6 +9094,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'comment' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_comment',
+        label: 'CompItem Set comment',
+        keywords: ['compitem', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -6938,6 +9146,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_parentFolder',
+        label: 'CompItem Set parentFolder',
+        keywords: ['compitem', 'parentfolder', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set parentFolder',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'parentFolder', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_selected',
         label: 'CompItem Get selected',
         keywords: ['compitem', 'selected', 'get'],
@@ -6960,6 +9192,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_CompItem_set_selected',
+        label: 'CompItem Set selected',
+        keywords: ['compitem', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_CompItem_get_label',
         label: 'CompItem Get label',
         keywords: ['compitem', 'label', 'get'],
@@ -6976,6 +9232,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'label' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_CompItem_set_label',
+        label: 'CompItem Set label',
+        keywords: ['compitem', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'CompItem Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'CompItem', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -7598,6 +9878,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FileSource_set_hasAlpha',
+        label: 'FileSource Set hasAlpha',
+        keywords: ['filesource', 'hasalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set hasAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'hasAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FileSource_get_alphaMode',
         label: 'FileSource Get alphaMode',
         keywords: ['filesource', 'alphamode', 'get'],
@@ -7614,6 +9918,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'alphaMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FileSource_set_alphaMode',
+        label: 'FileSource Set alphaMode',
+        keywords: ['filesource', 'alphamode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set alphaMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'alphaMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -7642,6 +9970,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FileSource_set_premulColor',
+        label: 'FileSource Set premulColor',
+        keywords: ['filesource', 'premulcolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set premulColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'premulColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FileSource_get_invertAlpha',
         label: 'FileSource Get invertAlpha',
         keywords: ['filesource', 'invertalpha', 'get'],
@@ -7658,6 +10010,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'invertAlpha' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FileSource_set_invertAlpha',
+        label: 'FileSource Set invertAlpha',
+        keywords: ['filesource', 'invertalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set invertAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'invertAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -7686,6 +10062,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FileSource_set_fieldSeparationType',
+        label: 'FileSource Set fieldSeparationType',
+        keywords: ['filesource', 'fieldseparationtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set fieldSeparationType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'fieldSeparationType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FileSource_get_highQualityFieldSeparation',
         label: 'FileSource Get highQualityFieldSeparation',
         keywords: ['filesource', 'highqualityfieldseparation', 'get'],
@@ -7702,6 +10102,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'highQualityFieldSeparation' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FileSource_set_highQualityFieldSeparation',
+        label: 'FileSource Set highQualityFieldSeparation',
+        keywords: ['filesource', 'highqualityfieldseparation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set highQualityFieldSeparation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'highQualityFieldSeparation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -7730,6 +10154,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FileSource_set_removePulldown',
+        label: 'FileSource Set removePulldown',
+        keywords: ['filesource', 'removepulldown', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set removePulldown',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'removePulldown', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FileSource_get_loop',
         label: 'FileSource Get loop',
         keywords: ['filesource', 'loop', 'get'],
@@ -7746,6 +10194,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'loop' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FileSource_set_loop',
+        label: 'FileSource Set loop',
+        keywords: ['filesource', 'loop', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set loop',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'loop', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -7774,6 +10246,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FileSource_set_nativeFrameRate',
+        label: 'FileSource Set nativeFrameRate',
+        keywords: ['filesource', 'nativeframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set nativeFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'nativeFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FileSource_get_conformFrameRate',
         label: 'FileSource Get conformFrameRate',
         keywords: ['filesource', 'conformframerate', 'get'],
@@ -7790,6 +10286,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'conformFrameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FileSource_set_conformFrameRate',
+        label: 'FileSource Set conformFrameRate',
+        keywords: ['filesource', 'conformframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FileSource Set conformFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FileSource', type: 'expr' },
+              { id: 'value', label: 'conformFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -7981,6 +10501,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FolderItem_set_name',
+        label: 'FolderItem Set name',
+        keywords: ['folderitem', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FolderItem Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FolderItem', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FolderItem_get_comment',
         label: 'FolderItem Get comment',
         keywords: ['folderitem', 'comment', 'get'],
@@ -7997,6 +10541,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'comment' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FolderItem_set_comment',
+        label: 'FolderItem Set comment',
+        keywords: ['folderitem', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FolderItem Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FolderItem', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8025,6 +10593,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FolderItem_set_parentFolder',
+        label: 'FolderItem Set parentFolder',
+        keywords: ['folderitem', 'parentfolder', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FolderItem Set parentFolder',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FolderItem', type: 'expr' },
+              { id: 'value', label: 'parentFolder', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FolderItem_get_selected',
         label: 'FolderItem Get selected',
         keywords: ['folderitem', 'selected', 'get'],
@@ -8047,6 +10639,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FolderItem_set_selected',
+        label: 'FolderItem Set selected',
+        keywords: ['folderitem', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FolderItem Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FolderItem', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FolderItem_get_label',
         label: 'FolderItem Get label',
         keywords: ['folderitem', 'label', 'get'],
@@ -8063,6 +10679,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'label' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FolderItem_set_label',
+        label: 'FolderItem Set label',
+        keywords: ['folderitem', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FolderItem Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FolderItem', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8395,6 +11035,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_width',
+        label: 'FootageItem Set width',
+        keywords: ['footageitem', 'width', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set width',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'width', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_height',
         label: 'FootageItem Get height',
         keywords: ['footageitem', 'height', 'get'],
@@ -8411,6 +11075,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'height' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageItem_set_height',
+        label: 'FootageItem Set height',
+        keywords: ['footageitem', 'height', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set height',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'height', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8439,6 +11127,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_pixelAspect',
+        label: 'FootageItem Set pixelAspect',
+        keywords: ['footageitem', 'pixelaspect', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set pixelAspect',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'pixelAspect', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_frameRate',
         label: 'FootageItem Get frameRate',
         keywords: ['footageitem', 'framerate', 'get'],
@@ -8455,6 +11167,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageItem_set_frameRate',
+        label: 'FootageItem Set frameRate',
+        keywords: ['footageitem', 'framerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set frameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'frameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8483,6 +11219,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_frameDuration',
+        label: 'FootageItem Set frameDuration',
+        keywords: ['footageitem', 'frameduration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set frameDuration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'frameDuration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_duration',
         label: 'FootageItem Get duration',
         keywords: ['footageitem', 'duration', 'get'],
@@ -8499,6 +11259,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'duration' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageItem_set_duration',
+        label: 'FootageItem Set duration',
+        keywords: ['footageitem', 'duration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set duration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'duration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8527,6 +11311,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_useProxy',
+        label: 'FootageItem Set useProxy',
+        keywords: ['footageitem', 'useproxy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set useProxy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'useProxy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_time',
         label: 'FootageItem Get time',
         keywords: ['footageitem', 'time', 'get'],
@@ -8543,6 +11351,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'time' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageItem_set_time',
+        label: 'FootageItem Set time',
+        keywords: ['footageitem', 'time', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set time',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'time', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8615,6 +11447,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_name',
+        label: 'FootageItem Set name',
+        keywords: ['footageitem', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_comment',
         label: 'FootageItem Get comment',
         keywords: ['footageitem', 'comment', 'get'],
@@ -8631,6 +11487,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'comment' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageItem_set_comment',
+        label: 'FootageItem Set comment',
+        keywords: ['footageitem', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -8659,6 +11539,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_parentFolder',
+        label: 'FootageItem Set parentFolder',
+        keywords: ['footageitem', 'parentfolder', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set parentFolder',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'parentFolder', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_selected',
         label: 'FootageItem Get selected',
         keywords: ['footageitem', 'selected', 'get'],
@@ -8681,6 +11585,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageItem_set_selected',
+        label: 'FootageItem Set selected',
+        keywords: ['footageitem', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageItem_get_label',
         label: 'FootageItem Get label',
         keywords: ['footageitem', 'label', 'get'],
@@ -8697,6 +11625,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'label' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageItem_set_label',
+        label: 'FootageItem Set label',
+        keywords: ['footageitem', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageItem Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageItem', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -9261,6 +12213,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_width',
+        label: 'PlaceholderItem Set width',
+        keywords: ['placeholderitem', 'width', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set width',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'width', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_height',
         label: 'PlaceholderItem Get height',
         keywords: ['placeholderitem', 'height', 'get'],
@@ -9277,6 +12253,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'height' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderItem_set_height',
+        label: 'PlaceholderItem Set height',
+        keywords: ['placeholderitem', 'height', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set height',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'height', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -9305,6 +12305,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_pixelAspect',
+        label: 'PlaceholderItem Set pixelAspect',
+        keywords: ['placeholderitem', 'pixelaspect', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set pixelAspect',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'pixelAspect', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_frameRate',
         label: 'PlaceholderItem Get frameRate',
         keywords: ['placeholderitem', 'framerate', 'get'],
@@ -9321,6 +12345,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderItem_set_frameRate',
+        label: 'PlaceholderItem Set frameRate',
+        keywords: ['placeholderitem', 'framerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set frameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'frameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -9349,6 +12397,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_frameDuration',
+        label: 'PlaceholderItem Set frameDuration',
+        keywords: ['placeholderitem', 'frameduration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set frameDuration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'frameDuration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_duration',
         label: 'PlaceholderItem Get duration',
         keywords: ['placeholderitem', 'duration', 'get'],
@@ -9365,6 +12437,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'duration' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderItem_set_duration',
+        label: 'PlaceholderItem Set duration',
+        keywords: ['placeholderitem', 'duration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set duration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'duration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -9393,6 +12489,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_useProxy',
+        label: 'PlaceholderItem Set useProxy',
+        keywords: ['placeholderitem', 'useproxy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set useProxy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'useProxy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_time',
         label: 'PlaceholderItem Get time',
         keywords: ['placeholderitem', 'time', 'get'],
@@ -9409,6 +12529,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'time' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderItem_set_time',
+        label: 'PlaceholderItem Set time',
+        keywords: ['placeholderitem', 'time', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set time',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'time', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -9481,6 +12625,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_name',
+        label: 'PlaceholderItem Set name',
+        keywords: ['placeholderitem', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_comment',
         label: 'PlaceholderItem Get comment',
         keywords: ['placeholderitem', 'comment', 'get'],
@@ -9497,6 +12665,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'comment' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderItem_set_comment',
+        label: 'PlaceholderItem Set comment',
+        keywords: ['placeholderitem', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -9525,6 +12717,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_parentFolder',
+        label: 'PlaceholderItem Set parentFolder',
+        keywords: ['placeholderitem', 'parentfolder', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set parentFolder',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'parentFolder', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_selected',
         label: 'PlaceholderItem Get selected',
         keywords: ['placeholderitem', 'selected', 'get'],
@@ -9547,6 +12763,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderItem_set_selected',
+        label: 'PlaceholderItem Set selected',
+        keywords: ['placeholderitem', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderItem_get_label',
         label: 'PlaceholderItem Get label',
         keywords: ['placeholderitem', 'label', 'get'],
@@ -9563,6 +12803,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'label' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderItem_set_label',
+        label: 'PlaceholderItem Set label',
+        keywords: ['placeholderitem', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderItem Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderItem', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10017,6 +13281,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageSource_set_hasAlpha',
+        label: 'FootageSource Set hasAlpha',
+        keywords: ['footagesource', 'hasalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set hasAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'hasAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageSource_get_alphaMode',
         label: 'FootageSource Get alphaMode',
         keywords: ['footagesource', 'alphamode', 'get'],
@@ -10033,6 +13321,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'alphaMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageSource_set_alphaMode',
+        label: 'FootageSource Set alphaMode',
+        keywords: ['footagesource', 'alphamode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set alphaMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'alphaMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10061,6 +13373,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageSource_set_premulColor',
+        label: 'FootageSource Set premulColor',
+        keywords: ['footagesource', 'premulcolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set premulColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'premulColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageSource_get_invertAlpha',
         label: 'FootageSource Get invertAlpha',
         keywords: ['footagesource', 'invertalpha', 'get'],
@@ -10077,6 +13413,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'invertAlpha' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageSource_set_invertAlpha',
+        label: 'FootageSource Set invertAlpha',
+        keywords: ['footagesource', 'invertalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set invertAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'invertAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10105,6 +13465,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageSource_set_fieldSeparationType',
+        label: 'FootageSource Set fieldSeparationType',
+        keywords: ['footagesource', 'fieldseparationtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set fieldSeparationType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'fieldSeparationType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageSource_get_highQualityFieldSeparation',
         label: 'FootageSource Get highQualityFieldSeparation',
         keywords: ['footagesource', 'highqualityfieldseparation', 'get'],
@@ -10121,6 +13505,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'highQualityFieldSeparation' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageSource_set_highQualityFieldSeparation',
+        label: 'FootageSource Set highQualityFieldSeparation',
+        keywords: ['footagesource', 'highqualityfieldseparation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set highQualityFieldSeparation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'highQualityFieldSeparation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10149,6 +13557,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageSource_set_removePulldown',
+        label: 'FootageSource Set removePulldown',
+        keywords: ['footagesource', 'removepulldown', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set removePulldown',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'removePulldown', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageSource_get_loop',
         label: 'FootageSource Get loop',
         keywords: ['footagesource', 'loop', 'get'],
@@ -10165,6 +13597,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'loop' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageSource_set_loop',
+        label: 'FootageSource Set loop',
+        keywords: ['footagesource', 'loop', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set loop',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'loop', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10193,6 +13649,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_FootageSource_set_nativeFrameRate',
+        label: 'FootageSource Set nativeFrameRate',
+        keywords: ['footagesource', 'nativeframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set nativeFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'nativeFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_FootageSource_get_conformFrameRate',
         label: 'FootageSource Get conformFrameRate',
         keywords: ['footagesource', 'conformframerate', 'get'],
@@ -10209,6 +13689,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'conformFrameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_FootageSource_set_conformFrameRate',
+        label: 'FootageSource Set conformFrameRate',
+        keywords: ['footagesource', 'conformframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'FootageSource Set conformFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'FootageSource', type: 'expr' },
+              { id: 'value', label: 'conformFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10289,6 +13793,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ImportOptions_set_importAs',
+        label: 'ImportOptions Set importAs',
+        keywords: ['importoptions', 'importas', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ImportOptions Set importAs',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ImportOptions', type: 'expr' },
+              { id: 'value', label: 'importAs', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ImportOptions_get_sequence',
         label: 'ImportOptions Get sequence',
         keywords: ['importoptions', 'sequence', 'get'],
@@ -10305,6 +13833,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'sequence' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ImportOptions_set_sequence',
+        label: 'ImportOptions Set sequence',
+        keywords: ['importoptions', 'sequence', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ImportOptions Set sequence',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ImportOptions', type: 'expr' },
+              { id: 'value', label: 'sequence', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10333,6 +13885,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ImportOptions_set_forceAlphabetical',
+        label: 'ImportOptions Set forceAlphabetical',
+        keywords: ['importoptions', 'forcealphabetical', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ImportOptions Set forceAlphabetical',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ImportOptions', type: 'expr' },
+              { id: 'value', label: 'forceAlphabetical', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ImportOptions_get_file',
         label: 'ImportOptions Get file',
         keywords: ['importoptions', 'file', 'get'],
@@ -10349,6 +13925,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'file' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ImportOptions_set_file',
+        label: 'ImportOptions Set file',
+        keywords: ['importoptions', 'file', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ImportOptions Set file',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ImportOptions', type: 'expr' },
+              { id: 'value', label: 'file', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10451,6 +14051,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Item_set_name',
+        label: 'Item Set name',
+        keywords: ['item', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Item Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Item', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Item_get_comment',
         label: 'Item Get comment',
         keywords: ['item', 'comment', 'get'],
@@ -10467,6 +14091,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'comment' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Item_set_comment',
+        label: 'Item Set comment',
+        keywords: ['item', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Item Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Item', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10495,6 +14143,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Item_set_parentFolder',
+        label: 'Item Set parentFolder',
+        keywords: ['item', 'parentfolder', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Item Set parentFolder',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Item', type: 'expr' },
+              { id: 'value', label: 'parentFolder', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Item_get_selected',
         label: 'Item Get selected',
         keywords: ['item', 'selected', 'get'],
@@ -10517,6 +14189,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Item_set_selected',
+        label: 'Item Set selected',
+        keywords: ['item', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Item Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Item', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Item_get_label',
         label: 'Item Get label',
         keywords: ['item', 'label', 'get'],
@@ -10533,6 +14229,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'label' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Item_set_label',
+        label: 'Item Set label',
+        keywords: ['item', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Item Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Item', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10746,6 +14466,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_KeyframeEase_set_speed',
+        label: 'KeyframeEase Set speed',
+        keywords: ['keyframeease', 'speed', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'KeyframeEase Set speed',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'KeyframeEase', type: 'expr' },
+              { id: 'value', label: 'speed', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_KeyframeEase_get_influence',
         label: 'KeyframeEase Get influence',
         keywords: ['keyframeease', 'influence', 'get'],
@@ -10762,6 +14506,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'influence' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_KeyframeEase_set_influence',
+        label: 'KeyframeEase Set influence',
+        keywords: ['keyframeease', 'influence', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'KeyframeEase Set influence',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'KeyframeEase', type: 'expr' },
+              { id: 'value', label: 'influence', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -10971,6 +14739,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_name',
+        label: 'Layer Set name',
+        keywords: ['layer', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_parent',
         label: 'Layer Get parent',
         keywords: ['layer', 'parent', 'get'],
@@ -10987,6 +14779,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'parent' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_parent',
+        label: 'Layer Set parent',
+        keywords: ['layer', 'parent', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set parent',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'parent', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -11015,6 +14831,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_startTime',
+        label: 'Layer Set startTime',
+        keywords: ['layer', 'starttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set startTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'startTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_stretch',
         label: 'Layer Get stretch',
         keywords: ['layer', 'stretch', 'get'],
@@ -11031,6 +14871,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'stretch' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_stretch',
+        label: 'Layer Set stretch',
+        keywords: ['layer', 'stretch', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set stretch',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'stretch', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -11059,6 +14923,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_inPoint',
+        label: 'Layer Set inPoint',
+        keywords: ['layer', 'inpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set inPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'inPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_outPoint',
         label: 'Layer Get outPoint',
         keywords: ['layer', 'outpoint', 'get'],
@@ -11075,6 +14963,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outPoint' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_outPoint',
+        label: 'Layer Set outPoint',
+        keywords: ['layer', 'outpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set outPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'outPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -11103,6 +15015,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_enabled',
+        label: 'Layer Set enabled',
+        keywords: ['layer', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_solo',
         label: 'Layer Get solo',
         keywords: ['layer', 'solo', 'get'],
@@ -11119,6 +15055,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'solo' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_solo',
+        label: 'Layer Set solo',
+        keywords: ['layer', 'solo', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set solo',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'solo', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -11147,6 +15107,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_shy',
+        label: 'Layer Set shy',
+        keywords: ['layer', 'shy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set shy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'shy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_locked',
         label: 'Layer Get locked',
         keywords: ['layer', 'locked', 'get'],
@@ -11163,6 +15147,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'locked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_locked',
+        label: 'Layer Set locked',
+        keywords: ['layer', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -11191,6 +15199,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_comment',
+        label: 'Layer Set comment',
+        keywords: ['layer', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_label',
         label: 'Layer Get label',
         keywords: ['layer', 'label', 'get'],
@@ -11213,6 +15245,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Layer_set_label',
+        label: 'Layer Set label',
+        keywords: ['layer', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Layer_get_autoOrient',
         label: 'Layer Get autoOrient',
         keywords: ['layer', 'autoorient', 'get'],
@@ -11229,6 +15285,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'autoOrient' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_autoOrient',
+        label: 'Layer Set autoOrient',
+        keywords: ['layer', 'autoorient', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set autoOrient',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'autoOrient', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -11823,6 +15903,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Layer_set_selected',
+        label: 'Layer Set selected',
+        keywords: ['layer', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Layer Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Layer', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -12552,6 +16656,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_lightType',
+        label: 'LightLayer Set lightType',
+        keywords: ['lightlayer', 'lighttype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set lightType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'lightType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_index',
         label: 'LightLayer Get index',
         keywords: ['lightlayer', 'index', 'get'],
@@ -12750,6 +16878,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_name',
+        label: 'LightLayer Set name',
+        keywords: ['lightlayer', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_parent',
         label: 'LightLayer Get parent',
         keywords: ['lightlayer', 'parent', 'get'],
@@ -12766,6 +16918,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'parent' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_LightLayer_set_parent',
+        label: 'LightLayer Set parent',
+        keywords: ['lightlayer', 'parent', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set parent',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'parent', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -12794,6 +16970,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_startTime',
+        label: 'LightLayer Set startTime',
+        keywords: ['lightlayer', 'starttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set startTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'startTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_stretch',
         label: 'LightLayer Get stretch',
         keywords: ['lightlayer', 'stretch', 'get'],
@@ -12810,6 +17010,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'stretch' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_LightLayer_set_stretch',
+        label: 'LightLayer Set stretch',
+        keywords: ['lightlayer', 'stretch', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set stretch',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'stretch', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -12838,6 +17062,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_inPoint',
+        label: 'LightLayer Set inPoint',
+        keywords: ['lightlayer', 'inpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set inPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'inPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_outPoint',
         label: 'LightLayer Get outPoint',
         keywords: ['lightlayer', 'outpoint', 'get'],
@@ -12854,6 +17102,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outPoint' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_LightLayer_set_outPoint',
+        label: 'LightLayer Set outPoint',
+        keywords: ['lightlayer', 'outpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set outPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'outPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -12882,6 +17154,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_enabled',
+        label: 'LightLayer Set enabled',
+        keywords: ['lightlayer', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_solo',
         label: 'LightLayer Get solo',
         keywords: ['lightlayer', 'solo', 'get'],
@@ -12898,6 +17194,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'solo' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_LightLayer_set_solo',
+        label: 'LightLayer Set solo',
+        keywords: ['lightlayer', 'solo', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set solo',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'solo', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -12926,6 +17246,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_shy',
+        label: 'LightLayer Set shy',
+        keywords: ['lightlayer', 'shy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set shy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'shy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_locked',
         label: 'LightLayer Get locked',
         keywords: ['lightlayer', 'locked', 'get'],
@@ -12942,6 +17286,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'locked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_LightLayer_set_locked',
+        label: 'LightLayer Set locked',
+        keywords: ['lightlayer', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -12970,6 +17338,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_comment',
+        label: 'LightLayer Set comment',
+        keywords: ['lightlayer', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_label',
         label: 'LightLayer Get label',
         keywords: ['lightlayer', 'label', 'get'],
@@ -12992,6 +17384,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_label',
+        label: 'LightLayer Set label',
+        keywords: ['lightlayer', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_get_autoOrient',
         label: 'LightLayer Get autoOrient',
         keywords: ['lightlayer', 'autoorient', 'get'],
@@ -13008,6 +17424,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'autoOrient' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_LightLayer_set_autoOrient',
+        label: 'LightLayer Set autoOrient',
+        keywords: ['lightlayer', 'autoorient', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set autoOrient',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'autoOrient', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -13608,6 +18048,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_LightLayer_set_selected',
+        label: 'LightLayer Set selected',
+        keywords: ['lightlayer', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'LightLayer Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'LightLayer', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_LightLayer_moveToBeginning',
         label: 'LightLayer moveToBeginning',
         keywords: ['lightlayer', 'movetobeginning'],
@@ -14022,6 +18486,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MarkerValue_set_comment',
+        label: 'MarkerValue Set comment',
+        keywords: ['markervalue', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MarkerValue_get_chapter',
         label: 'MarkerValue Get chapter',
         keywords: ['markervalue', 'chapter', 'get'],
@@ -14038,6 +18526,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'chapter' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MarkerValue_set_chapter',
+        label: 'MarkerValue Set chapter',
+        keywords: ['markervalue', 'chapter', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set chapter',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'chapter', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14066,6 +18578,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MarkerValue_set_cuePointName',
+        label: 'MarkerValue Set cuePointName',
+        keywords: ['markervalue', 'cuepointname', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set cuePointName',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'cuePointName', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MarkerValue_get_duration',
         label: 'MarkerValue Get duration',
         keywords: ['markervalue', 'duration', 'get'],
@@ -14082,6 +18618,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'duration' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MarkerValue_set_duration',
+        label: 'MarkerValue Set duration',
+        keywords: ['markervalue', 'duration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set duration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'duration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14110,6 +18670,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MarkerValue_set_eventCuePoint',
+        label: 'MarkerValue Set eventCuePoint',
+        keywords: ['markervalue', 'eventcuepoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set eventCuePoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'eventCuePoint', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MarkerValue_get_url',
         label: 'MarkerValue Get url',
         keywords: ['markervalue', 'url', 'get'],
@@ -14126,6 +18710,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'url' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MarkerValue_set_url',
+        label: 'MarkerValue Set url',
+        keywords: ['markervalue', 'url', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set url',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'url', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14154,6 +18762,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MarkerValue_set_frameTarget',
+        label: 'MarkerValue Set frameTarget',
+        keywords: ['markervalue', 'frametarget', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set frameTarget',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'frameTarget', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MarkerValue_get_label',
         label: 'MarkerValue Get label',
         keywords: ['markervalue', 'label', 'get'],
@@ -14176,6 +18808,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MarkerValue_set_label',
+        label: 'MarkerValue Set label',
+        keywords: ['markervalue', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MarkerValue_get_protectedRegion',
         label: 'MarkerValue Get protectedRegion',
         keywords: ['markervalue', 'protectedregion', 'get'],
@@ -14192,6 +18848,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'protectedRegion' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MarkerValue_set_protectedRegion',
+        label: 'MarkerValue Set protectedRegion',
+        keywords: ['markervalue', 'protectedregion', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MarkerValue Set protectedRegion',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MarkerValue', type: 'expr' },
+              { id: 'value', label: 'protectedRegion', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14273,6 +18953,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_maskMode',
+        label: 'MaskPropertyGroup Set maskMode',
+        keywords: ['maskpropertygroup', 'maskmode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_inverted',
         label: 'MaskPropertyGroup Get inverted',
         keywords: ['maskpropertygroup', 'inverted', 'get'],
@@ -14289,6 +18993,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'inverted' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_inverted',
+        label: 'MaskPropertyGroup Set inverted',
+        keywords: ['maskpropertygroup', 'inverted', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set inverted',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'inverted', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14317,6 +19045,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_rotoBezier',
+        label: 'MaskPropertyGroup Set rotoBezier',
+        keywords: ['maskpropertygroup', 'rotobezier', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set rotoBezier',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'rotoBezier', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_maskMotionBlur',
         label: 'MaskPropertyGroup Get maskMotionBlur',
         keywords: ['maskpropertygroup', 'maskmotionblur', 'get'],
@@ -14333,6 +19085,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'maskMotionBlur' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_maskMotionBlur',
+        label: 'MaskPropertyGroup Set maskMotionBlur',
+        keywords: ['maskpropertygroup', 'maskmotionblur', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskMotionBlur',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskMotionBlur', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14361,6 +19137,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_locked',
+        label: 'MaskPropertyGroup Set locked',
+        keywords: ['maskpropertygroup', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_color',
         label: 'MaskPropertyGroup Get color',
         keywords: ['maskpropertygroup', 'color', 'get'],
@@ -14377,6 +19177,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'color' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_color',
+        label: 'MaskPropertyGroup Set color',
+        keywords: ['maskpropertygroup', 'color', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set color',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'color', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14405,6 +19229,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_maskShape',
+        label: 'MaskPropertyGroup Set maskShape',
+        keywords: ['maskpropertygroup', 'maskshape', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskShape',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskShape', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_maskPath',
         label: 'MaskPropertyGroup Get maskPath',
         keywords: ['maskpropertygroup', 'maskpath', 'get'],
@@ -14421,6 +19269,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'maskPath' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_maskPath',
+        label: 'MaskPropertyGroup Set maskPath',
+        keywords: ['maskpropertygroup', 'maskpath', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskPath',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskPath', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14449,6 +19321,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_maskFeather',
+        label: 'MaskPropertyGroup Set maskFeather',
+        keywords: ['maskpropertygroup', 'maskfeather', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskFeather',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskFeather', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_maskFeatherFalloff',
         label: 'MaskPropertyGroup Get maskFeatherFalloff',
         keywords: ['maskpropertygroup', 'maskfeatherfalloff', 'get'],
@@ -14465,6 +19361,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'maskFeatherFalloff' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_maskFeatherFalloff',
+        label: 'MaskPropertyGroup Set maskFeatherFalloff',
+        keywords: ['maskpropertygroup', 'maskfeatherfalloff', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskFeatherFalloff',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskFeatherFalloff', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14493,6 +19413,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_maskOpacity',
+        label: 'MaskPropertyGroup Set maskOpacity',
+        keywords: ['maskpropertygroup', 'maskopacity', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskOpacity',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskOpacity', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_maskExpansion',
         label: 'MaskPropertyGroup Get maskExpansion',
         keywords: ['maskpropertygroup', 'maskexpansion', 'get'],
@@ -14509,6 +19453,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'maskExpansion' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_maskExpansion',
+        label: 'MaskPropertyGroup Set maskExpansion',
+        keywords: ['maskpropertygroup', 'maskexpansion', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set maskExpansion',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'maskExpansion', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -14801,6 +19769,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_name',
+        label: 'MaskPropertyGroup Set name',
+        keywords: ['maskpropertygroup', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_enabled',
         label: 'MaskPropertyGroup Get enabled',
         keywords: ['maskpropertygroup', 'enabled', 'get'],
@@ -14823,6 +19815,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_MaskPropertyGroup_set_enabled',
+        label: 'MaskPropertyGroup Set enabled',
+        keywords: ['maskpropertygroup', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_MaskPropertyGroup_get_selected',
         label: 'MaskPropertyGroup Get selected',
         keywords: ['maskpropertygroup', 'selected', 'get'],
@@ -14839,6 +19855,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_MaskPropertyGroup_set_selected',
+        label: 'MaskPropertyGroup Set selected',
+        keywords: ['maskpropertygroup', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'MaskPropertyGroup Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'MaskPropertyGroup', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15139,6 +20179,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_OutputModule_set_file',
+        label: 'OutputModule Set file',
+        keywords: ['outputmodule', 'file', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'OutputModule Set file',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'OutputModule', type: 'expr' },
+              { id: 'value', label: 'file', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_OutputModule_get_postRenderAction',
         label: 'OutputModule Get postRenderAction',
         keywords: ['outputmodule', 'postrenderaction', 'get'],
@@ -15161,6 +20225,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_OutputModule_set_postRenderAction',
+        label: 'OutputModule Set postRenderAction',
+        keywords: ['outputmodule', 'postrenderaction', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'OutputModule Set postRenderAction',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'OutputModule', type: 'expr' },
+              { id: 'value', label: 'postRenderAction', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_OutputModule_get_includeSourceXMP',
         label: 'OutputModule Get includeSourceXMP',
         keywords: ['outputmodule', 'includesourcexmp', 'get'],
@@ -15177,6 +20265,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'includeSourceXMP' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_OutputModule_set_includeSourceXMP',
+        label: 'OutputModule Set includeSourceXMP',
+        keywords: ['outputmodule', 'includesourcexmp', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'OutputModule Set includeSourceXMP',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'OutputModule', type: 'expr' },
+              { id: 'value', label: 'includeSourceXMP', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15446,6 +20558,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderSource_set_hasAlpha',
+        label: 'PlaceholderSource Set hasAlpha',
+        keywords: ['placeholdersource', 'hasalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set hasAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'hasAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderSource_get_alphaMode',
         label: 'PlaceholderSource Get alphaMode',
         keywords: ['placeholdersource', 'alphamode', 'get'],
@@ -15462,6 +20598,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'alphaMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderSource_set_alphaMode',
+        label: 'PlaceholderSource Set alphaMode',
+        keywords: ['placeholdersource', 'alphamode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set alphaMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'alphaMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15490,6 +20650,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderSource_set_premulColor',
+        label: 'PlaceholderSource Set premulColor',
+        keywords: ['placeholdersource', 'premulcolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set premulColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'premulColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderSource_get_invertAlpha',
         label: 'PlaceholderSource Get invertAlpha',
         keywords: ['placeholdersource', 'invertalpha', 'get'],
@@ -15506,6 +20690,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'invertAlpha' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderSource_set_invertAlpha',
+        label: 'PlaceholderSource Set invertAlpha',
+        keywords: ['placeholdersource', 'invertalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set invertAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'invertAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15534,6 +20742,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderSource_set_fieldSeparationType',
+        label: 'PlaceholderSource Set fieldSeparationType',
+        keywords: ['placeholdersource', 'fieldseparationtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set fieldSeparationType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'fieldSeparationType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderSource_get_highQualityFieldSeparation',
         label: 'PlaceholderSource Get highQualityFieldSeparation',
         keywords: ['placeholdersource', 'highqualityfieldseparation', 'get'],
@@ -15550,6 +20782,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'highQualityFieldSeparation' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderSource_set_highQualityFieldSeparation',
+        label: 'PlaceholderSource Set highQualityFieldSeparation',
+        keywords: ['placeholdersource', 'highqualityfieldseparation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set highQualityFieldSeparation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'highQualityFieldSeparation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15578,6 +20834,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderSource_set_removePulldown',
+        label: 'PlaceholderSource Set removePulldown',
+        keywords: ['placeholdersource', 'removepulldown', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set removePulldown',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'removePulldown', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderSource_get_loop',
         label: 'PlaceholderSource Get loop',
         keywords: ['placeholdersource', 'loop', 'get'],
@@ -15594,6 +20874,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'loop' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderSource_set_loop',
+        label: 'PlaceholderSource Set loop',
+        keywords: ['placeholdersource', 'loop', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set loop',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'loop', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15622,6 +20926,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PlaceholderSource_set_nativeFrameRate',
+        label: 'PlaceholderSource Set nativeFrameRate',
+        keywords: ['placeholdersource', 'nativeframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set nativeFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'nativeFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PlaceholderSource_get_conformFrameRate',
         label: 'PlaceholderSource Get conformFrameRate',
         keywords: ['placeholdersource', 'conformframerate', 'get'],
@@ -15638,6 +20966,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'conformFrameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PlaceholderSource_set_conformFrameRate',
+        label: 'PlaceholderSource Set conformFrameRate',
+        keywords: ['placeholdersource', 'conformframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PlaceholderSource Set conformFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PlaceholderSource', type: 'expr' },
+              { id: 'value', label: 'conformFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15872,6 +21224,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_bitsPerChannel',
+        label: 'Project Set bitsPerChannel',
+        keywords: ['project', 'bitsperchannel', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set bitsPerChannel',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'bitsPerChannel', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_transparencyGridThumbnails',
         label: 'Project Get transparencyGridThumbnails',
         keywords: ['project', 'transparencygridthumbnails', 'get'],
@@ -15888,6 +21264,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'transparencyGridThumbnails' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_transparencyGridThumbnails',
+        label: 'Project Set transparencyGridThumbnails',
+        keywords: ['project', 'transparencygridthumbnails', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set transparencyGridThumbnails',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'transparencyGridThumbnails', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15916,6 +21316,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_displayStartFrame',
+        label: 'Project Set displayStartFrame',
+        keywords: ['project', 'displaystartframe', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set displayStartFrame',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'displayStartFrame', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_gpuAccelType',
         label: 'Project Get gpuAccelType',
         keywords: ['project', 'gpuacceltype', 'get'],
@@ -15932,6 +21356,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'gpuAccelType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_gpuAccelType',
+        label: 'Project Set gpuAccelType',
+        keywords: ['project', 'gpuacceltype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set gpuAccelType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'gpuAccelType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -15960,6 +21408,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_linearBlending',
+        label: 'Project Set linearBlending',
+        keywords: ['project', 'linearblending', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set linearBlending',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'linearBlending', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_xmpPacket',
         label: 'Project Get xmpPacket',
         keywords: ['project', 'xmppacket', 'get'],
@@ -15976,6 +21448,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'xmpPacket' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_xmpPacket',
+        label: 'Project Set xmpPacket',
+        keywords: ['project', 'xmppacket', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set xmpPacket',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'xmpPacket', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -16004,6 +21500,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_framesCountType',
+        label: 'Project Set framesCountType',
+        keywords: ['project', 'framescounttype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set framesCountType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'framesCountType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_feetFramesFilmType',
         label: 'Project Get feetFramesFilmType',
         keywords: ['project', 'feetframesfilmtype', 'get'],
@@ -16020,6 +21540,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'feetFramesFilmType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_feetFramesFilmType',
+        label: 'Project Set feetFramesFilmType',
+        keywords: ['project', 'feetframesfilmtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set feetFramesFilmType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'feetFramesFilmType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -16048,6 +21592,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_framesUseFeetFrames',
+        label: 'Project Set framesUseFeetFrames',
+        keywords: ['project', 'framesusefeetframes', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set framesUseFeetFrames',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'framesUseFeetFrames', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_footageTimecodeDisplayStartType',
         label: 'Project Get footageTimecodeDisplayStartType',
         keywords: ['project', 'footagetimecodedisplaystarttype', 'get'],
@@ -16064,6 +21632,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'footageTimecodeDisplayStartType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_footageTimecodeDisplayStartType',
+        label: 'Project Set footageTimecodeDisplayStartType',
+        keywords: ['project', 'footagetimecodedisplaystarttype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set footageTimecodeDisplayStartType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'footageTimecodeDisplayStartType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -16092,6 +21684,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_timeDisplayType',
+        label: 'Project Set timeDisplayType',
+        keywords: ['project', 'timedisplaytype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set timeDisplayType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'timeDisplayType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_toolType',
         label: 'Project Get toolType',
         keywords: ['project', 'tooltype', 'get'],
@@ -16108,6 +21724,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'toolType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_toolType',
+        label: 'Project Set toolType',
+        keywords: ['project', 'tooltype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set toolType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'toolType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -16136,6 +21776,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_workingGamma',
+        label: 'Project Set workingGamma',
+        keywords: ['project', 'workinggamma', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set workingGamma',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'workingGamma', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_workingSpace',
         label: 'Project Get workingSpace',
         keywords: ['project', 'workingspace', 'get'],
@@ -16152,6 +21816,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'workingSpace' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_workingSpace',
+        label: 'Project Set workingSpace',
+        keywords: ['project', 'workingspace', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set workingSpace',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'workingSpace', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -16180,6 +21868,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_linearizeWorkingSpace',
+        label: 'Project Set linearizeWorkingSpace',
+        keywords: ['project', 'linearizeworkingspace', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set linearizeWorkingSpace',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'linearizeWorkingSpace', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_compensateForSceneReferredProfiles',
         label: 'Project Get compensateForSceneReferredProfiles',
         keywords: ['project', 'compensateforscenereferredprofiles', 'get'],
@@ -16202,6 +21914,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Project_set_compensateForSceneReferredProfiles',
+        label: 'Project Set compensateForSceneReferredProfiles',
+        keywords: ['project', 'compensateforscenereferredprofiles', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set compensateForSceneReferredProfiles',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'compensateForSceneReferredProfiles', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Project_get_expressionEngine',
         label: 'Project Get expressionEngine',
         keywords: ['project', 'expressionengine', 'get'],
@@ -16218,6 +21954,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'expressionEngine' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Project_set_expressionEngine',
+        label: 'Project Set expressionEngine',
+        keywords: ['project', 'expressionengine', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Project Set expressionEngine',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Project', type: 'expr' },
+              { id: 'value', label: 'expressionEngine', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -17474,6 +23234,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Property_set_expression',
+        label: 'Property Set expression',
+        keywords: ['property', 'expression', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Property Set expression',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Property', type: 'expr' },
+              { id: 'value', label: 'expression', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Property_get_expressionEnabled',
         label: 'Property Get expressionEnabled',
         keywords: ['property', 'expressionenabled', 'get'],
@@ -17496,6 +23280,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Property_set_expressionEnabled',
+        label: 'Property Set expressionEnabled',
+        keywords: ['property', 'expressionenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Property Set expressionEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Property', type: 'expr' },
+              { id: 'value', label: 'expressionEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Property_get_dimensionsSeparated',
         label: 'Property Get dimensionsSeparated',
         keywords: ['property', 'dimensionsseparated', 'get'],
@@ -17512,6 +23320,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'dimensionsSeparated' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Property_set_dimensionsSeparated',
+        label: 'Property Set dimensionsSeparated',
+        keywords: ['property', 'dimensionsseparated', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Property Set dimensionsSeparated',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Property', type: 'expr' },
+              { id: 'value', label: 'dimensionsSeparated', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -17760,6 +23592,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Property_set_name',
+        label: 'Property Set name',
+        keywords: ['property', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Property Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Property', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Property_get_enabled',
         label: 'Property Get enabled',
         keywords: ['property', 'enabled', 'get'],
@@ -17782,6 +23638,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Property_set_enabled',
+        label: 'Property Set enabled',
+        keywords: ['property', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Property Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Property', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Property_get_selected',
         label: 'Property Get selected',
         keywords: ['property', 'selected', 'get'],
@@ -17798,6 +23678,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Property_set_selected',
+        label: 'Property Set selected',
+        keywords: ['property', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Property Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Property', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -19298,6 +25202,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PropertyBase_set_name',
+        label: 'PropertyBase Set name',
+        keywords: ['propertybase', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PropertyBase Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PropertyBase', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PropertyBase_get_enabled',
         label: 'PropertyBase Get enabled',
         keywords: ['propertybase', 'enabled', 'get'],
@@ -19320,6 +25248,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PropertyBase_set_enabled',
+        label: 'PropertyBase Set enabled',
+        keywords: ['propertybase', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PropertyBase Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PropertyBase', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PropertyBase_get_selected',
         label: 'PropertyBase Get selected',
         keywords: ['propertybase', 'selected', 'get'],
@@ -19336,6 +25288,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PropertyBase_set_selected',
+        label: 'PropertyBase Set selected',
+        keywords: ['propertybase', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PropertyBase Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PropertyBase', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -19779,6 +25755,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PropertyGroup_set_name',
+        label: 'PropertyGroup Set name',
+        keywords: ['propertygroup', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PropertyGroup Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PropertyGroup', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PropertyGroup_get_enabled',
         label: 'PropertyGroup Get enabled',
         keywords: ['propertygroup', 'enabled', 'get'],
@@ -19801,6 +25801,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_PropertyGroup_set_enabled',
+        label: 'PropertyGroup Set enabled',
+        keywords: ['propertygroup', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PropertyGroup Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PropertyGroup', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_PropertyGroup_get_selected',
         label: 'PropertyGroup Get selected',
         keywords: ['propertygroup', 'selected', 'get'],
@@ -19817,6 +25841,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_PropertyGroup_set_selected',
+        label: 'PropertyGroup Set selected',
+        keywords: ['propertygroup', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'PropertyGroup Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'PropertyGroup', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -20436,6 +26484,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_RenderQueueItem_set_render',
+        label: 'RenderQueueItem Set render',
+        keywords: ['renderqueueitem', 'render', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'RenderQueueItem Set render',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'RenderQueueItem', type: 'expr' },
+              { id: 'value', label: 'render', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_RenderQueueItem_get_timeSpanStart',
         label: 'RenderQueueItem Get timeSpanStart',
         keywords: ['renderqueueitem', 'timespanstart', 'get'],
@@ -20452,6 +26524,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'timeSpanStart' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_RenderQueueItem_set_timeSpanStart',
+        label: 'RenderQueueItem Set timeSpanStart',
+        keywords: ['renderqueueitem', 'timespanstart', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'RenderQueueItem Set timeSpanStart',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'RenderQueueItem', type: 'expr' },
+              { id: 'value', label: 'timeSpanStart', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -20480,6 +26576,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_RenderQueueItem_set_timeSpanDuration',
+        label: 'RenderQueueItem Set timeSpanDuration',
+        keywords: ['renderqueueitem', 'timespanduration', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'RenderQueueItem Set timeSpanDuration',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'RenderQueueItem', type: 'expr' },
+              { id: 'value', label: 'timeSpanDuration', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_RenderQueueItem_get_skipFrames',
         label: 'RenderQueueItem Get skipFrames',
         keywords: ['renderqueueitem', 'skipframes', 'get'],
@@ -20496,6 +26616,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'skipFrames' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_RenderQueueItem_set_skipFrames',
+        label: 'RenderQueueItem Set skipFrames',
+        keywords: ['renderqueueitem', 'skipframes', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'RenderQueueItem Set skipFrames',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'RenderQueueItem', type: 'expr' },
+              { id: 'value', label: 'skipFrames', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -20524,6 +26668,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_RenderQueueItem_set_onStatus',
+        label: 'RenderQueueItem Set onStatus',
+        keywords: ['renderqueueitem', 'onstatus', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'RenderQueueItem Set onStatus',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'RenderQueueItem', type: 'expr' },
+              { id: 'value', label: 'onStatus', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_RenderQueueItem_get_logType',
         label: 'RenderQueueItem Get logType',
         keywords: ['renderqueueitem', 'logtype', 'get'],
@@ -20540,6 +26708,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'logType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_RenderQueueItem_set_logType',
+        label: 'RenderQueueItem Set logType',
+        keywords: ['renderqueueitem', 'logtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'RenderQueueItem Set logType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'RenderQueueItem', type: 'expr' },
+              { id: 'value', label: 'logType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -20930,6 +27122,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Shape_set_closed',
+        label: 'Shape Set closed',
+        keywords: ['shape', 'closed', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set closed',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'closed', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Shape_get_vertices',
         label: 'Shape Get vertices',
         keywords: ['shape', 'vertices', 'get'],
@@ -20946,6 +27162,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'vertices' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Shape_set_vertices',
+        label: 'Shape Set vertices',
+        keywords: ['shape', 'vertices', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set vertices',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'vertices', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -20974,6 +27214,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Shape_set_inTangents',
+        label: 'Shape Set inTangents',
+        keywords: ['shape', 'intangents', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set inTangents',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'inTangents', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Shape_get_outTangents',
         label: 'Shape Get outTangents',
         keywords: ['shape', 'outtangents', 'get'],
@@ -20990,6 +27254,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outTangents' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Shape_set_outTangents',
+        label: 'Shape Set outTangents',
+        keywords: ['shape', 'outtangents', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set outTangents',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'outTangents', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21018,6 +27306,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Shape_set_featherSegLocs',
+        label: 'Shape Set featherSegLocs',
+        keywords: ['shape', 'featherseglocs', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherSegLocs',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherSegLocs', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Shape_get_featherRelSegLocs',
         label: 'Shape Get featherRelSegLocs',
         keywords: ['shape', 'featherrelseglocs', 'get'],
@@ -21034,6 +27346,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'featherRelSegLocs' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Shape_set_featherRelSegLocs',
+        label: 'Shape Set featherRelSegLocs',
+        keywords: ['shape', 'featherrelseglocs', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherRelSegLocs',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherRelSegLocs', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21062,6 +27398,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Shape_set_featherRadii',
+        label: 'Shape Set featherRadii',
+        keywords: ['shape', 'featherradii', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherRadii',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherRadii', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Shape_get_featherInterps',
         label: 'Shape Get featherInterps',
         keywords: ['shape', 'featherinterps', 'get'],
@@ -21078,6 +27438,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'featherInterps' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Shape_set_featherInterps',
+        label: 'Shape Set featherInterps',
+        keywords: ['shape', 'featherinterps', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherInterps',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherInterps', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21106,6 +27490,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Shape_set_featherTensions',
+        label: 'Shape Set featherTensions',
+        keywords: ['shape', 'feathertensions', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherTensions',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherTensions', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Shape_get_featherTypes',
         label: 'Shape Get featherTypes',
         keywords: ['shape', 'feathertypes', 'get'],
@@ -21128,6 +27536,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Shape_set_featherTypes',
+        label: 'Shape Set featherTypes',
+        keywords: ['shape', 'feathertypes', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherTypes',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherTypes', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Shape_get_featherRelCornerAngles',
         label: 'Shape Get featherRelCornerAngles',
         keywords: ['shape', 'featherrelcornerangles', 'get'],
@@ -21144,6 +27576,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'featherRelCornerAngles' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Shape_set_featherRelCornerAngles',
+        label: 'Shape Set featherRelCornerAngles',
+        keywords: ['shape', 'featherrelcornerangles', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Shape Set featherRelCornerAngles',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Shape', type: 'expr' },
+              { id: 'value', label: 'featherRelCornerAngles', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21419,6 +27875,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_audioEnabled',
+        label: 'ShapeLayer Set audioEnabled',
+        keywords: ['shapelayer', 'audioenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set audioEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'audioEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_motionBlur',
         label: 'ShapeLayer Get motionBlur',
         keywords: ['shapelayer', 'motionblur', 'get'],
@@ -21435,6 +27915,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'motionBlur' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_motionBlur',
+        label: 'ShapeLayer Set motionBlur',
+        keywords: ['shapelayer', 'motionblur', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set motionBlur',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'motionBlur', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21463,6 +27967,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_effectsActive',
+        label: 'ShapeLayer Set effectsActive',
+        keywords: ['shapelayer', 'effectsactive', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set effectsActive',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'effectsActive', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_adjustmentLayer',
         label: 'ShapeLayer Get adjustmentLayer',
         keywords: ['shapelayer', 'adjustmentlayer', 'get'],
@@ -21479,6 +28007,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'adjustmentLayer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_adjustmentLayer',
+        label: 'ShapeLayer Set adjustmentLayer',
+        keywords: ['shapelayer', 'adjustmentlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set adjustmentLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'adjustmentLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21507,6 +28059,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_environmentLayer',
+        label: 'ShapeLayer Set environmentLayer',
+        keywords: ['shapelayer', 'environmentlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set environmentLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'environmentLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_guideLayer',
         label: 'ShapeLayer Get guideLayer',
         keywords: ['shapelayer', 'guidelayer', 'get'],
@@ -21523,6 +28099,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'guideLayer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_guideLayer',
+        label: 'ShapeLayer Set guideLayer',
+        keywords: ['shapelayer', 'guidelayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set guideLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'guideLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21551,6 +28151,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_threeDLayer',
+        label: 'ShapeLayer Set threeDLayer',
+        keywords: ['shapelayer', 'threedlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set threeDLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'threeDLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_threeDPerChar',
         label: 'ShapeLayer Get threeDPerChar',
         keywords: ['shapelayer', 'threedperchar', 'get'],
@@ -21567,6 +28191,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'threeDPerChar' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_threeDPerChar',
+        label: 'ShapeLayer Set threeDPerChar',
+        keywords: ['shapelayer', 'threedperchar', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set threeDPerChar',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'threeDPerChar', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21595,6 +28243,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_collapseTransformation',
+        label: 'ShapeLayer Set collapseTransformation',
+        keywords: ['shapelayer', 'collapsetransformation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set collapseTransformation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'collapseTransformation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_frameBlendingType',
         label: 'ShapeLayer Get frameBlendingType',
         keywords: ['shapelayer', 'frameblendingtype', 'get'],
@@ -21611,6 +28283,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameBlendingType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_frameBlendingType',
+        label: 'ShapeLayer Set frameBlendingType',
+        keywords: ['shapelayer', 'frameblendingtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set frameBlendingType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'frameBlendingType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21639,6 +28335,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_timeRemapEnabled',
+        label: 'ShapeLayer Set timeRemapEnabled',
+        keywords: ['shapelayer', 'timeremapenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set timeRemapEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'timeRemapEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_blendingMode',
         label: 'ShapeLayer Get blendingMode',
         keywords: ['shapelayer', 'blendingmode', 'get'],
@@ -21655,6 +28375,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'blendingMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_blendingMode',
+        label: 'ShapeLayer Set blendingMode',
+        keywords: ['shapelayer', 'blendingmode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set blendingMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'blendingMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21683,6 +28427,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_preserveTransparency',
+        label: 'ShapeLayer Set preserveTransparency',
+        keywords: ['shapelayer', 'preservetransparency', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set preserveTransparency',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'preserveTransparency', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_samplingQuality',
         label: 'ShapeLayer Get samplingQuality',
         keywords: ['shapelayer', 'samplingquality', 'get'],
@@ -21699,6 +28467,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'samplingQuality' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_samplingQuality',
+        label: 'ShapeLayer Set samplingQuality',
+        keywords: ['shapelayer', 'samplingquality', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set samplingQuality',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'samplingQuality', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -21727,6 +28519,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_trackMatteType',
+        label: 'ShapeLayer Set trackMatteType',
+        keywords: ['shapelayer', 'trackmattetype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set trackMatteType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'trackMatteType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_quality',
         label: 'ShapeLayer Get quality',
         keywords: ['shapelayer', 'quality', 'get'],
@@ -21743,6 +28559,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'quality' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_quality',
+        label: 'ShapeLayer Set quality',
+        keywords: ['shapelayer', 'quality', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set quality',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'quality', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22101,6 +28941,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_name',
+        label: 'ShapeLayer Set name',
+        keywords: ['shapelayer', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_parent',
         label: 'ShapeLayer Get parent',
         keywords: ['shapelayer', 'parent', 'get'],
@@ -22117,6 +28981,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'parent' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_parent',
+        label: 'ShapeLayer Set parent',
+        keywords: ['shapelayer', 'parent', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set parent',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'parent', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22145,6 +29033,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_startTime',
+        label: 'ShapeLayer Set startTime',
+        keywords: ['shapelayer', 'starttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set startTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'startTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_stretch',
         label: 'ShapeLayer Get stretch',
         keywords: ['shapelayer', 'stretch', 'get'],
@@ -22161,6 +29073,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'stretch' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_stretch',
+        label: 'ShapeLayer Set stretch',
+        keywords: ['shapelayer', 'stretch', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set stretch',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'stretch', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22189,6 +29125,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_inPoint',
+        label: 'ShapeLayer Set inPoint',
+        keywords: ['shapelayer', 'inpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set inPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'inPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_outPoint',
         label: 'ShapeLayer Get outPoint',
         keywords: ['shapelayer', 'outpoint', 'get'],
@@ -22205,6 +29165,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outPoint' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_outPoint',
+        label: 'ShapeLayer Set outPoint',
+        keywords: ['shapelayer', 'outpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set outPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'outPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22233,6 +29217,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_enabled',
+        label: 'ShapeLayer Set enabled',
+        keywords: ['shapelayer', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_solo',
         label: 'ShapeLayer Get solo',
         keywords: ['shapelayer', 'solo', 'get'],
@@ -22249,6 +29257,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'solo' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_solo',
+        label: 'ShapeLayer Set solo',
+        keywords: ['shapelayer', 'solo', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set solo',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'solo', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22277,6 +29309,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_shy',
+        label: 'ShapeLayer Set shy',
+        keywords: ['shapelayer', 'shy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set shy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'shy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_locked',
         label: 'ShapeLayer Get locked',
         keywords: ['shapelayer', 'locked', 'get'],
@@ -22293,6 +29349,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'locked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_locked',
+        label: 'ShapeLayer Set locked',
+        keywords: ['shapelayer', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22321,6 +29401,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_comment',
+        label: 'ShapeLayer Set comment',
+        keywords: ['shapelayer', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_label',
         label: 'ShapeLayer Get label',
         keywords: ['shapelayer', 'label', 'get'],
@@ -22343,6 +29447,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ShapeLayer_set_label',
+        label: 'ShapeLayer Set label',
+        keywords: ['shapelayer', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ShapeLayer_get_autoOrient',
         label: 'ShapeLayer Get autoOrient',
         keywords: ['shapelayer', 'autoorient', 'get'],
@@ -22359,6 +29487,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'autoOrient' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_autoOrient',
+        label: 'ShapeLayer Set autoOrient',
+        keywords: ['shapelayer', 'autoorient', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set autoOrient',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'autoOrient', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -22953,6 +30105,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ShapeLayer_set_selected',
+        label: 'ShapeLayer Set selected',
+        keywords: ['shapelayer', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ShapeLayer Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ShapeLayer', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -23626,6 +30802,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_SolidSource_set_color',
+        label: 'SolidSource Set color',
+        keywords: ['solidsource', 'color', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set color',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'color', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_SolidSource_get_file',
         label: 'SolidSource Get file',
         keywords: ['solidsource', 'file', 'get'],
@@ -23714,6 +30914,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_SolidSource_set_hasAlpha',
+        label: 'SolidSource Set hasAlpha',
+        keywords: ['solidsource', 'hasalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set hasAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'hasAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_SolidSource_get_alphaMode',
         label: 'SolidSource Get alphaMode',
         keywords: ['solidsource', 'alphamode', 'get'],
@@ -23730,6 +30954,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'alphaMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_SolidSource_set_alphaMode',
+        label: 'SolidSource Set alphaMode',
+        keywords: ['solidsource', 'alphamode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set alphaMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'alphaMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -23758,6 +31006,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_SolidSource_set_premulColor',
+        label: 'SolidSource Set premulColor',
+        keywords: ['solidsource', 'premulcolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set premulColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'premulColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_SolidSource_get_invertAlpha',
         label: 'SolidSource Get invertAlpha',
         keywords: ['solidsource', 'invertalpha', 'get'],
@@ -23774,6 +31046,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'invertAlpha' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_SolidSource_set_invertAlpha',
+        label: 'SolidSource Set invertAlpha',
+        keywords: ['solidsource', 'invertalpha', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set invertAlpha',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'invertAlpha', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -23802,6 +31098,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_SolidSource_set_fieldSeparationType',
+        label: 'SolidSource Set fieldSeparationType',
+        keywords: ['solidsource', 'fieldseparationtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set fieldSeparationType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'fieldSeparationType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_SolidSource_get_highQualityFieldSeparation',
         label: 'SolidSource Get highQualityFieldSeparation',
         keywords: ['solidsource', 'highqualityfieldseparation', 'get'],
@@ -23818,6 +31138,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'highQualityFieldSeparation' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_SolidSource_set_highQualityFieldSeparation',
+        label: 'SolidSource Set highQualityFieldSeparation',
+        keywords: ['solidsource', 'highqualityfieldseparation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set highQualityFieldSeparation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'highQualityFieldSeparation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -23846,6 +31190,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_SolidSource_set_removePulldown',
+        label: 'SolidSource Set removePulldown',
+        keywords: ['solidsource', 'removepulldown', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set removePulldown',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'removePulldown', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_SolidSource_get_loop',
         label: 'SolidSource Get loop',
         keywords: ['solidsource', 'loop', 'get'],
@@ -23862,6 +31230,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'loop' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_SolidSource_set_loop',
+        label: 'SolidSource Set loop',
+        keywords: ['solidsource', 'loop', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set loop',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'loop', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -23890,6 +31282,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_SolidSource_set_nativeFrameRate',
+        label: 'SolidSource Set nativeFrameRate',
+        keywords: ['solidsource', 'nativeframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set nativeFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'nativeFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_SolidSource_get_conformFrameRate',
         label: 'SolidSource Get conformFrameRate',
         keywords: ['solidsource', 'conformframerate', 'get'],
@@ -23906,6 +31322,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'conformFrameRate' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_SolidSource_set_conformFrameRate',
+        label: 'SolidSource Set conformFrameRate',
+        keywords: ['solidsource', 'conformframerate', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'SolidSource Set conformFrameRate',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'SolidSource', type: 'expr' },
+              { id: 'value', label: 'conformFrameRate', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -24478,6 +31918,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_text',
+        label: 'TextDocument Set text',
+        keywords: ['textdocument', 'text', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set text',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'text', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_applyFill',
         label: 'TextDocument Get applyFill',
         keywords: ['textdocument', 'applyfill', 'get'],
@@ -24494,6 +31958,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'applyFill' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextDocument_set_applyFill',
+        label: 'TextDocument Set applyFill',
+        keywords: ['textdocument', 'applyfill', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set applyFill',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'applyFill', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -24522,6 +32010,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_applyStroke',
+        label: 'TextDocument Set applyStroke',
+        keywords: ['textdocument', 'applystroke', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set applyStroke',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'applyStroke', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_fillColor',
         label: 'TextDocument Get fillColor',
         keywords: ['textdocument', 'fillcolor', 'get'],
@@ -24538,6 +32050,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'fillColor' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextDocument_set_fillColor',
+        label: 'TextDocument Set fillColor',
+        keywords: ['textdocument', 'fillcolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set fillColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'fillColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -24566,6 +32102,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_font',
+        label: 'TextDocument Set font',
+        keywords: ['textdocument', 'font', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set font',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'font', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_fontSize',
         label: 'TextDocument Get fontSize',
         keywords: ['textdocument', 'fontsize', 'get'],
@@ -24582,6 +32142,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'fontSize' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextDocument_set_fontSize',
+        label: 'TextDocument Set fontSize',
+        keywords: ['textdocument', 'fontsize', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set fontSize',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'fontSize', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -24610,6 +32194,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_justification',
+        label: 'TextDocument Set justification',
+        keywords: ['textdocument', 'justification', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set justification',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'justification', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_leading',
         label: 'TextDocument Get leading',
         keywords: ['textdocument', 'leading', 'get'],
@@ -24626,6 +32234,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'leading' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextDocument_set_leading',
+        label: 'TextDocument Set leading',
+        keywords: ['textdocument', 'leading', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set leading',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'leading', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -24654,6 +32286,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_strokeColor',
+        label: 'TextDocument Set strokeColor',
+        keywords: ['textdocument', 'strokecolor', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set strokeColor',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'strokeColor', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_strokeOverFill',
         label: 'TextDocument Get strokeOverFill',
         keywords: ['textdocument', 'strokeoverfill', 'get'],
@@ -24670,6 +32326,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'strokeOverFill' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextDocument_set_strokeOverFill',
+        label: 'TextDocument Set strokeOverFill',
+        keywords: ['textdocument', 'strokeoverfill', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set strokeOverFill',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'strokeOverFill', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -24698,6 +32378,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_strokeWidth',
+        label: 'TextDocument Set strokeWidth',
+        keywords: ['textdocument', 'strokewidth', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set strokeWidth',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'strokeWidth', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_tracking',
         label: 'TextDocument Get tracking',
         keywords: ['textdocument', 'tracking', 'get'],
@@ -24720,6 +32424,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextDocument_set_tracking',
+        label: 'TextDocument Set tracking',
+        keywords: ['textdocument', 'tracking', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set tracking',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'tracking', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextDocument_get_boxTextSize',
         label: 'TextDocument Get boxTextSize',
         keywords: ['textdocument', 'boxtextsize', 'get'],
@@ -24736,6 +32464,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'boxTextSize' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextDocument_set_boxTextSize',
+        label: 'TextDocument Set boxTextSize',
+        keywords: ['textdocument', 'boxtextsize', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextDocument Set boxTextSize',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextDocument', type: 'expr' },
+              { id: 'value', label: 'boxTextSize', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25101,6 +32853,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_audioEnabled',
+        label: 'TextLayer Set audioEnabled',
+        keywords: ['textlayer', 'audioenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set audioEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'audioEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_motionBlur',
         label: 'TextLayer Get motionBlur',
         keywords: ['textlayer', 'motionblur', 'get'],
@@ -25117,6 +32893,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'motionBlur' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_motionBlur',
+        label: 'TextLayer Set motionBlur',
+        keywords: ['textlayer', 'motionblur', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set motionBlur',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'motionBlur', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25145,6 +32945,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_effectsActive',
+        label: 'TextLayer Set effectsActive',
+        keywords: ['textlayer', 'effectsactive', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set effectsActive',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'effectsActive', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_adjustmentLayer',
         label: 'TextLayer Get adjustmentLayer',
         keywords: ['textlayer', 'adjustmentlayer', 'get'],
@@ -25161,6 +32985,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'adjustmentLayer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_adjustmentLayer',
+        label: 'TextLayer Set adjustmentLayer',
+        keywords: ['textlayer', 'adjustmentlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set adjustmentLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'adjustmentLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25189,6 +33037,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_environmentLayer',
+        label: 'TextLayer Set environmentLayer',
+        keywords: ['textlayer', 'environmentlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set environmentLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'environmentLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_guideLayer',
         label: 'TextLayer Get guideLayer',
         keywords: ['textlayer', 'guidelayer', 'get'],
@@ -25205,6 +33077,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'guideLayer' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_guideLayer',
+        label: 'TextLayer Set guideLayer',
+        keywords: ['textlayer', 'guidelayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set guideLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'guideLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25233,6 +33129,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_threeDLayer',
+        label: 'TextLayer Set threeDLayer',
+        keywords: ['textlayer', 'threedlayer', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set threeDLayer',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'threeDLayer', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_threeDPerChar',
         label: 'TextLayer Get threeDPerChar',
         keywords: ['textlayer', 'threedperchar', 'get'],
@@ -25249,6 +33169,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'threeDPerChar' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_threeDPerChar',
+        label: 'TextLayer Set threeDPerChar',
+        keywords: ['textlayer', 'threedperchar', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set threeDPerChar',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'threeDPerChar', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25277,6 +33221,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_collapseTransformation',
+        label: 'TextLayer Set collapseTransformation',
+        keywords: ['textlayer', 'collapsetransformation', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set collapseTransformation',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'collapseTransformation', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_frameBlendingType',
         label: 'TextLayer Get frameBlendingType',
         keywords: ['textlayer', 'frameblendingtype', 'get'],
@@ -25293,6 +33261,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'frameBlendingType' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_frameBlendingType',
+        label: 'TextLayer Set frameBlendingType',
+        keywords: ['textlayer', 'frameblendingtype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set frameBlendingType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'frameBlendingType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25321,6 +33313,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_timeRemapEnabled',
+        label: 'TextLayer Set timeRemapEnabled',
+        keywords: ['textlayer', 'timeremapenabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set timeRemapEnabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'timeRemapEnabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_blendingMode',
         label: 'TextLayer Get blendingMode',
         keywords: ['textlayer', 'blendingmode', 'get'],
@@ -25337,6 +33353,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'blendingMode' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_blendingMode',
+        label: 'TextLayer Set blendingMode',
+        keywords: ['textlayer', 'blendingmode', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set blendingMode',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'blendingMode', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25365,6 +33405,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_preserveTransparency',
+        label: 'TextLayer Set preserveTransparency',
+        keywords: ['textlayer', 'preservetransparency', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set preserveTransparency',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'preserveTransparency', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_samplingQuality',
         label: 'TextLayer Get samplingQuality',
         keywords: ['textlayer', 'samplingquality', 'get'],
@@ -25381,6 +33445,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'samplingQuality' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_samplingQuality',
+        label: 'TextLayer Set samplingQuality',
+        keywords: ['textlayer', 'samplingquality', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set samplingQuality',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'samplingQuality', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25409,6 +33497,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_trackMatteType',
+        label: 'TextLayer Set trackMatteType',
+        keywords: ['textlayer', 'trackmattetype', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set trackMatteType',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'trackMatteType', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_quality',
         label: 'TextLayer Get quality',
         keywords: ['textlayer', 'quality', 'get'],
@@ -25425,6 +33537,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'quality' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_quality',
+        label: 'TextLayer Set quality',
+        keywords: ['textlayer', 'quality', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set quality',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'quality', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25783,6 +33919,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_name',
+        label: 'TextLayer Set name',
+        keywords: ['textlayer', 'name', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set name',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'name', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_parent',
         label: 'TextLayer Get parent',
         keywords: ['textlayer', 'parent', 'get'],
@@ -25799,6 +33959,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'parent' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_parent',
+        label: 'TextLayer Set parent',
+        keywords: ['textlayer', 'parent', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set parent',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'parent', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25827,6 +34011,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_startTime',
+        label: 'TextLayer Set startTime',
+        keywords: ['textlayer', 'starttime', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set startTime',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'startTime', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_stretch',
         label: 'TextLayer Get stretch',
         keywords: ['textlayer', 'stretch', 'get'],
@@ -25843,6 +34051,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'stretch' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_stretch',
+        label: 'TextLayer Set stretch',
+        keywords: ['textlayer', 'stretch', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set stretch',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'stretch', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25871,6 +34103,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_inPoint',
+        label: 'TextLayer Set inPoint',
+        keywords: ['textlayer', 'inpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set inPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'inPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_outPoint',
         label: 'TextLayer Get outPoint',
         keywords: ['textlayer', 'outpoint', 'get'],
@@ -25887,6 +34143,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'outPoint' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_outPoint',
+        label: 'TextLayer Set outPoint',
+        keywords: ['textlayer', 'outpoint', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set outPoint',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'outPoint', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25915,6 +34195,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_enabled',
+        label: 'TextLayer Set enabled',
+        keywords: ['textlayer', 'enabled', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set enabled',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'enabled', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_solo',
         label: 'TextLayer Get solo',
         keywords: ['textlayer', 'solo', 'get'],
@@ -25931,6 +34235,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'solo' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_solo',
+        label: 'TextLayer Set solo',
+        keywords: ['textlayer', 'solo', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set solo',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'solo', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -25959,6 +34287,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_shy',
+        label: 'TextLayer Set shy',
+        keywords: ['textlayer', 'shy', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set shy',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'shy', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_locked',
         label: 'TextLayer Get locked',
         keywords: ['textlayer', 'locked', 'get'],
@@ -25975,6 +34327,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'locked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_locked',
+        label: 'TextLayer Set locked',
+        keywords: ['textlayer', 'locked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set locked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'locked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -26003,6 +34379,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_comment',
+        label: 'TextLayer Set comment',
+        keywords: ['textlayer', 'comment', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set comment',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'comment', type: 'text' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_label',
         label: 'TextLayer Get label',
         keywords: ['textlayer', 'label', 'get'],
@@ -26025,6 +34425,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_TextLayer_set_label',
+        label: 'TextLayer Set label',
+        keywords: ['textlayer', 'label', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set label',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'label', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_TextLayer_get_autoOrient',
         label: 'TextLayer Get autoOrient',
         keywords: ['textlayer', 'autoorient', 'get'],
@@ -26041,6 +34465,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'autoOrient' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_autoOrient',
+        label: 'TextLayer Set autoOrient',
+        keywords: ['textlayer', 'autoorient', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set autoOrient',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'autoOrient', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -26635,6 +35083,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'selected' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_TextLayer_set_selected',
+        label: 'TextLayer Set selected',
+        keywords: ['textlayer', 'selected', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'TextLayer Set selected',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'TextLayer', type: 'expr' },
+              { id: 'value', label: 'selected', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -27446,6 +35918,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Viewer_set_activeViewIndex',
+        label: 'Viewer Set activeViewIndex',
+        keywords: ['viewer', 'activeviewindex', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Viewer Set activeViewIndex',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Viewer', type: 'expr' },
+              { id: 'value', label: 'activeViewIndex', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Viewer_get_guidesLocked',
         label: 'Viewer Get guidesLocked',
         keywords: ['viewer', 'guideslocked', 'get'],
@@ -27462,6 +35958,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'guidesLocked' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Viewer_set_guidesLocked',
+        label: 'Viewer Set guidesLocked',
+        keywords: ['viewer', 'guideslocked', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Viewer Set guidesLocked',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Viewer', type: 'expr' },
+              { id: 'value', label: 'guidesLocked', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -27490,6 +36010,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Viewer_set_guidesSnap',
+        label: 'Viewer Set guidesSnap',
+        keywords: ['viewer', 'guidessnap', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Viewer Set guidesSnap',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Viewer', type: 'expr' },
+              { id: 'value', label: 'guidesSnap', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Viewer_get_guidesVisibility',
         label: 'Viewer Get guidesVisibility',
         keywords: ['viewer', 'guidesvisibility', 'get'],
@@ -27506,6 +36050,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'guidesVisibility' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Viewer_set_guidesVisibility',
+        label: 'Viewer Set guidesVisibility',
+        keywords: ['viewer', 'guidesvisibility', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Viewer Set guidesVisibility',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Viewer', type: 'expr' },
+              { id: 'value', label: 'guidesVisibility', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -27534,6 +36102,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_Viewer_set_rulers',
+        label: 'Viewer Set rulers',
+        keywords: ['viewer', 'rulers', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Viewer Set rulers',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Viewer', type: 'expr' },
+              { id: 'value', label: 'rulers', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_Viewer_get_maximized',
         label: 'Viewer Get maximized',
         keywords: ['viewer', 'maximized', 'get'],
@@ -27550,6 +36142,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'maximized' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_Viewer_set_maximized',
+        label: 'Viewer Set maximized',
+        keywords: ['viewer', 'maximized', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'Viewer Set maximized',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'Viewer', type: 'expr' },
+              { id: 'value', label: 'maximized', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -27607,6 +36223,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ViewOptions_set_channels',
+        label: 'ViewOptions Set channels',
+        keywords: ['viewoptions', 'channels', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ViewOptions Set channels',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ViewOptions', type: 'expr' },
+              { id: 'value', label: 'channels', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ViewOptions_get_checkerboards',
         label: 'ViewOptions Get checkerboards',
         keywords: ['viewoptions', 'checkerboards', 'get'],
@@ -27623,6 +36263,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'checkerboards' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ViewOptions_set_checkerboards',
+        label: 'ViewOptions Set checkerboards',
+        keywords: ['viewoptions', 'checkerboards', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ViewOptions Set checkerboards',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ViewOptions', type: 'expr' },
+              { id: 'value', label: 'checkerboards', type: 'boolean' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
@@ -27651,6 +36315,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ViewOptions_set_exposure',
+        label: 'ViewOptions Set exposure',
+        keywords: ['viewoptions', 'exposure', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ViewOptions Set exposure',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ViewOptions', type: 'expr' },
+              { id: 'value', label: 'exposure', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ViewOptions_get_fastPreview',
         label: 'ViewOptions Get fastPreview',
         keywords: ['viewoptions', 'fastpreview', 'get'],
@@ -27673,6 +36361,30 @@ export const AE_NODE_LIBRARY = [
         })
       },
       {
+        type: 'ae_ViewOptions_set_fastPreview',
+        label: 'ViewOptions Set fastPreview',
+        keywords: ['viewoptions', 'fastpreview', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ViewOptions Set fastPreview',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ViewOptions', type: 'expr' },
+              { id: 'value', label: 'fastPreview', type: 'expr' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
         type: 'ae_ViewOptions_get_zoom',
         label: 'ViewOptions Get zoom',
         keywords: ['viewoptions', 'zoom', 'get'],
@@ -27689,6 +36401,30 @@ export const AE_NODE_LIBRARY = [
             ],
             outputs: [
               { id: 'value', label: 'zoom' }
+            ],
+            values: {}
+          }
+        })
+      },
+      {
+        type: 'ae_ViewOptions_set_zoom',
+        label: 'ViewOptions Set zoom',
+        keywords: ['viewoptions', 'zoom', 'set'],
+        factory: (pos) => ({
+          id: uid('node'),
+          type: 'ebnNode',
+          position: pos,
+          data: {
+            label: 'ViewOptions Set zoom',
+            category: 'action',
+            themeColor: '#2b5c7a',
+            inputs: [
+              { id: 'exec_in', label: 'Execution', type: 'exec' },
+              { id: 'target', label: 'ViewOptions', type: 'expr' },
+              { id: 'value', label: 'zoom', type: 'number' }
+            ],
+            outputs: [
+              { id: 'exec_out', label: 'Execution' }
             ],
             values: {}
           }
