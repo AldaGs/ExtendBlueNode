@@ -12,8 +12,60 @@
 
 #target aftereffects
 
+// Inlined copy of EBN from jsx/host.jsx. We deliberately do *not* #include
+// host.jsx here — when this file is installed into AE's ScriptUI Panels
+// folder, host.jsx is not a sibling and the preprocessor errors out before
+// the panel can even load. Keeping the copy small (run + ping) is cheaper
+// than a path-resolution dance. If host.jsx's EBN ever grows, mirror the
+// additions here.
 if (typeof EBN === 'undefined') {
-    // @include "host.jsx"
+    var EBN = (function () {
+        function _stringify(obj) {
+            if (typeof JSON !== 'undefined' && JSON && JSON.stringify) {
+                return JSON.stringify(obj);
+            }
+            var parts = [];
+            for (var k in obj) {
+                if (obj.hasOwnProperty(k)) {
+                    var v = obj[k];
+                    if (v === undefined) continue;
+                    var safe;
+                    if (v === null) {
+                        safe = 'null';
+                    } else if (typeof v === 'number' || typeof v === 'boolean') {
+                        safe = String(v);
+                    } else {
+                        safe = '"' + String(v)
+                            .replace(/\\/g, '\\\\')
+                            .replace(/"/g, '\\"')
+                            .replace(/[\r\n]/g, ' ') + '"';
+                    }
+                    parts.push('"' + k + '":' + safe);
+                }
+            }
+            return '{' + parts.join(',') + '}';
+        }
+        function run(script) {
+            try {
+                eval(String(script));
+                return _stringify({ ok: true });
+            } catch (err) {
+                return _stringify({
+                    ok: false,
+                    message: String(err && (err.message || err)) || 'Unknown error',
+                    line: err && err.line,
+                    source: err && err.source,
+                    fileName: err && err.fileName
+                });
+            }
+        }
+        function ping() {
+            var version = '';
+            try { version = app.version; } catch (e) {}
+            return _stringify({ ok: true, version: version });
+        }
+        return { run: run, ping: ping };
+    })();
 }
 
 (function (thisObj) {
