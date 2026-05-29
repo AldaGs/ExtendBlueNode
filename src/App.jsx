@@ -31,6 +31,7 @@ import {
   saveCopilotState,
 } from './persistence';
 import { runInHost, isCep } from './cep';
+import ConnectionStatus from './components/ConnectionStatus';
 import './App.css';
 
 // Mirror of CopilotPanel's seed — App owns the lifted Copilot conversation.
@@ -523,6 +524,7 @@ export default function App() {
               </span>
             </div>
           )}
+          <ConnectionStatus />
           <button
             className="ebn-btn-primary"
             type="button"

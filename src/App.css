@@ -134,6 +134,81 @@
   cursor: progress;
 }
 
+/* --- Connection status chips (AE process + agent socket) --- */
+.ebn-conn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ebn-conn-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ebn-text);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 3px 10px;
+  cursor: default;
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+.ebn-conn-tag__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6e6e6e;
+}
+
+.ebn-conn-tag--ok {
+  border-color: rgba(76, 212, 130, 0.45);
+  background: rgba(76, 212, 130, 0.08);
+}
+.ebn-conn-tag--ok .ebn-conn-tag__dot {
+  background: #4cd482;
+  box-shadow: 0 0 6px rgba(76, 212, 130, 0.6);
+  animation: ebn-conn-pulse 2.4s ease-in-out infinite;
+}
+
+.ebn-conn-tag--warn {
+  border-color: rgba(255, 170, 60, 0.5);
+  background: rgba(255, 170, 60, 0.08);
+}
+.ebn-conn-tag--warn .ebn-conn-tag__dot {
+  background: #ffaa3c;
+  box-shadow: 0 0 6px rgba(255, 170, 60, 0.55);
+}
+
+.ebn-conn-tag--muted {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--ebn-text-dim);
+}
+
+@keyframes ebn-conn-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+.ebn-conn-btn {
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ebn-text);
+  background: rgba(120, 170, 255, 0.12);
+  border: 1px solid rgba(120, 170, 255, 0.45);
+  border-radius: 10px;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.ebn-conn-btn:hover { background: rgba(120, 170, 255, 0.22); }
+.ebn-conn-btn:disabled { opacity: 0.55; cursor: progress; }
+
 .ebn-btn-primary {
   background: var(--ebn-accent);
   color: #fff;
