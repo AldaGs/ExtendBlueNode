@@ -4,25 +4,8 @@ import { getScriptUIPromptSection } from '../graph/scriptUITree';
 import { layoutGraphTopo } from '../graph/blueprintLayout';
 import { filterConnectActions, autoChainActions } from '../graph/graphActions';
 import { CLOUD_PROVIDERS, getStoredKey, setStoredKey, callCloud } from '../services/cloudLlmService';
+import { suggestLabel, autoResolveLabel } from '../graph/labelMatch';
 import './CopilotPanel.css'; // Let's create this file next
-
-function suggestLabel(requested, allLabels) {
-  if (!requested) return null;
-  const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean);
-  const reqTokens = new Set(norm(requested));
-  let best = null;
-  let bestScore = 0;
-  for (const lbl of allLabels) {
-    const lblTokens = norm(lbl);
-    let overlap = 0;
-    for (const t of lblTokens) if (reqTokens.has(t)) overlap++;
-    // Also reward substring containment
-    const sub = lbl.toLowerCase().includes(requested.toLowerCase()) || requested.toLowerCase().includes(lbl.toLowerCase());
-    const score = overlap + (sub ? 1 : 0);
-    if (score > bestScore) { bestScore = score; best = lbl; }
-  }
-  return bestScore > 0 ? best : null;
-}
 
 const OLLAMA_MODELS = [
   'qwen2.5:7b-instruct',
@@ -356,7 +339,9 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
       };
 
       const unknown = [];
+      const substituted = []; // auto-corrected labels, for the report
       const validActions = [];
+      const allLabels = library.map(t => t.label);
       // Track the id -> label of nodes the LLM is proposing in *this* batch
       // so we can validate the edges that reference them.
       const proposedNodeLabel = new Map();
@@ -371,11 +356,18 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
           if (!knownLabels.has(lbl)) {
             const ci = lcMap.get(lbl.toLowerCase());
             if (ci) {
-              resolved = ci;
+              resolved = ci; // exact, case-insensitive
             } else {
-              const suggestion = suggestLabel(lbl, library.map(t => t.label));
-              unknown.push({ requested: lbl, suggestion });
-              continue;
+              // Try a confident fuzzy auto-correction (e.g. wrong class name)
+              // before giving up — dropping a node also kills all its edges.
+              const auto = autoResolveLabel(lbl, allLabels);
+              if (auto) {
+                resolved = auto;
+                substituted.push({ requested: lbl, into: auto });
+              } else {
+                unknown.push({ requested: lbl, suggestion: suggestLabel(lbl, allLabels) });
+                continue;
+              }
             }
           }
           proposedNodeLabel.set(a.args.id, resolved);
@@ -417,6 +409,10 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
       const droppedInputTaken = dropped.inputTaken;
 
       let finalReply = reply || '(no reply)';
+      if (substituted.length) {
+        const lines = substituted.map(s => `  • "${s.requested}" → "${s.into}"`).join('\n');
+        finalReply += `\n\n🔧 ${substituted.length} label(s) auto-corrected:\n${lines}`;
+      }
       if (unknown.length) {
         const lines = unknown.map(u =>
           `  • "${u.requested}"${u.suggestion ? ` — did you mean "${u.suggestion}"?` : ' — no close match'}`
