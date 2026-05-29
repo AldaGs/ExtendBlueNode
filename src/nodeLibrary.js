@@ -722,22 +722,51 @@ export function flattenLibrary() {
 // Build a human-readable catalog of every node, including its input/output handles.
 // Used to inject the allowed vocabulary into the Copilot LLM's system prompt so
 // it stops hallucinating node types that don't exist.
+// Handle ids for node types whose ports are declared in their React component
+// (JSX <Handle id=…>) rather than in the factory's data.inputs/outputs. Without
+// this, getNodeCatalogSummary reports "—" for them and the Copilot is blind to
+// their real handles — so it guesses (e.g. "exec_true"/"condition" for If) and
+// the resulting edges silently go nowhere. Keep in sync with the components.
+export const CUSTOM_NODE_HANDLES = {
+  reroute:         { inputs: ['in'],                       outputs: ['out'] },
+  integer:         { inputs: [],                           outputs: ['value'] },
+  string:          { inputs: [],                           outputs: ['value'] },
+  getGlobal:       { inputs: [],                           outputs: ['value'] },
+  setGlobal:       { inputs: ['exec_in', 'value'],         outputs: ['exec_out'] },
+  math:            { inputs: ['a', 'b'],                   outputs: ['value'] },
+  compare:         { inputs: ['a', 'b'],                   outputs: ['value'] },
+  if:              { inputs: ['exec_in', 'cond'],          outputs: ['exec_then', 'exec_else'] },
+  select:          { inputs: ['cond', 'if_true', 'if_false'], outputs: ['value'] },
+  forEachSelected: { inputs: ['exec_in'],                  outputs: ['exec_body', 'layer', 'exec_done'] },
+  vecMath:         { inputs: ['a', 'b'],                   outputs: ['value'] },
+  splitVec:        { inputs: ['vec'],                      outputs: ['x', 'y'] },
+  propertyPath:    { inputs: [],                           outputs: ['value'] },
+};
+
+// Resolve the input/output handle ids for a spawned node, preferring the
+// factory's declared ports and falling back to CUSTOM_NODE_HANDLES by type.
+export function handlesForNode(node) {
+  const data = node?.data || {};
+  const declaredIn = Array.isArray(data.inputs) ? data.inputs.map(p => p.id) : [];
+  const declaredOut = Array.isArray(data.outputs) ? data.outputs.map(p => p.id) : [];
+  if (declaredIn.length || declaredOut.length) {
+    return { inputs: declaredIn, outputs: declaredOut };
+  }
+  const fallback = CUSTOM_NODE_HANDLES[node?.type];
+  return fallback ? { inputs: [...fallback.inputs], outputs: [...fallback.outputs] } : { inputs: [], outputs: [] };
+}
+
 export function getNodeCatalogSummary() {
   const lines = [];
   for (const entry of flattenLibrary()) {
-    let inputs = [];
-    let outputs = [];
+    let handles = { inputs: [], outputs: [] };
     try {
-      const sample = entry.factory({ x: 0, y: 0 });
-      const data = sample?.data || {};
-      inputs = Array.isArray(data.inputs) ? data.inputs.map(p => p.id) : [];
-      outputs = Array.isArray(data.outputs) ? data.outputs.map(p => p.id) : [];
+      handles = handlesForNode(entry.factory({ x: 0, y: 0 }));
     } catch {
-      // Some node types (reroute, getGlobal, setGlobal) don't declare inputs/outputs;
-      // fall back to an empty handle list rather than crashing the prompt build.
+      // Some factories may throw on the stub position; fall back to empty.
     }
-    const inStr = inputs.length ? inputs.join(', ') : '—';
-    const outStr = outputs.length ? outputs.join(', ') : '—';
+    const inStr = handles.inputs.length ? handles.inputs.join(', ') : '—';
+    const outStr = handles.outputs.length ? handles.outputs.join(', ') : '—';
     lines.push(`- "${entry.label}" (Inputs: ${inStr}. Outputs: ${outStr})`);
   }
   return lines.join('\n');

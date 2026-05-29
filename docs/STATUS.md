@@ -11,7 +11,7 @@
 
 EBN's loop is **closed**. A user can wire visual nodes on a Blender-style canvas, the equivalent ExtendScript is regenerated in Monaco on every change, and a single **Compile & Inject** button now sends that script to After Effects through CEP. The first real inject from the panel into AE has been executed and confirmed working by the project owner.
 
-Since the last report the surface area expanded dramatically. The node library grew from ~20 hand-authored nodes to **1,629** — a `generate-ae-nodes.mjs` script emits 1,566 nodes covering the After Effects scripting DOM, and a full tier of hand-authored JavaScript nodes (Array / Object / String / Logic / Math / control-flow loops + switch / user-defined functions / File I/O) was added. The **ScriptUI** suite shipped with a visual builder (structured tree model, live output-pin sync, palette-first non-modal default). The **Copilot** is now wired to real backends — local Ollama and cloud (Claude / OpenAI / Gemini) — and generates canvas graphs from prompts. The test suite is now **99 cases, all green**, and an audit script (`npm run audit:nodes`) verifies every node has a matching emitter.
+Since the last report the surface area expanded dramatically. The node library grew from ~20 hand-authored nodes to **1,629** — a `generate-ae-nodes.mjs` script emits 1,566 nodes covering the After Effects scripting DOM, and a full tier of hand-authored JavaScript nodes (Array / Object / String / Logic / Math / control-flow loops + switch / user-defined functions / File I/O) was added. The **ScriptUI** suite shipped with a visual builder (structured tree model, live output-pin sync, palette-first non-modal default). The **Copilot** is now wired to real backends — local Ollama and cloud (Claude / OpenAI / Gemini) — and generates canvas graphs from prompts. The test suite is now **105 cases, all green**, and an audit script (`npm run audit:nodes`) verifies every node has a matching emitter.
 
 **Reverse translation** ("paste ExtendScript, get a graph") now has a working v1 — the Copilot's Blueprint mode reconstructs the node graph from pasted code, auto-lays it out, and replaces or appends the canvas. What's still open: Copilot **tool-use** (read graph/IR, propose diffs with preview) and Blueprint **v2** (true diff/merge against the current graph).
 
@@ -85,7 +85,7 @@ Repository: <https://github.com/AldaGs/ExtendBlueNode>
 
 ## 6. Numbers
 
-- **Tests:** 99/99 green.
+- **Tests:** 105/105 green.
 - **Nodes:** 1,635 total (69 hand-authored + 1,566 auto-generated AE DOM); audit reports 0 broken.
 - **Bundle:** app shell 363 KB (107 KB gzipped), Monaco split into its own 4 MB chunk (loaded on first Code-view mount).
 - **Commits since last status report:** ScriptUI + JS-node + AE-DOM-generation + Copilot-backend waves, all with green-test gating.

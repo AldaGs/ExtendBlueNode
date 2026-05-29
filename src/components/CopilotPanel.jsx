@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { flattenLibrary, getNodeCatalogSummary } from '../nodeLibrary';
+import { flattenLibrary, getNodeCatalogSummary, handlesForNode } from '../nodeLibrary';
 import { getScriptUIPromptSection } from '../graph/scriptUITree';
 import { layoutGraphTopo } from '../graph/blueprintLayout';
 import { filterConnectActions, autoChainActions, extractJsonObject } from '../graph/graphActions';
@@ -345,9 +345,12 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
         const tmpl = library.find(t => t.label === label);
         let inputs = new Set(), outputs = new Set();
         try {
-          const sample = tmpl?.factory({ x: 0, y: 0 });
-          (sample?.data?.inputs || []).forEach(p => inputs.add(p.id));
-          (sample?.data?.outputs || []).forEach(p => outputs.add(p.id));
+          // handlesForNode falls back to CUSTOM_NODE_HANDLES for nodes whose
+          // ports live in their component (if / math / forEachSelected / …),
+          // so the validator can actually catch wrong handles on them.
+          const h = handlesForNode(tmpl?.factory({ x: 0, y: 0 }));
+          h.inputs.forEach(id => inputs.add(id));
+          h.outputs.forEach(id => outputs.add(id));
         } catch {}
         const out = { inputs, outputs };
         handleCache.set(label, out);
