@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { filterConnectActions, autoChainActions } from './graphActions';
+import { filterConnectActions, autoChainActions, extractJsonObject } from './graphActions';
 
 // Minimal fake library: two node labels with known handles.
 const HANDLES = {
@@ -134,5 +134,36 @@ describe('autoChainActions', () => {
     const { startNode, chainEdges } = autoChainActions([n('r', 'Read Value at Time')], [], hfl);
     expect(startNode).toBeNull();
     expect(chainEdges).toHaveLength(0);
+  });
+});
+
+describe('extractJsonObject', () => {
+  it('parses bare JSON', () => {
+    expect(extractJsonObject('{"reply":"hi","nodes":[]}')).toEqual({ reply: 'hi', nodes: [] });
+  });
+
+  it('strips a ```json markdown fence (Claude wraps its output)', () => {
+    const text = '```json\n{"reply":"ok","nodes":[{"id":"n1","label":"Start"}]}\n```';
+    const obj = extractJsonObject(text);
+    expect(obj.reply).toBe('ok');
+    expect(obj.nodes).toHaveLength(1);
+  });
+
+  it('strips a plain ``` fence and ignores leading prose', () => {
+    const text = 'Here is the graph:\n```\n{"nodes":[],"edges":[]}\n```\nDone.';
+    expect(extractJsonObject(text)).toEqual({ nodes: [], edges: [] });
+  });
+
+  it('slices from first { to last } when there is trailing chatter', () => {
+    expect(extractJsonObject('{"a":1} trailing junk')).toEqual({ a: 1 });
+  });
+
+  it('returns null for truncated JSON (no recoverable object)', () => {
+    expect(extractJsonObject('{"nodes":[{"id":"n1","label":"Start"}')).toBeNull();
+  });
+
+  it('returns null for non-strings / empty', () => {
+    expect(extractJsonObject(null)).toBeNull();
+    expect(extractJsonObject('')).toBeNull();
   });
 });

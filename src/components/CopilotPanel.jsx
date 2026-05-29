@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { flattenLibrary, getNodeCatalogSummary } from '../nodeLibrary';
 import { getScriptUIPromptSection } from '../graph/scriptUITree';
 import { layoutGraphTopo } from '../graph/blueprintLayout';
-import { filterConnectActions, autoChainActions } from '../graph/graphActions';
+import { filterConnectActions, autoChainActions, extractJsonObject } from '../graph/graphActions';
 import { CLOUD_PROVIDERS, getStoredKey, setStoredKey, callCloud } from '../services/cloudLlmService';
 import { suggestLabel, autoResolveLabel } from '../graph/labelMatch';
 import './CopilotPanel.css'; // Let's create this file next
@@ -169,25 +169,28 @@ export default function CopilotPanel({ nodes, edges, setNodes, setEdges, globalV
   };
 
   const parseStructuredResponse = (text) => {
-    try {
-      const obj = JSON.parse(text);
-      console.log('[Copilot] parsed model JSON:', obj);
-      const reply =
-        (typeof obj.reply === 'string' && obj.reply) ||
-        (typeof obj.message === 'string' && obj.message) ||
-        (typeof obj.response === 'string' && obj.response) ||
-        (typeof obj.text === 'string' && obj.text) ||
-        (typeof obj.explanation === 'string' && obj.explanation) ||
-        '';
-      const actions = normalizeToActions(obj);
-      const fallbackReply = actions.length
-        ? `Proposed ${actions.length} action(s).`
-        : `(model returned no recognized actions)`;
-      return { reply: reply || fallbackReply, actions };
-    } catch (e) {
-      console.error("Failed to parse structured JSON response:", e, text);
-      return { reply: `(parse error — raw output):\n${text}`, actions: [] };
+    // Tolerate ```json fences / surrounding prose (Claude wraps its JSON).
+    const obj = extractJsonObject(text);
+    if (!obj) {
+      console.error('Failed to parse structured JSON response:', text);
+      const hint = /```|^\s*\{/.test(text || '')
+        ? '(parse error — the JSON looks truncated; try again or use fewer nodes):\n'
+        : '(parse error — raw output):\n';
+      return { reply: `${hint}${text}`, actions: [] };
     }
+    console.log('[Copilot] parsed model JSON:', obj);
+    const reply =
+      (typeof obj.reply === 'string' && obj.reply) ||
+      (typeof obj.message === 'string' && obj.message) ||
+      (typeof obj.response === 'string' && obj.response) ||
+      (typeof obj.text === 'string' && obj.text) ||
+      (typeof obj.explanation === 'string' && obj.explanation) ||
+      '';
+    const actions = normalizeToActions(obj);
+    const fallbackReply = actions.length
+      ? `Proposed ${actions.length} action(s).`
+      : `(model returned no recognized actions)`;
+    return { reply: reply || fallbackReply, actions };
   };
 
   const getSystemPrompt = () => {
@@ -288,7 +291,7 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
             messages: [{ role: 'system', content: systemPrompt }, ...recentHistory],
             stream: true,
             format: 'json',
-            options: { temperature: 0.1, top_p: 0.9, num_predict: 800, repeat_penalty: 1.15 },
+            options: { temperature: 0.1, top_p: 0.9, num_predict: 4096, repeat_penalty: 1.15 },
           }),
         });
         if (!res.ok) throw new Error(`Ollama API error: ${res.statusText}`);

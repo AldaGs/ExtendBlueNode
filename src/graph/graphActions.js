@@ -7,6 +7,34 @@
 const isExecHandle = (h) => typeof h === 'string' && h.startsWith('exec');
 
 /**
+ * Parse a model response into an object, tolerating the common ways LLMs wrap
+ * JSON: a ```json … ``` markdown fence, leading prose, or trailing chatter.
+ * Falls back to slicing from the first "{" to the last "}". Returns null when
+ * nothing parses (e.g. the response was truncated mid-JSON).
+ * @param {string} text
+ * @returns {object|null}
+ */
+export function extractJsonObject(text) {
+  if (typeof text !== 'string') return null;
+  let s = text.trim();
+
+  // Prefer the contents of a fenced block if present.
+  const fence = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) s = fence[1].trim();
+
+  // Direct parse first.
+  try { return JSON.parse(s); } catch { /* fall through */ }
+
+  // Otherwise slice the outermost object span and try that.
+  const first = s.indexOf('{');
+  const last = s.lastIndexOf('}');
+  if (first !== -1 && last > first) {
+    try { return JSON.parse(s.slice(first, last + 1)); } catch { /* fall through */ }
+  }
+  return null;
+}
+
+/**
  * @param {object[]} actions  the full action list (only connect_nodes are processed)
  * @param {(id:string)=>string|null} labelOf  resolve a node id to its label (proposed or existing)
  * @param {(label:string)=>{inputs:Set<string>,outputs:Set<string>}} handlesForLabel

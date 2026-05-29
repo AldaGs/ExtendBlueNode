@@ -72,7 +72,9 @@ async function callClaude({ model, systemPrompt, history, apiKey, signal }) {
     },
     body: JSON.stringify({
       model,
-      max_tokens: 2048,
+      // Large graph translations (Blueprint mode) can run to dozens of nodes
+      // and edges; 2048 truncated them mid-JSON. Give ample room.
+      max_tokens: 8192,
       system: systemPrompt,
       messages: history
         .filter(m => m.role === 'user' || m.role === 'assistant')
@@ -96,6 +98,7 @@ async function callOpenAI({ model, systemPrompt, history, apiKey, signal }) {
     body: JSON.stringify({
       model,
       response_format: { type: 'json_object' },
+      max_tokens: 8192,
       temperature: 0.2,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -125,7 +128,7 @@ async function callGemini({ model, systemPrompt, history, apiKey, signal }) {
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: systemPrompt }] },
       contents,
-      generationConfig: { temperature: 0.2, responseMimeType: 'application/json' },
+      generationConfig: { temperature: 0.2, responseMimeType: 'application/json', maxOutputTokens: 8192 },
     }),
   });
   if (!res.ok) throw new Error(`Gemini API ${res.status}: ${await res.text()}`);
