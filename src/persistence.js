@@ -93,6 +93,34 @@ export function clearStorage() {
   } catch {/* ignore */}
 }
 
+/* ----------------------------- copilot session ----------------------------- */
+// Persisted separately from the project so the chosen provider/model and the
+// conversation survive a full restart AND a layout split (which remounts the
+// Copilot panel). Messages are capped so localStorage doesn't balloon.
+
+const COPILOT_KEY = 'ebn:copilot';
+const MAX_PERSISTED_MESSAGES = 50;
+
+export function loadCopilotState() {
+  try {
+    const raw = localStorage.getItem(COPILOT_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === 'object' ? obj : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveCopilotState({ provider, model, messages }) {
+  try {
+    const trimmed = Array.isArray(messages)
+      ? messages.slice(-MAX_PERSISTED_MESSAGES)
+      : [];
+    localStorage.setItem(COPILOT_KEY, JSON.stringify({ provider, model, messages: trimmed }));
+  } catch {/* ignore quota / serialization errors */}
+}
+
 /* ----------------------------- file IO ----------------------------- */
 
 export function downloadProject(state, filename = 'project.ebn') {

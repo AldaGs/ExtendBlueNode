@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './ProjectMenu.css';
 
-export default function ProjectMenu({ onNew, onOpen, onSave }) {
+export default function ProjectMenu({ onNew, onOpen, onSave, onClearCanvas }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -55,6 +55,9 @@ export default function ProjectMenu({ onNew, onOpen, onSave }) {
           <button type="button" className="ebn-projmenu__item" onClick={fire(onSave)}>
             Save As…
             <span className="ebn-projmenu__kbd">⌘S</span>
+          </button>
+          <button type="button" className="ebn-projmenu__item" onClick={fire(onClearCanvas)}>
+            Clear Canvas
           </button>
         </div>
       )}

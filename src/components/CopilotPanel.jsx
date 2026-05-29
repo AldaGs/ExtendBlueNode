@@ -55,19 +55,25 @@ Translation rules:
 ${getScriptUIPromptSection()}`;
 }
 
-export default function CopilotPanel({ nodes, edges, setNodes, setEdges, globalVariables }) {
+// Fresh-conversation seed (module-local; App keeps its own copy for the
+// initial lifted state — kept identical on purpose).
+const INITIAL_COPILOT_MESSAGES = [
+  { role: 'system', content: '> Copilot ready.\n> Pick a provider and type a request to build or modify nodes.' },
+];
+
+export default function CopilotPanel({
+  nodes, edges, setNodes, setEdges, globalVariables,
+  // Conversation + provider/model are owned by App so they survive a layout
+  // split (which remounts this panel) and a full restart.
+  provider, setProvider, model, setModel, messages, setMessages,
+}) {
   const [chatInput, setChatInput] = useState('');
-  const [provider, setProvider] = useState('ollama');
-  const [model, setModel] = useState(OLLAMA_MODELS[0]);
   const [apiKeys, setApiKeys] = useState({
     claude: getStoredKey('claude'),
     openai: getStoredKey('openai'),
     gemini: getStoredKey('gemini'),
   });
   const [showKeyEditor, setShowKeyEditor] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'system', content: '> Copilot ready.\n> Pick a provider and type a request to build or modify nodes.' }
-  ]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [blueprintMode, setBlueprintMode] = useState(false);
   const [replaceCanvas, setReplaceCanvas] = useState(true);
@@ -79,6 +85,13 @@ export default function CopilotPanel({ nodes, edges, setNodes, setEdges, globalV
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  // Normalize the model when it's empty (fresh restore) or not offered by the
+  // current provider, so the <select> always has a valid value.
+  useEffect(() => {
+    const valid = PROVIDERS[provider]?.models || [];
+    if (valid.length && !valid.includes(model)) setModel(valid[0]);
+  }, [provider, model, setModel]);
 
   const handleAction = (action, args) => {
     if (action === 'propose_node') {
@@ -496,6 +509,11 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
     setMessages(msgs => msgs.map((m, i) => i === msgIndex ? { ...m, pendingActions: null, content: '> Actions applied.' } : m));
   };
 
+  const onClearConversation = () => {
+    if (isGenerating) return;
+    setMessages(INITIAL_COPILOT_MESSAGES);
+  };
+
   const onTextareaKeyDown = (e) => {
     // Enter submits; Shift+Enter inserts a newline.
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -562,6 +580,13 @@ Edges: ${JSON.stringify(edges.map(e => ({ source: e.source, target: e.target }))
             Replace canvas
           </label>
         )}
+        <button
+          type="button"
+          className="ebn-copilot__keybtn"
+          onClick={onClearConversation}
+          disabled={isGenerating || messages.length <= 1}
+          title="Clear the conversation"
+        >🗑 Clear</button>
       </div>
       {showKeyEditor && PROVIDERS[provider].isCloud && (
         <div className="ebn-copilot__keyrow">

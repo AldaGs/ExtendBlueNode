@@ -27,9 +27,16 @@ import {
   clearStorage,
   downloadProject,
   pickProjectFile,
+  loadCopilotState,
+  saveCopilotState,
 } from './persistence';
 import { runInHost, isCep } from './cep';
 import './App.css';
+
+// Mirror of CopilotPanel's seed — App owns the lifted Copilot conversation.
+const INITIAL_COPILOT_MESSAGES = [
+  { role: 'system', content: '> Copilot ready.\n> Pick a provider and type a request to build or modify nodes.' },
+];
 
 const INITIAL_LAYOUT = {
   type: 'split',
@@ -75,6 +82,23 @@ export default function App() {
   const [running, setRunning] = useState(false);
   const [lastRun, setLastRun] = useState(null); // {at, ok, message, offline}
   const [errorNodeId, setErrorNodeId] = useState(null); // node to flag red after a run error
+
+  // Copilot session lives here (not inside CopilotPanel) so it survives a
+  // layout split — which remounts the panel — and a full restart.
+  const restoredCopilot = useMemo(() => loadCopilotState(), []);
+  const [copilotProvider, setCopilotProvider] = useState(restoredCopilot?.provider || 'ollama');
+  const [copilotModel, setCopilotModel] = useState(restoredCopilot?.model || '');
+  const [copilotMessages, setCopilotMessages] = useState(
+    restoredCopilot?.messages?.length ? restoredCopilot.messages : INITIAL_COPILOT_MESSAGES,
+  );
+
+  useEffect(() => {
+    saveCopilotState({
+      provider: copilotProvider,
+      model: copilotModel,
+      messages: copilotMessages,
+    });
+  }, [copilotProvider, copilotModel, copilotMessages]);
   const activeComp = 'Main_Comp_01';
 
   // line -> nodeId map for the most recent compile, used to trace a runtime
@@ -153,6 +177,13 @@ export default function App() {
     setSelectedNode(null);
     clearStorage();
     setLastSave(null);
+  }, [setNodes, setEdges]);
+
+  const onClearCanvas = useCallback(() => {
+    if (!window.confirm('Clear the canvas? This removes all nodes and edges. Globals are kept.')) return;
+    setNodes([]);
+    setEdges([]);
+    setSelectedNode(null);
   }, [setNodes, setEdges]);
 
   const onOpenProject = useCallback(async () => {
@@ -345,6 +376,12 @@ export default function App() {
             setNodes={setNodes}
             setEdges={setEdges}
             globalVariables={globalVariables}
+            provider={copilotProvider}
+            setProvider={setCopilotProvider}
+            model={copilotModel}
+            setModel={setCopilotModel}
+            messages={copilotMessages}
+            setMessages={setCopilotMessages}
           />
         ),
       },
@@ -371,6 +408,7 @@ export default function App() {
       nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange,
       generatedCode, liveSelected, propsValid, globalVariables,
       onSpawnGlobalRef, errorNodeId,
+      copilotProvider, copilotModel, copilotMessages,
     ],
   );
 
@@ -437,6 +475,7 @@ export default function App() {
             onNew={onNewProject}
             onOpen={onOpenProject}
             onSave={onSaveProject}
+            onClearCanvas={onClearCanvas}
           />
           <div className="ebn-header__status">
             Active Comp:<strong>{activeComp}</strong>
